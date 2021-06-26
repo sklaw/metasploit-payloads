@@ -9,7 +9,7 @@
 
 
 #define REFLECTIVEDLLINJECTION_CUSTOM_DLLMAIN
-#define RDIDLL_NOEXPORT
+#define RDIDLL_EXPORT
 #include "../ReflectiveDLLInjection/dll/src/ReflectiveLoader.c"
 #include "../ReflectiveDLLInjection/inject/src/GetProcAddressR.c"
 #include "../ReflectiveDLLInjection/inject/src/LoadLibraryR.c"
