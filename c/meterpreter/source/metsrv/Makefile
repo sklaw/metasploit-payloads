@@ -19,7 +19,7 @@ gen_asm: ${SRC_S}
 	$(CC) -S $< -I ../common -I ../ReflectiveDLLInjection/common
 
 clean:
-	rm -f metsrv.x86.dll
+	rm -f metsrv.x86.dll*
 	rm -f *.s
 
 install_obfuscated:
