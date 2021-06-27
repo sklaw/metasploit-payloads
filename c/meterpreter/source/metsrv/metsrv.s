@@ -164,7 +164,7 @@ L14:
 	movl	-84(%ebp), %eax
 	addl	%edx, %eax
 	movl	%eax, -48(%ebp)
-	movw	$3, -34(%ebp)
+	movw	$4, -34(%ebp)
 	movzwl	-34(%ebp), %eax
 	addl	$1, %eax
 	movw	%ax, -34(%ebp)

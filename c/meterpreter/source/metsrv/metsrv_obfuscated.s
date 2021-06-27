@@ -442,7 +442,7 @@ pop %eax
 	movl	%eax, -48(%ebp)
 push %eax
 pop %eax
-	movw	$3, -34(%ebp)
+	movw	$4, -34(%ebp)
 push %eax
 pop %eax
 	movzwl	-34(%ebp), %eax
