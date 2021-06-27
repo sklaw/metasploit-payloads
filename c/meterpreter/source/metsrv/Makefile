@@ -19,7 +19,8 @@ gen_asm: ${SRC_S}
 	$(CC) -S $< -I ../common -I ../ReflectiveDLLInjection/common
 
 clean:
-	rm metsrv.x86.dll
+	rm -f metsrv.x86.dll
+	rm -f *.s
 
 install_obfuscated:
 	cp metsrv.x86.dll.obfuscated ~/Code/metasploit-framework/data/meterpreter/metsrv.x86.dll

@@ -11,10 +11,10 @@ _AddMandatoryAce@20:
 	pushl	%ebp
 	movl	%esp, %ebp
 	subl	$56, %esp
-	movl	_attempted.83825, %eax
+	movl	_attempted.83830, %eax
 	testl	%eax, %eax
 	je	L2
-	movl	$1, _attempted.83825
+	movl	$1, _attempted.83830
 	movl	$LC0, (%esp)
 	movl	__imp__LoadLibraryA@4, %eax
 	call	*%eax
@@ -28,12 +28,12 @@ _AddMandatoryAce@20:
 	movl	__imp__GetProcAddress@8, %eax
 	call	*%eax
 	subl	$8, %esp
-	movl	%eax, _pAddMandatoryAce.83826
+	movl	%eax, _pAddMandatoryAce.83831
 L2:
-	movl	_pAddMandatoryAce.83826, %eax
+	movl	_pAddMandatoryAce.83831, %eax
 	testl	%eax, %eax
 	je	L3
-	movl	_pAddMandatoryAce.83826, %eax
+	movl	_pAddMandatoryAce.83831, %eax
 	movl	24(%ebp), %edx
 	movl	%edx, 16(%esp)
 	movl	20(%ebp), %edx
@@ -1519,8 +1519,8 @@ L102:
 	movl	-12(%ebp), %eax
 	leave
 	ret
-.lcomm _attempted.83825,4,4
-.lcomm _pAddMandatoryAce.83826,4,4
+.lcomm _attempted.83830,4,4
+.lcomm _pAddMandatoryAce.83831,4,4
 	.ident	"GCC: (GNU) 9.3-win32 20200320"
 	.def	_lock_acquire;	.scl	2;	.type	32;	.endef
 	.def	_free;	.scl	2;	.type	32;	.endef

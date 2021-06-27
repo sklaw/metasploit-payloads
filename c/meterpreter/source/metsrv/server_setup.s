@@ -34,7 +34,7 @@ _server_sessionid:
 	subl	$36, %esp
 	movl	$0, -12(%ebp)
 	movl	$0, -16(%ebp)
-	movl	_processIdToSessionId.83546, %eax
+	movl	_processIdToSessionId.83551, %eax
 	testl	%eax, %eax
 	jne	L6
 	movl	$LC0, (%esp)
@@ -50,12 +50,12 @@ _server_sessionid:
 	movl	__imp__GetProcAddress@8, %eax
 	call	*%eax
 	subl	$8, %esp
-	movl	%eax, _processIdToSessionId.83546
+	movl	%eax, _processIdToSessionId.83551
 L6:
-	movl	_processIdToSessionId.83546, %eax
+	movl	_processIdToSessionId.83551, %eax
 	testl	%eax, %eax
 	je	L11
-	movl	_processIdToSessionId.83546, %ebx
+	movl	_processIdToSessionId.83551, %ebx
 	movl	__imp__GetCurrentProcessId@0, %eax
 	call	*%eax
 	leal	-16(%ebp), %edx
@@ -926,7 +926,7 @@ L69:
 	popl	%edi
 	popl	%ebp
 	ret
-.lcomm _processIdToSessionId.83546,4,4
+.lcomm _processIdToSessionId.83551,4,4
 	.ident	"GCC: (GNU) 9.3-win32 20200320"
 	.def	_LoadLibraryR@12;	.scl	2;	.type	32;	.endef
 	.def	_load_extension;	.scl	2;	.type	32;	.endef

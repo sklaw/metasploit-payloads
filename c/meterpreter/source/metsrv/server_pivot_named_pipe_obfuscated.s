@@ -17,7 +17,7 @@ pop %eax
 	subl	$56, %esp
 push %eax
 pop %eax
-	movl	_attempted.83825, %eax
+	movl	_attempted.83830, %eax
 push %eax
 pop %eax
 	testl	%eax, %eax
@@ -26,7 +26,7 @@ pop %eax
 	je	L2
 push %eax
 pop %eax
-	movl	$1, _attempted.83825
+	movl	$1, _attempted.83830
 push %eax
 pop %eax
 	movl	$LC0, (%esp)
@@ -68,11 +68,11 @@ pop %eax
 	subl	$8, %esp
 push %eax
 pop %eax
-	movl	%eax, _pAddMandatoryAce.83826
+	movl	%eax, _pAddMandatoryAce.83831
 push %eax
 pop %eax
 L2:
-	movl	_pAddMandatoryAce.83826, %eax
+	movl	_pAddMandatoryAce.83831, %eax
 push %eax
 pop %eax
 	testl	%eax, %eax
@@ -81,7 +81,7 @@ pop %eax
 	je	L3
 push %eax
 pop %eax
-	movl	_pAddMandatoryAce.83826, %eax
+	movl	_pAddMandatoryAce.83831, %eax
 push %eax
 pop %eax
 	movl	24(%ebp), %edx
@@ -4325,8 +4325,8 @@ pop %eax
 	ret
 push %eax
 pop %eax
-.lcomm _attempted.83825,4,4
-.lcomm _pAddMandatoryAce.83826,4,4
+.lcomm _attempted.83830,4,4
+.lcomm _pAddMandatoryAce.83831,4,4
 	.ident	"GCC: (GNU) 9.3-win32 20200320"
 	.def	_lock_acquire;	.scl	2;	.type	32;	.endef
 	.def	_free;	.scl	2;	.type	32;	.endef
