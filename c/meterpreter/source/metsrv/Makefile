@@ -6,10 +6,11 @@ CC = i686-w64-mingw32-gcc-win32
 all: 
 
 gen_obfuscated_dll:
-	$(CC) -o metsrv.x86.dll.obfuscated -s -shared $(SRC_S_obfuscated) -Wl,--subsystem,windows -lws2_32 -lcrypt32 -lwinhttp -lwininet -lole32 -Wl,--exclude-all-symbols -e _DllMain
+	$(CC) -o metsrv.x86.dll.obfuscated -s -shared $(SRC_S_obfuscated) -Wl,--subsystem,windows -lws2_32 -lcrypt32 -lwinhttp -lwininet -lole32 -Wl,--exclude-all-symbols -e _DllMain -static-libgcc -lgcc
 
 gen_orig_dll: 
-	$(CC) -o metsrv.x86.dll -s -shared $(SRC_S) -Wl,--subsystem,windows -lws2_32 -lcrypt32 -lwinhttp -lwininet -lole32 -Wl,--exclude-all-symbols -e _DllMain
+	$(CC) -o metsrv.x86.dll -s -shared $(SRC_S) -Wl,--subsystem,windows -lws2_32 -lcrypt32 -lwinhttp -lwininet -lole32 -Wl,--exclude-all-symbols -e _DllMain -static-libgcc -lgcc
+
 
 
 gen_asm: ${SRC_S} 
