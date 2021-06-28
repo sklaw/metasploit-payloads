@@ -1,5 +1,175 @@
 	.file	"remote_dispatch.c"
 	.text
+	.section .rdata,"dr"
+LC0:
+	.ascii "[%04x] \0"
+LC1:
+	.ascii "\15\12\0"
+	.text
+	.def	_real_dprintf;	.scl	3;	.type	32;	.endef
+_real_dprintf:
+	pushl	%ebp
+push %eax
+pop %eax
+	movl	%esp, %ebp
+push %eax
+pop %eax
+	pushl	%esi
+push %eax
+pop %eax
+	pushl	%ebx
+push %eax
+pop %eax
+	subl	$1072, %esp
+push %eax
+pop %eax
+	movl	__imp__GetCurrentThreadId@0, %eax
+push %eax
+pop %eax
+	call	*%eax
+push %eax
+pop %eax
+	movl	%eax, 16(%esp)
+push %eax
+pop %eax
+	movl	$LC0, 12(%esp)
+push %eax
+pop %eax
+	movl	$1023, 8(%esp)
+push %eax
+pop %eax
+	movl	$1024, 4(%esp)
+push %eax
+pop %eax
+	leal	-1040(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, (%esp)
+push %eax
+pop %eax
+	movl	__imp___snprintf_s, %eax
+push %eax
+pop %eax
+	call	*%eax
+push %eax
+pop %eax
+	leal	-1040(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, (%esp)
+push %eax
+pop %eax
+	call	_strlen
+push %eax
+pop %eax
+	movl	%eax, -12(%ebp)
+push %eax
+pop %eax
+	leal	12(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, -16(%ebp)
+push %eax
+pop %eax
+	movl	-16(%ebp), %ecx
+push %eax
+pop %eax
+	movl	$1021, %eax
+push %eax
+pop %eax
+	subl	-12(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, %edx
+push %eax
+pop %eax
+	movl	$1024, %eax
+push %eax
+pop %eax
+	subl	-12(%ebp), %eax
+push %eax
+pop %eax
+	leal	-1040(%ebp), %esi
+push %eax
+pop %eax
+	movl	-12(%ebp), %ebx
+push %eax
+pop %eax
+	addl	%esi, %ebx
+push %eax
+pop %eax
+	movl	%ecx, 16(%esp)
+push %eax
+pop %eax
+	movl	8(%ebp), %ecx
+push %eax
+pop %eax
+	movl	%ecx, 12(%esp)
+push %eax
+pop %eax
+	movl	%edx, 8(%esp)
+push %eax
+pop %eax
+	movl	%eax, 4(%esp)
+push %eax
+pop %eax
+	movl	%ebx, (%esp)
+push %eax
+pop %eax
+	call	_vsnprintf_s
+push %eax
+pop %eax
+	movl	$LC1, 8(%esp)
+push %eax
+pop %eax
+	movl	$1024, 4(%esp)
+push %eax
+pop %eax
+	leal	-1040(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, (%esp)
+push %eax
+pop %eax
+	movl	__imp__strcat_s, %eax
+push %eax
+pop %eax
+	call	*%eax
+push %eax
+pop %eax
+	leal	-1040(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, (%esp)
+push %eax
+pop %eax
+	movl	__imp__OutputDebugStringA@4, %eax
+push %eax
+pop %eax
+	call	*%eax
+push %eax
+pop %eax
+	subl	$4, %esp
+push %eax
+pop %eax
+	nop
+push %eax
+pop %eax
+	leal	-8(%ebp), %esp
+push %eax
+pop %eax
+	popl	%ebx
+push %eax
+pop %eax
+	popl	%esi
+push %eax
+pop %eax
+	popl	%ebp
+push %eax
+pop %eax
+	ret
+push %eax
+pop %eax
 	.globl	_gExtensionList
 	.bss
 	.align 4
@@ -190,7 +360,7 @@ pop %eax
 	cmpl	$-1, -24(%ebp)
 push %eax
 pop %eax
-	jne	L2
+	jne	L3
 push %eax
 pop %eax
 	movl	__imp__GetLastError@0, %eax
@@ -202,20 +372,20 @@ pop %eax
 	movl	%eax, -12(%ebp)
 push %eax
 pop %eax
-	jmp	L3
+	jmp	L4
 push %eax
 pop %eax
-L2:
+L3:
 	movl	16(%ebp), %eax
 push %eax
 pop %eax
 	movl	%eax, -20(%ebp)
 push %eax
 pop %eax
-	jmp	L4
+	jmp	L5
 push %eax
 pop %eax
-L6:
+L7:
 	movl	-28(%ebp), %eax
 push %eax
 pop %eax
@@ -228,11 +398,11 @@ pop %eax
 	addl	%eax, -16(%ebp)
 push %eax
 pop %eax
-L4:
+L5:
 	cmpl	$0, -20(%ebp)
 push %eax
 pop %eax
-	je	L5
+	je	L6
 push %eax
 pop %eax
 	movl	12(%ebp), %edx
@@ -280,18 +450,18 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	jne	L6
+	jne	L7
 push %eax
 pop %eax
-L5:
+L6:
 	movl	$0, -12(%ebp)
 push %eax
 pop %eax
-L3:
+L4:
 	cmpl	$-1, -24(%ebp)
 push %eax
 pop %eax
-	je	L7
+	je	L8
 push %eax
 pop %eax
 	movl	-24(%ebp), %eax
@@ -309,7 +479,7 @@ pop %eax
 	subl	$4, %esp
 push %eax
 pop %eax
-L7:
+L8:
 	movl	-12(%ebp), %eax
 push %eax
 pop %eax
@@ -319,6 +489,14 @@ pop %eax
 	ret
 push %eax
 pop %eax
+	.section .rdata,"dr"
+	.align 4
+LC2:
+	.ascii "[LISTEXTCMD] Processing extension: %p\0"
+	.align 4
+LC3:
+	.ascii "[LISTEXTCMD] Adding command ID %u\0"
+	.text
 	.globl	_ext_cmd_callback
 	.def	_ext_cmd_callback;	.scl	2;	.type	32;	.endef
 _ext_cmd_callback:
@@ -343,7 +521,7 @@ pop %eax
 	cmpl	$0, -16(%ebp)
 push %eax
 pop %eax
-	je	L10
+	je	L11
 push %eax
 pop %eax
 	movl	-16(%ebp), %eax
@@ -355,13 +533,13 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	je	L10
+	je	L11
 push %eax
 pop %eax
 	cmpl	$0, 12(%ebp)
 push %eax
 pop %eax
-	je	L10
+	je	L11
 push %eax
 pop %eax
 	movl	12(%ebp), %eax
@@ -379,10 +557,22 @@ pop %eax
 	movl	%eax, -12(%ebp)
 push %eax
 pop %eax
-	jmp	L11
+	jmp	L12
 push %eax
 pop %eax
-L13:
+L14:
+	movl	-20(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC2, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
 	movl	-16(%ebp), %eax
 push %eax
 pop %eax
@@ -398,7 +588,7 @@ pop %eax
 	cmpl	%eax, %edx
 push %eax
 pop %eax
-	jnb	L12
+	jnb	L13
 push %eax
 pop %eax
 	movl	-12(%ebp), %eax
@@ -416,7 +606,22 @@ pop %eax
 	cmpl	%eax, %edx
 push %eax
 pop %eax
-	jnb	L12
+	jnb	L13
+push %eax
+pop %eax
+	movl	-12(%ebp), %eax
+push %eax
+pop %eax
+	movl	(%eax), %eax
+push %eax
+pop %eax
+	movl	%eax, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC3, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
 push %eax
 pop %eax
 	movl	-12(%ebp), %eax
@@ -443,7 +648,7 @@ pop %eax
 	call	_packet_add_tlv_uint
 push %eax
 pop %eax
-L12:
+L13:
 	movl	-12(%ebp), %eax
 push %eax
 pop %eax
@@ -453,7 +658,7 @@ pop %eax
 	movl	%eax, -12(%ebp)
 push %eax
 pop %eax
-L11:
+L12:
 	movl	-20(%ebp), %eax
 push %eax
 pop %eax
@@ -463,10 +668,10 @@ pop %eax
 	cmpl	%eax, -12(%ebp)
 push %eax
 pop %eax
-	jne	L13
+	jne	L14
 push %eax
 pop %eax
-L10:
+L11:
 	movl	$0, %eax
 push %eax
 pop %eax
@@ -500,7 +705,7 @@ pop %eax
 	cmpl	$1, %eax
 push %eax
 pop %eax
-	jne	L16
+	jne	L17
 push %eax
 pop %eax
 	movl	16(%ebp), %eax
@@ -509,10 +714,10 @@ pop %eax
 	movl	$5023, (%eax)
 push %eax
 pop %eax
-	jmp	L17
+	jmp	L18
 push %eax
 pop %eax
-L16:
+L17:
 	movl	8(%ebp), %eax
 push %eax
 pop %eax
@@ -549,7 +754,7 @@ pop %eax
 	movl	$0, (%eax)
 push %eax
 pop %eax
-L17:
+L18:
 	movl	$1, %eax
 push %eax
 pop %eax
@@ -559,6 +764,11 @@ pop %eax
 	ret
 push %eax
 pop %eax
+	.section .rdata,"dr"
+	.align 4
+LC4:
+	.ascii "[LISTEXTCMD] Listing extension commands between %u and %u\0"
+	.text
 	.globl	_request_core_enumextcmd
 	.def	_request_core_enumextcmd;	.scl	2;	.type	32;	.endef
 _request_core_enumextcmd:
@@ -589,7 +799,7 @@ pop %eax
 	cmpl	$0, -16(%ebp)
 push %eax
 pop %eax
-	je	L20
+	je	L21
 push %eax
 pop %eax
 	movl	-16(%ebp), %eax
@@ -634,6 +844,24 @@ pop %eax
 	movl	%eax, -20(%ebp)
 push %eax
 pop %eax
+	movl	-20(%ebp), %edx
+push %eax
+pop %eax
+	movl	-24(%ebp), %eax
+push %eax
+pop %eax
+	movl	%edx, 8(%esp)
+push %eax
+pop %eax
+	movl	%eax, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC4, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
 	movl	_gExtensionList, %eax
 push %eax
 pop %eax
@@ -673,7 +901,7 @@ pop %eax
 	call	_packet_transmit_response
 push %eax
 pop %eax
-L20:
+L21:
 	movl	$0, %eax
 push %eax
 pop %eax
@@ -712,6 +940,11 @@ pop %eax
 	ret
 push %eax
 pop %eax
+	.section .rdata,"dr"
+	.align 4
+LC5:
+	.ascii "[CORE] Registered the core pseudo extension %p\0"
+	.text
 	.globl	_register_dispatch_routines
 	.def	_register_dispatch_routines;	.scl	2;	.type	32;	.endef
 _register_dispatch_routines:
@@ -754,7 +987,7 @@ pop %eax
 	cmpl	$0, -16(%ebp)
 push %eax
 pop %eax
-	je	L26
+	je	L27
 push %eax
 pop %eax
 	movl	$28, 8(%esp)
@@ -811,7 +1044,19 @@ pop %eax
 	call	_list_push
 push %eax
 pop %eax
-L26:
+	movl	-16(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC5, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
+L27:
 	nop
 push %eax
 pop %eax
@@ -833,7 +1078,7 @@ pop %eax
 	subl	$40, %esp
 push %eax
 pop %eax
-L31:
+L32:
 	movl	_gExtensionList, %eax
 push %eax
 pop %eax
@@ -849,7 +1094,7 @@ pop %eax
 	cmpl	$0, -12(%ebp)
 push %eax
 pop %eax
-	je	L33
+	je	L34
 push %eax
 pop %eax
 	movl	-12(%ebp), %eax
@@ -861,7 +1106,7 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	je	L30
+	je	L31
 push %eax
 pop %eax
 	movl	-12(%ebp), %eax
@@ -879,7 +1124,7 @@ pop %eax
 	call	*%eax
 push %eax
 pop %eax
-L30:
+L31:
 	movl	-12(%ebp), %eax
 push %eax
 pop %eax
@@ -889,10 +1134,10 @@ pop %eax
 	call	_free
 push %eax
 pop %eax
-	jmp	L31
+	jmp	L32
 push %eax
 pop %eax
-L33:
+L34:
 	nop
 push %eax
 pop %eax
@@ -914,6 +1159,17 @@ pop %eax
 	ret
 push %eax
 pop %eax
+	.section .rdata,"dr"
+	.align 4
+LC6:
+	.ascii "[STAGELESSINIT] searching for extension init for %u in %p\0"
+	.align 4
+LC7:
+	.ascii "[STAGELESSINIT] extension list start is %p\0"
+	.align 4
+LC8:
+	.ascii "[STAGELESSINIT] passing stageless init\0"
+	.text
 	.globl	_stagelessinit_extension
 	.def	_stagelessinit_extension;	.scl	2;	.type	32;	.endef
 _stagelessinit_extension:
@@ -929,16 +1185,49 @@ pop %eax
 	movl	_gExtensionList, %eax
 push %eax
 pop %eax
+	movl	%eax, 8(%esp)
+push %eax
+pop %eax
+	movl	8(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC6, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
+	movl	_gExtensionList, %eax
+push %eax
+pop %eax
+	movl	(%eax), %eax
+push %eax
+pop %eax
+	movl	%eax, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC7, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
+	movl	_gExtensionList, %eax
+push %eax
+pop %eax
 	movl	(%eax), %eax
 push %eax
 pop %eax
 	movl	%eax, -12(%ebp)
 push %eax
 pop %eax
-	jmp	L35
+	jmp	L36
 push %eax
 pop %eax
-L37:
+L38:
 	movl	-12(%ebp), %eax
 push %eax
 pop %eax
@@ -957,7 +1246,13 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	je	L36
+	je	L37
+push %eax
+pop %eax
+	movl	$LC8, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
 push %eax
 pop %eax
 	movl	-16(%ebp), %eax
@@ -987,7 +1282,7 @@ pop %eax
 	call	*%eax
 push %eax
 pop %eax
-L36:
+L37:
 	movl	-12(%ebp), %eax
 push %eax
 pop %eax
@@ -997,11 +1292,11 @@ pop %eax
 	movl	%eax, -12(%ebp)
 push %eax
 pop %eax
-L35:
+L36:
 	cmpl	$0, -12(%ebp)
 push %eax
 pop %eax
-	jne	L37
+	jne	L38
 push %eax
 pop %eax
 	movl	$0, %eax
@@ -1013,6 +1308,21 @@ pop %eax
 	ret
 push %eax
 pop %eax
+	.section .rdata,"dr"
+	.align 4
+LC9:
+	.ascii "[SERVER] Initialising extension %x\0"
+	.align 4
+LC10:
+	.ascii "[SERVER] Calling init on extension, address is 0x%p\0"
+LC11:
+	.ascii "[SERVER] Calling init()...\0"
+LC12:
+	.ascii "[SERVER] Called init()...\0"
+	.align 4
+LC13:
+	.ascii "[LOAD EXTENSION] Adding command ID to response: %u\0"
+	.text
 	.globl	_load_extension
 	.def	_load_extension;	.scl	2;	.type	32;	.endef
 _load_extension:
@@ -1037,10 +1347,22 @@ pop %eax
 	movl	%eax, -28(%ebp)
 push %eax
 pop %eax
+	movl	8(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC9, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
 	cmpl	$0, -28(%ebp)
 push %eax
 pop %eax
-	je	L40
+	je	L41
 push %eax
 pop %eax
 	movl	$28, 8(%esp)
@@ -1070,7 +1392,7 @@ pop %eax
 	cmpl	$0, 12(%ebp)
 push %eax
 pop %eax
-	je	L41
+	je	L42
 push %eax
 pop %eax
 	movl	-28(%ebp), %eax
@@ -1169,119 +1491,134 @@ pop %eax
 	movl	%eax, 16(%edx)
 push %eax
 pop %eax
-	jmp	L42
-push %eax
-pop %eax
-L41:
-	movl	-28(%ebp), %eax
-push %eax
-pop %eax
-	movl	(%eax), %eax
-push %eax
-pop %eax
-	movl	$2, 4(%esp)
-push %eax
-pop %eax
-	movl	%eax, (%esp)
-push %eax
-pop %eax
-	movl	__imp__GetProcAddress@8, %eax
-push %eax
-pop %eax
-	call	*%eax
-push %eax
-pop %eax
-	subl	$8, %esp
-push %eax
-pop %eax
-	movl	-28(%ebp), %edx
-push %eax
-pop %eax
-	movl	%eax, 4(%edx)
-push %eax
-pop %eax
-	movl	-28(%ebp), %eax
-push %eax
-pop %eax
-	movl	(%eax), %eax
-push %eax
-pop %eax
-	movl	$3, 4(%esp)
-push %eax
-pop %eax
-	movl	%eax, (%esp)
-push %eax
-pop %eax
-	movl	__imp__GetProcAddress@8, %eax
-push %eax
-pop %eax
-	call	*%eax
-push %eax
-pop %eax
-	subl	$8, %esp
-push %eax
-pop %eax
-	movl	-28(%ebp), %edx
-push %eax
-pop %eax
-	movl	%eax, 8(%edx)
-push %eax
-pop %eax
-	movl	-28(%ebp), %eax
-push %eax
-pop %eax
-	movl	(%eax), %eax
-push %eax
-pop %eax
-	movl	$5, 4(%esp)
-push %eax
-pop %eax
-	movl	%eax, (%esp)
-push %eax
-pop %eax
-	movl	__imp__GetProcAddress@8, %eax
-push %eax
-pop %eax
-	call	*%eax
-push %eax
-pop %eax
-	subl	$8, %esp
-push %eax
-pop %eax
-	movl	-28(%ebp), %edx
-push %eax
-pop %eax
-	movl	%eax, 12(%edx)
-push %eax
-pop %eax
-	movl	-28(%ebp), %eax
-push %eax
-pop %eax
-	movl	(%eax), %eax
-push %eax
-pop %eax
-	movl	$4, 4(%esp)
-push %eax
-pop %eax
-	movl	%eax, (%esp)
-push %eax
-pop %eax
-	movl	__imp__GetProcAddress@8, %eax
-push %eax
-pop %eax
-	call	*%eax
-push %eax
-pop %eax
-	subl	$8, %esp
-push %eax
-pop %eax
-	movl	-28(%ebp), %edx
-push %eax
-pop %eax
-	movl	%eax, 16(%edx)
+	jmp	L43
 push %eax
 pop %eax
 L42:
+	movl	-28(%ebp), %eax
+push %eax
+pop %eax
+	movl	(%eax), %eax
+push %eax
+pop %eax
+	movl	$2, 4(%esp)
+push %eax
+pop %eax
+	movl	%eax, (%esp)
+push %eax
+pop %eax
+	movl	__imp__GetProcAddress@8, %eax
+push %eax
+pop %eax
+	call	*%eax
+push %eax
+pop %eax
+	subl	$8, %esp
+push %eax
+pop %eax
+	movl	-28(%ebp), %edx
+push %eax
+pop %eax
+	movl	%eax, 4(%edx)
+push %eax
+pop %eax
+	movl	-28(%ebp), %eax
+push %eax
+pop %eax
+	movl	(%eax), %eax
+push %eax
+pop %eax
+	movl	$3, 4(%esp)
+push %eax
+pop %eax
+	movl	%eax, (%esp)
+push %eax
+pop %eax
+	movl	__imp__GetProcAddress@8, %eax
+push %eax
+pop %eax
+	call	*%eax
+push %eax
+pop %eax
+	subl	$8, %esp
+push %eax
+pop %eax
+	movl	-28(%ebp), %edx
+push %eax
+pop %eax
+	movl	%eax, 8(%edx)
+push %eax
+pop %eax
+	movl	-28(%ebp), %eax
+push %eax
+pop %eax
+	movl	(%eax), %eax
+push %eax
+pop %eax
+	movl	$5, 4(%esp)
+push %eax
+pop %eax
+	movl	%eax, (%esp)
+push %eax
+pop %eax
+	movl	__imp__GetProcAddress@8, %eax
+push %eax
+pop %eax
+	call	*%eax
+push %eax
+pop %eax
+	subl	$8, %esp
+push %eax
+pop %eax
+	movl	-28(%ebp), %edx
+push %eax
+pop %eax
+	movl	%eax, 12(%edx)
+push %eax
+pop %eax
+	movl	-28(%ebp), %eax
+push %eax
+pop %eax
+	movl	(%eax), %eax
+push %eax
+pop %eax
+	movl	$4, 4(%esp)
+push %eax
+pop %eax
+	movl	%eax, (%esp)
+push %eax
+pop %eax
+	movl	__imp__GetProcAddress@8, %eax
+push %eax
+pop %eax
+	call	*%eax
+push %eax
+pop %eax
+	subl	$8, %esp
+push %eax
+pop %eax
+	movl	-28(%ebp), %edx
+push %eax
+pop %eax
+	movl	%eax, 16(%edx)
+push %eax
+pop %eax
+L43:
+	movl	-28(%ebp), %eax
+push %eax
+pop %eax
+	movl	4(%eax), %eax
+push %eax
+pop %eax
+	movl	%eax, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC10, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
 	movl	-28(%ebp), %eax
 push %eax
 pop %eax
@@ -1291,7 +1628,13 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	je	L43
+	je	L44
+push %eax
+pop %eax
+	movl	$LC11, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
 push %eax
 pop %eax
 	movl	-28(%ebp), %eax
@@ -1339,7 +1682,7 @@ pop %eax
 	cmpl	$0, -12(%ebp)
 push %eax
 pop %eax
-	jne	L44
+	jne	L45
 push %eax
 pop %eax
 	movl	-28(%ebp), %eax
@@ -1351,7 +1694,7 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	je	L45
+	je	L46
 push %eax
 pop %eax
 	movl	-28(%ebp), %eax
@@ -1363,10 +1706,10 @@ pop %eax
 	movl	%eax, -16(%ebp)
 push %eax
 pop %eax
-	jmp	L46
+	jmp	L47
 push %eax
 pop %eax
-L47:
+L48:
 	movl	-28(%ebp), %eax
 push %eax
 pop %eax
@@ -1394,14 +1737,14 @@ pop %eax
 	movl	%eax, -16(%ebp)
 push %eax
 pop %eax
-L46:
+L47:
 	cmpl	$0, -16(%ebp)
 push %eax
 pop %eax
-	jne	L47
+	jne	L48
 push %eax
 pop %eax
-L45:
+L46:
 	movl	_gExtensionList, %eax
 push %eax
 pop %eax
@@ -1417,10 +1760,10 @@ pop %eax
 	call	_list_push
 push %eax
 pop %eax
-	jmp	L43
+	jmp	L44
 push %eax
 pop %eax
-L44:
+L45:
 	movl	-28(%ebp), %eax
 push %eax
 pop %eax
@@ -1430,11 +1773,17 @@ pop %eax
 	call	_free
 push %eax
 pop %eax
-L43:
+L44:
+	movl	$LC12, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
 	cmpl	$0, 20(%ebp)
 push %eax
 pop %eax
-	je	L40
+	je	L41
 push %eax
 pop %eax
 	movl	-28(%ebp), %eax
@@ -1446,10 +1795,25 @@ pop %eax
 	movl	%eax, -20(%ebp)
 push %eax
 pop %eax
-	jmp	L48
+	jmp	L49
 push %eax
 pop %eax
-L52:
+L53:
+	movl	-20(%ebp), %eax
+push %eax
+pop %eax
+	movl	(%eax), %eax
+push %eax
+pop %eax
+	movl	%eax, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC13, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
 	movl	-20(%ebp), %eax
 push %eax
 pop %eax
@@ -1480,10 +1844,10 @@ pop %eax
 	movl	%eax, -24(%ebp)
 push %eax
 pop %eax
-	jmp	L49
+	jmp	L50
 push %eax
 pop %eax
-L51:
+L52:
 	movl	-24(%ebp), %eax
 push %eax
 pop %eax
@@ -1499,7 +1863,7 @@ pop %eax
 	cmpl	-28(%ebp), %eax
 push %eax
 pop %eax
-	je	L50
+	je	L51
 push %eax
 pop %eax
 	movl	-32(%ebp), %eax
@@ -1511,7 +1875,7 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	je	L50
+	je	L51
 push %eax
 pop %eax
 	movl	-32(%ebp), %eax
@@ -1532,7 +1896,7 @@ pop %eax
 	call	*%eax
 push %eax
 pop %eax
-L50:
+L51:
 	movl	-24(%ebp), %eax
 push %eax
 pop %eax
@@ -1542,11 +1906,11 @@ pop %eax
 	movl	%eax, -24(%ebp)
 push %eax
 pop %eax
-L49:
+L50:
 	cmpl	$0, -24(%ebp)
 push %eax
 pop %eax
-	jne	L51
+	jne	L52
 push %eax
 pop %eax
 	movl	-20(%ebp), %eax
@@ -1558,7 +1922,7 @@ pop %eax
 	movl	%eax, -20(%ebp)
 push %eax
 pop %eax
-L48:
+L49:
 	movl	-28(%ebp), %eax
 push %eax
 pop %eax
@@ -1568,10 +1932,10 @@ pop %eax
 	cmpl	%eax, -20(%ebp)
 push %eax
 pop %eax
-	jne	L52
+	jne	L53
 push %eax
 pop %eax
-L40:
+L41:
 	movl	-12(%ebp), %eax
 push %eax
 pop %eax
@@ -1581,6 +1945,30 @@ pop %eax
 	ret
 push %eax
 pop %eax
+	.section .rdata,"dr"
+LC14:
+	.ascii "[LOADLIB] here 1\0"
+LC15:
+	.ascii "[LOADLIB] here 2\0"
+LC16:
+	.ascii "[LOADLIB] here 3\0"
+LC17:
+	.ascii "[LOADLIB] here 4\0"
+LC18:
+	.ascii "[LOADLIB] here 5\0"
+LC19:
+	.ascii "[LOADLIB] here 6\0"
+LC20:
+	.ascii "[LOADLIB] here 7\0"
+LC21:
+	.ascii "[LOADLIB] here 8\0"
+LC22:
+	.ascii "[LOADLIB] here 9\0"
+LC23:
+	.ascii "[LOADLIB] here 10\0"
+LC24:
+	.ascii "[LOADLIB] here 11\0"
+	.text
 	.globl	_request_core_loadlib
 	.def	_request_core_loadlib;	.scl	2;	.type	32;	.endef
 _request_core_loadlib:
@@ -1614,10 +2002,22 @@ pop %eax
 	movl	$0, -24(%ebp)
 push %eax
 pop %eax
+	movl	$LC14, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
 	movl	_extensionCommands, %eax
 push %eax
 pop %eax
 	movl	%eax, -36(%ebp)
+push %eax
+pop %eax
+	movl	$LC15, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
 push %eax
 pop %eax
 	movl	$65936, 4(%esp)
@@ -1633,6 +2033,12 @@ pop %eax
 push %eax
 pop %eax
 	movl	%eax, -20(%ebp)
+push %eax
+pop %eax
+	movl	$LC16, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
 push %eax
 pop %eax
 	movl	$131099, 4(%esp)
@@ -1653,16 +2059,22 @@ pop %eax
 	cmpl	$0, -20(%ebp)
 push %eax
 pop %eax
-	jne	L55
+	jne	L56
 push %eax
 pop %eax
 	movl	$87, -12(%ebp)
 push %eax
 pop %eax
-	jmp	L56
+	jmp	L57
 push %eax
 pop %eax
-L55:
+L56:
+	movl	$LC17, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
 	movl	-32(%ebp), %eax
 push %eax
 pop %eax
@@ -1672,7 +2084,13 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	jne	L57
+	jne	L58
+push %eax
+pop %eax
+	movl	$LC18, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
 push %eax
 pop %eax
 	leal	-56(%ebp), %eax
@@ -1696,7 +2114,7 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	jne	L58
+	jne	L59
 push %eax
 pop %eax
 	movl	$65937, 4(%esp)
@@ -1717,17 +2135,23 @@ pop %eax
 	cmpl	$0, -40(%ebp)
 push %eax
 pop %eax
-	jne	L59
-push %eax
-pop %eax
-L58:
-	movl	$87, -12(%ebp)
-push %eax
-pop %eax
-	jmp	L56
+	jne	L60
 push %eax
 pop %eax
 L59:
+	movl	$87, -12(%ebp)
+push %eax
+pop %eax
+	jmp	L57
+push %eax
+pop %eax
+L60:
+	movl	$LC19, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
 	movl	-32(%ebp), %eax
 push %eax
 pop %eax
@@ -1737,7 +2161,7 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	jne	L60
+	jne	L61
 push %eax
 pop %eax
 	movl	12(%ebp), %eax
@@ -1750,6 +2174,12 @@ pop %eax
 push %eax
 pop %eax
 	movl	%eax, -44(%ebp)
+push %eax
+pop %eax
+	movl	$LC20, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
 push %eax
 pop %eax
 	movl	-56(%ebp), %edx
@@ -1779,10 +2209,16 @@ pop %eax
 	movl	%eax, -16(%ebp)
 push %eax
 pop %eax
+	movl	$LC21, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
 	cmpl	$0, -16(%ebp)
 push %eax
 pop %eax
-	jne	L61
+	jne	L62
 push %eax
 pop %eax
 	movl	-56(%ebp), %edx
@@ -1809,38 +2245,44 @@ pop %eax
 	movl	%eax, -16(%ebp)
 push %eax
 pop %eax
-	jmp	L62
-push %eax
-pop %eax
-L61:
-	movl	$1, -24(%ebp)
+	jmp	L63
 push %eax
 pop %eax
 L62:
+	movl	$1, -24(%ebp)
+push %eax
+pop %eax
+L63:
+	movl	$LC22, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
 	cmpl	$0, -16(%ebp)
 push %eax
 pop %eax
-	je	L63
+	je	L64
 push %eax
 pop %eax
 	movl	$0, %eax
 push %eax
 pop %eax
-	jmp	L64
-push %eax
-pop %eax
-L63:
-	movl	$1168, %eax
-push %eax
-pop %eax
-L64:
-	movl	%eax, -12(%ebp)
-push %eax
-pop %eax
 	jmp	L65
 push %eax
 pop %eax
-L60:
+L64:
+	movl	$1168, %eax
+push %eax
+pop %eax
+L65:
+	movl	%eax, -12(%ebp)
+push %eax
+pop %eax
+	jmp	L66
+push %eax
+pop %eax
+L61:
 	movl	-56(%ebp), %edx
 push %eax
 pop %eax
@@ -1865,24 +2307,24 @@ pop %eax
 	movl	%eax, -12(%ebp)
 push %eax
 pop %eax
-L65:
+L66:
 	movl	-40(%ebp), %eax
 push %eax
 pop %eax
 	movl	%eax, -20(%ebp)
 push %eax
 pop %eax
-L57:
+L58:
 	cmpl	$0, -12(%ebp)
 push %eax
 pop %eax
-	jne	L70
+	jne	L71
 push %eax
 pop %eax
 	cmpl	$0, -16(%ebp)
 push %eax
 pop %eax
-	jne	L67
+	jne	L68
 push %eax
 pop %eax
 	movl	-20(%ebp), %eax
@@ -1906,7 +2348,7 @@ pop %eax
 	cmpl	$0, -16(%ebp)
 push %eax
 pop %eax
-	jne	L67
+	jne	L68
 push %eax
 pop %eax
 	movl	__imp__GetLastError@0, %eax
@@ -1918,7 +2360,7 @@ pop %eax
 	movl	%eax, -12(%ebp)
 push %eax
 pop %eax
-L67:
+L68:
 	movl	-32(%ebp), %eax
 push %eax
 pop %eax
@@ -1928,13 +2370,13 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	je	L56
+	je	L57
 push %eax
 pop %eax
 	cmpl	$0, -16(%ebp)
 push %eax
 pop %eax
-	je	L56
+	je	L57
 push %eax
 pop %eax
 	movl	-36(%ebp), %eax
@@ -1973,18 +2415,24 @@ pop %eax
 	movl	%eax, -12(%ebp)
 push %eax
 pop %eax
-	jmp	L56
+	jmp	L57
 push %eax
 pop %eax
-L70:
+L71:
 	nop
 push %eax
 pop %eax
-L56:
+L57:
+	movl	$LC23, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
 	cmpl	$0, -28(%ebp)
 push %eax
 pop %eax
-	je	L68
+	je	L69
 push %eax
 pop %eax
 	movl	-28(%ebp), %eax
@@ -2008,7 +2456,13 @@ pop %eax
 	call	_packet_transmit_response
 push %eax
 pop %eax
-L68:
+L69:
+	movl	$LC24, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
 	movl	-12(%ebp), %eax
 push %eax
 pop %eax
@@ -2069,7 +2523,7 @@ pop %eax
 	cmpl	$0, -16(%ebp)
 push %eax
 pop %eax
-	je	L72
+	je	L73
 push %eax
 pop %eax
 	movl	8(%ebp), %eax
@@ -2096,11 +2550,11 @@ pop %eax
 	call	_memcpy
 push %eax
 pop %eax
-L72:
+L73:
 	cmpl	$0, -12(%ebp)
 push %eax
 pop %eax
-	je	L73
+	je	L74
 push %eax
 pop %eax
 	movl	-12(%ebp), %eax
@@ -2121,7 +2575,7 @@ pop %eax
 	call	_packet_transmit_response
 push %eax
 pop %eax
-L73:
+L74:
 	movl	$0, %eax
 push %eax
 pop %eax
@@ -2158,7 +2612,7 @@ pop %eax
 	cmpl	$0, -12(%ebp)
 push %eax
 pop %eax
-	je	L76
+	je	L77
 push %eax
 pop %eax
 	movl	8(%ebp), %eax
@@ -2206,7 +2660,7 @@ pop %eax
 	call	_packet_transmit_response
 push %eax
 pop %eax
-L76:
+L77:
 	movl	$0, %eax
 push %eax
 pop %eax
@@ -2258,7 +2712,7 @@ pop %eax
 	cmpl	$0, -16(%ebp)
 push %eax
 pop %eax
-	je	L79
+	je	L80
 push %eax
 pop %eax
 	movl	8(%ebp), %eax
@@ -2285,14 +2739,14 @@ pop %eax
 	call	_memcpy
 push %eax
 pop %eax
-	jmp	L80
-push %eax
-pop %eax
-L79:
-	movl	$160, -12(%ebp)
+	jmp	L81
 push %eax
 pop %eax
 L80:
+	movl	$160, -12(%ebp)
+push %eax
+pop %eax
+L81:
 	movl	-12(%ebp), %eax
 push %eax
 pop %eax
@@ -2324,13 +2778,20 @@ pop %eax
 push %eax
 pop %eax
 	.section .rdata,"dr"
+	.align 4
+LC25:
+	.ascii "[CORE] Running request_core_machine_id\0"
+LC26:
+	.ascii "[CORE] response is %p\0"
 	.align 2
-LC0:
+LC27:
 	.ascii "%\0"
 	.ascii "0\0"
 	.ascii "4\0x\0-\0%\0"
 	.ascii "0\0"
 	.ascii "4\0x\0:\0%\0s\0\0\0"
+LC28:
+	.ascii "[CORE] sending machine id: %S\0"
 	.text
 	.globl	_request_core_machine_id
 	.def	_request_core_machine_id;	.scl	2;	.type	32;	.endef
@@ -2347,6 +2808,12 @@ pop %eax
 	movl	$0, -12(%ebp)
 push %eax
 pop %eax
+	movl	$LC25, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
 	movl	12(%ebp), %eax
 push %eax
 pop %eax
@@ -2359,10 +2826,22 @@ pop %eax
 	movl	%eax, -16(%ebp)
 push %eax
 pop %eax
+	movl	-16(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC26, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
 	cmpl	$0, -16(%ebp)
 push %eax
 pop %eax
-	je	L83
+	je	L84
 push %eax
 pop %eax
 	movl	$260, 4(%esp)
@@ -2386,7 +2865,7 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	je	L84
+	je	L85
 push %eax
 pop %eax
 	movl	$260, -24(%ebp)
@@ -2503,7 +2982,7 @@ pop %eax
 	movl	%eax, 16(%esp)
 push %eax
 pop %eax
-	movl	$LC0, 12(%esp)
+	movl	$LC27, 12(%esp)
 push %eax
 pop %eax
 	movl	$259, 8(%esp)
@@ -2542,7 +3021,19 @@ pop %eax
 	call	_packet_add_tlv_wstring
 push %eax
 pop %eax
-L84:
+	leal	-1068(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC28, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
+L85:
 	movl	-16(%ebp), %eax
 push %eax
 pop %eax
@@ -2564,7 +3055,7 @@ pop %eax
 	call	_packet_transmit_response
 push %eax
 pop %eax
-L83:
+L84:
 	movl	$0, %eax
 push %eax
 pop %eax
@@ -2575,6 +3066,8 @@ pop %eax
 push %eax
 pop %eax
 	.ident	"GCC: (GNU) 9.3-win32 20200320"
+	.def	_strlen;	.scl	2;	.type	32;	.endef
+	.def	_vsnprintf_s;	.scl	2;	.type	32;	.endef
 	.def	_request_core_pivot_add;	.scl	2;	.type	32;	.endef
 	.def	_request_core_pivot_remove;	.scl	2;	.type	32;	.endef
 	.def	_packet_add_tlv_uint;	.scl	2;	.type	32;	.endef

@@ -1,5 +1,67 @@
 	.file	"scheduler.c"
 	.text
+	.section .rdata,"dr"
+LC0:
+	.ascii "[%04x] \0"
+LC1:
+	.ascii "\15\12\0"
+	.text
+	.def	_real_dprintf;	.scl	3;	.type	32;	.endef
+_real_dprintf:
+	pushl	%ebp
+	movl	%esp, %ebp
+	pushl	%esi
+	pushl	%ebx
+	subl	$1072, %esp
+	movl	__imp__GetCurrentThreadId@0, %eax
+	call	*%eax
+	movl	%eax, 16(%esp)
+	movl	$LC0, 12(%esp)
+	movl	$1023, 8(%esp)
+	movl	$1024, 4(%esp)
+	leal	-1040(%ebp), %eax
+	movl	%eax, (%esp)
+	movl	__imp___snprintf_s, %eax
+	call	*%eax
+	leal	-1040(%ebp), %eax
+	movl	%eax, (%esp)
+	call	_strlen
+	movl	%eax, -12(%ebp)
+	leal	12(%ebp), %eax
+	movl	%eax, -16(%ebp)
+	movl	-16(%ebp), %ecx
+	movl	$1021, %eax
+	subl	-12(%ebp), %eax
+	movl	%eax, %edx
+	movl	$1024, %eax
+	subl	-12(%ebp), %eax
+	leal	-1040(%ebp), %esi
+	movl	-12(%ebp), %ebx
+	addl	%esi, %ebx
+	movl	%ecx, 16(%esp)
+	movl	8(%ebp), %ecx
+	movl	%ecx, 12(%esp)
+	movl	%edx, 8(%esp)
+	movl	%eax, 4(%esp)
+	movl	%ebx, (%esp)
+	call	_vsnprintf_s
+	movl	$LC1, 8(%esp)
+	movl	$1024, 4(%esp)
+	leal	-1040(%ebp), %eax
+	movl	%eax, (%esp)
+	movl	__imp__strcat_s, %eax
+	call	*%eax
+	leal	-1040(%ebp), %eax
+	movl	%eax, (%esp)
+	movl	__imp__OutputDebugStringA@4, %eax
+	call	*%eax
+	subl	$4, %esp
+	nop
+	leal	-8(%ebp), %esp
+	popl	%ebx
+	popl	%esi
+	popl	%ebp
+	ret
 	.globl	_schedulerThreadList
 	.bss
 	.align 4
@@ -9,33 +71,64 @@ _schedulerThreadList:
 	.align 4
 _schedulerRemote:
 	.space 4
+	.section .rdata,"dr"
+	.align 4
+LC2:
+	.ascii "[SCHEDULER] entering scheduler_initialize.\0"
+	.align 4
+LC3:
+	.ascii "[SCHEDULER] leaving scheduler_initialize.\0"
 	.text
 	.globl	_scheduler_initialize
 	.def	_scheduler_initialize;	.scl	2;	.type	32;	.endef
 _scheduler_initialize:
 	pushl	%ebp
 	movl	%esp, %ebp
-	subl	$24, %esp
+	subl	$40, %esp
 	movl	$0, -12(%ebp)
+	movl	$LC2, (%esp)
+	call	_real_dprintf
 	cmpl	$0, 8(%ebp)
-	jne	L2
+	jne	L3
 	movl	$6, %eax
-	jmp	L3
-L2:
+	jmp	L4
+L3:
 	call	_list_create
 	movl	%eax, _schedulerThreadList
 	movl	_schedulerThreadList, %eax
 	testl	%eax, %eax
-	jne	L4
+	jne	L5
 	movl	$6, %eax
-	jmp	L3
-L4:
+	jmp	L4
+L5:
 	movl	8(%ebp), %eax
 	movl	%eax, _schedulerRemote
+	movl	$LC3, (%esp)
+	call	_real_dprintf
 	movl	-12(%ebp), %eax
-L3:
+L4:
 	leave
 	ret
+	.section .rdata,"dr"
+	.align 4
+LC4:
+	.ascii "[SCHEDULER] entering scheduler_destroy.\0"
+	.align 4
+LC5:
+	.ascii "[SCHEDULER] scheduler_destroy, joining all waitable threads...\0"
+	.align 4
+LC6:
+	.ascii "[SCHEDULER] scheduler_destroy, popping off another item from thread list...\0"
+	.align 4
+LC7:
+	.ascii "[SCHEDULER] scheduler_destroy, joining thread 0x%08X...\0"
+	.align 4
+LC8:
+	.ascii "[SCHEDULER] scheduler_destroy, destroying lists...\0"
+	.align 4
+LC9:
+	.ascii "[SCHEDULER] leaving scheduler_destroy.\0"
+	.text
 	.globl	_scheduler_destroy
 	.def	_scheduler_destroy;	.scl	2;	.type	32;	.endef
 _scheduler_destroy:
@@ -49,12 +142,14 @@ _scheduler_destroy:
 	movl	%eax, -24(%ebp)
 	movl	$0, -28(%ebp)
 	movl	$0, -32(%ebp)
+	movl	$LC4, (%esp)
+	call	_real_dprintf
 	movl	_schedulerThreadList, %eax
 	testl	%eax, %eax
-	jne	L6
+	jne	L7
 	movl	$0, %eax
-	jmp	L7
-L6:
+	jmp	L8
+L7:
 	movl	_schedulerThreadList, %eax
 	movl	12(%eax), %eax
 	movl	%eax, (%esp)
@@ -64,8 +159,8 @@ L6:
 	call	_list_count
 	movl	%eax, -20(%ebp)
 	movl	$0, -12(%ebp)
-	jmp	L8
-L12:
+	jmp	L9
+L13:
 	movl	_schedulerThreadList, %eax
 	movl	-12(%ebp), %edx
 	movl	%edx, 4(%esp)
@@ -73,7 +168,7 @@ L12:
 	call	_list_get
 	movl	%eax, -28(%ebp)
 	cmpl	$0, -28(%ebp)
-	je	L17
+	je	L18
 	movl	-28(%ebp), %eax
 	movl	%eax, 4(%esp)
 	movl	-24(%ebp), %eax
@@ -85,41 +180,51 @@ L12:
 	movl	-32(%ebp), %eax
 	movl	20(%eax), %eax
 	testl	%eax, %eax
-	jne	L11
+	jne	L12
 	movl	-32(%ebp), %eax
 	movl	12(%eax), %eax
 	movl	%eax, (%esp)
 	call	_event_signal
-L11:
+L12:
 	movl	-28(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_thread_sigterm
-	jmp	L10
-L17:
+	jmp	L11
+L18:
 	nop
-L10:
+L11:
 	addl	$1, -12(%ebp)
-L8:
+L9:
 	movl	-12(%ebp), %eax
 	cmpl	-20(%ebp), %eax
-	jb	L12
+	jb	L13
 	movl	_schedulerThreadList, %eax
 	movl	12(%eax), %eax
 	movl	%eax, (%esp)
 	call	_lock_release
-L15:
+	movl	$LC5, (%esp)
+	call	_real_dprintf
+L16:
+	movl	$LC6, (%esp)
+	call	_real_dprintf
 	movl	-24(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_list_pop
 	movl	%eax, -28(%ebp)
 	cmpl	$0, -28(%ebp)
-	je	L18
+	je	L19
+	movl	-28(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC7, (%esp)
+	call	_real_dprintf
 	movl	-28(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_thread_join
-	jmp	L15
-L18:
+	jmp	L16
+L19:
 	nop
+	movl	$LC8, (%esp)
+	call	_real_dprintf
 	movl	-24(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_list_destroy
@@ -127,26 +232,51 @@ L18:
 	movl	%eax, (%esp)
 	call	_list_destroy
 	movl	$0, _schedulerThreadList
+	movl	$LC9, (%esp)
+	call	_real_dprintf
 	movl	-16(%ebp), %eax
-L7:
+L8:
 	leave
 	ret
+	.section .rdata,"dr"
+	.align 4
+LC10:
+	.ascii "[SCHEDULER] entering scheduler_insert_waitable( 0x%08X, 0x%08X, 0x%08X, 0x%08X, 0x%08X )\0"
+	.align 4
+LC11:
+	.ascii "[SCHEDULER] created scheduler_waitable_thread 0x%08X\0"
+	.align 4
+LC12:
+	.ascii "[SCHEDULER] leaving scheduler_insert_waitable\0"
+	.text
 	.globl	_scheduler_insert_waitable
 	.def	_scheduler_insert_waitable;	.scl	2;	.type	32;	.endef
 _scheduler_insert_waitable:
 	pushl	%ebp
 	movl	%esp, %ebp
-	subl	$40, %esp
+	subl	$56, %esp
 	movl	$0, -12(%ebp)
 	movl	$0, -16(%ebp)
 	movl	$32, (%esp)
 	call	_malloc
 	movl	%eax, -20(%ebp)
 	cmpl	$0, -20(%ebp)
-	jne	L20
+	jne	L21
 	movl	$8, %eax
-	jmp	L21
-L20:
+	jmp	L22
+L21:
+	movl	24(%ebp), %eax
+	movl	%eax, 20(%esp)
+	movl	20(%ebp), %eax
+	movl	%eax, 16(%esp)
+	movl	16(%ebp), %eax
+	movl	%eax, 12(%esp)
+	movl	12(%ebp), %eax
+	movl	%eax, 8(%esp)
+	movl	8(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC10, (%esp)
+	call	_real_dprintf
 	movl	$32, 8(%esp)
 	movl	$0, 4(%esp)
 	movl	-20(%ebp), %eax
@@ -182,21 +312,53 @@ L20:
 	call	_thread_create
 	movl	%eax, -16(%ebp)
 	cmpl	$0, -16(%ebp)
-	je	L22
+	je	L23
+	movl	-16(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC11, (%esp)
+	call	_real_dprintf
 	movl	-16(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_thread_run
-	jmp	L23
-L22:
+	jmp	L24
+L23:
 	movl	-20(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_free
 	movl	$6, -12(%ebp)
-L23:
+L24:
+	movl	$LC12, (%esp)
+	call	_real_dprintf
 	movl	-12(%ebp), %eax
-L21:
+L22:
 	leave
 	ret
+	.section .rdata,"dr"
+	.align 4
+LC13:
+	.ascii "[SCHEDULER] entering scheduler_signal_waitable( 0x%08X )\0"
+	.align 4
+LC14:
+	.ascii "[SCHEDULER] scheduler_signal_waitable: signaling waitable = 0x%08X, thread = 0x%08X\0"
+	.align 4
+LC15:
+	.ascii "[SCHEDULER] scheduler_signal_waitable: thread running, pausing. waitable = 0x%08X, thread = 0x%08X, handle = 0x%X\0"
+	.align 4
+LC16:
+	.ascii "[SCHEDULER] scheduler_signal_waitable: thread already paused. waitable = 0x%08X, thread = 0x%08X\0"
+	.align 4
+LC17:
+	.ascii "[SCHEDULER] scheduler_signal_waitable: thread paused, resuming. waitable = 0x%08X, thread = 0x%08X, handle = 0x%X\0"
+	.align 4
+LC18:
+	.ascii "[SCHEDULER] scheduler_signal_waitable: stopping thread. waitable = 0x%08X, thread = 0x%08X, handle = 0x%X\0"
+	.align 4
+LC19:
+	.ascii "[SCHEDULER] scheduler_signal_waitable: thread already running. waitable = 0x%08X, thread = 0x%08X\0"
+	.align 4
+LC20:
+	.ascii "[SCHEDULER] leaving scheduler_signal_waitable\0"
+	.text
 	.globl	_scheduler_signal_waitable
 	.def	_scheduler_signal_waitable;	.scl	2;	.type	32;	.endef
 _scheduler_signal_waitable:
@@ -208,15 +370,19 @@ _scheduler_signal_waitable:
 	movl	$0, -24(%ebp)
 	movl	$0, -28(%ebp)
 	movl	$1168, -16(%ebp)
+	movl	8(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC13, (%esp)
+	call	_real_dprintf
 	movl	_schedulerThreadList, %eax
 	testl	%eax, %eax
-	je	L25
+	je	L26
 	cmpl	$0, 8(%ebp)
-	jne	L26
-L25:
-	movl	$6, %eax
-	jmp	L27
+	jne	L27
 L26:
+	movl	$6, %eax
+	jmp	L28
+L27:
 	movl	_schedulerThreadList, %eax
 	movl	12(%eax), %eax
 	movl	%eax, (%esp)
@@ -226,8 +392,8 @@ L26:
 	call	_list_count
 	movl	%eax, -20(%ebp)
 	movl	$0, -12(%ebp)
-	jmp	L28
-L36:
+	jmp	L29
+L39:
 	movl	_schedulerThreadList, %eax
 	movl	-12(%ebp), %edx
 	movl	%edx, 4(%esp)
@@ -235,65 +401,145 @@ L36:
 	call	_list_get
 	movl	%eax, -24(%ebp)
 	cmpl	$0, -24(%ebp)
-	je	L37
+	je	L40
 	movl	-24(%ebp), %eax
 	movl	16(%eax), %eax
 	movl	%eax, -28(%ebp)
 	cmpl	$0, -28(%ebp)
-	je	L38
+	je	L41
 	movl	-28(%ebp), %eax
 	movl	4(%eax), %eax
 	cmpl	%eax, 8(%ebp)
-	jne	L30
+	jne	L31
+	movl	-24(%ebp), %eax
+	movl	%eax, 8(%esp)
+	movl	8(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC14, (%esp)
+	call	_real_dprintf
 	cmpl	$1, 12(%ebp)
-	jne	L32
+	jne	L33
 	movl	-28(%ebp), %eax
 	movl	20(%eax), %eax
 	testl	%eax, %eax
-	je	L33
+	je	L34
+	movl	-28(%ebp), %eax
+	movl	8(%eax), %eax
+	movl	(%eax), %eax
+	movl	%eax, 12(%esp)
+	movl	-24(%ebp), %eax
+	movl	%eax, 8(%esp)
+	movl	8(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC15, (%esp)
+	call	_real_dprintf
 	movl	-28(%ebp), %eax
 	movl	8(%eax), %eax
 	movl	%eax, (%esp)
 	call	_event_signal
-	jmp	L33
-L32:
+	jmp	L35
+L34:
+	movl	-24(%ebp), %eax
+	movl	%eax, 8(%esp)
+	movl	8(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC16, (%esp)
+	call	_real_dprintf
+	jmp	L35
+L33:
 	movl	-28(%ebp), %eax
 	movl	20(%eax), %eax
 	testl	%eax, %eax
-	jne	L34
+	jne	L36
+	movl	-28(%ebp), %eax
+	movl	12(%eax), %eax
+	movl	(%eax), %eax
+	movl	%eax, 12(%esp)
+	movl	-24(%ebp), %eax
+	movl	%eax, 8(%esp)
+	movl	8(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC17, (%esp)
+	call	_real_dprintf
 	movl	-28(%ebp), %eax
 	movl	12(%eax), %eax
 	movl	%eax, (%esp)
 	call	_event_signal
-L34:
+L36:
 	cmpl	$3, 12(%ebp)
-	jne	L33
+	jne	L37
+	movl	-24(%ebp), %eax
+	movl	8(%eax), %eax
+	movl	(%eax), %eax
+	movl	%eax, 12(%esp)
+	movl	-24(%ebp), %eax
+	movl	%eax, 8(%esp)
+	movl	8(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC18, (%esp)
+	call	_real_dprintf
 	movl	-24(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_thread_sigterm
-L33:
-	movl	$0, -16(%ebp)
 	jmp	L35
 L37:
+	movl	-24(%ebp), %eax
+	movl	%eax, 8(%esp)
+	movl	8(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC19, (%esp)
+	call	_real_dprintf
+L35:
+	movl	$0, -16(%ebp)
+	jmp	L38
+L40:
 	nop
-	jmp	L30
-L38:
+	jmp	L31
+L41:
 	nop
-L30:
+L31:
 	addl	$1, -12(%ebp)
-L28:
+L29:
 	movl	-12(%ebp), %eax
 	cmpl	-20(%ebp), %eax
-	jb	L36
-L35:
+	jb	L39
+L38:
 	movl	_schedulerThreadList, %eax
 	movl	12(%eax), %eax
 	movl	%eax, (%esp)
 	call	_lock_release
+	movl	$LC20, (%esp)
+	call	_real_dprintf
 	movl	-16(%ebp), %eax
-L27:
+L28:
 	leave
 	ret
+	.section .rdata,"dr"
+	.align 4
+LC21:
+	.ascii "[SCHEDULER] entering scheduler_waitable_thread( 0x%08X )\0"
+	.align 4
+LC22:
+	.ascii "[SCHEDULER] About to wait ( 0x%08X )\0"
+	.align 4
+LC23:
+	.ascii "[SCHEDULER] Wait returned ( 0x%08X )\0"
+	.align 4
+LC24:
+	.ascii "[SCHEDULER] scheduler_waitable_thread( 0x%08X ), signaled to terminate...\0"
+	.align 4
+LC25:
+	.ascii "[SCHEDULER] scheduler_waitable_thread( 0x%08X ), signaled to pause...\0"
+	.align 4
+LC26:
+	.ascii "[SCHEDULER] scheduler_waitable_thread( 0x%08X ), signaled to resume...\0"
+	.align 4
+LC27:
+	.ascii "[SCHEDULER] leaving scheduler_waitable_thread( 0x%08X )\0"
+	.align 4
+LC28:
+	.ascii "[SCHEDULER] scheduler_waitable_thread( 0x%08X ) closing handle 0x%08X\0"
+	.text
 	.globl	_scheduler_waitable_thread@4
 	.def	_scheduler_waitable_thread@4;	.scl	2;	.type	32;	.endef
 _scheduler_waitable_thread@4:
@@ -309,31 +555,31 @@ _scheduler_waitable_thread@4:
 	movl	$0, -12(%ebp)
 	movl	$0, -24(%ebp)
 	cmpl	$0, 8(%ebp)
-	jne	L40
+	jne	L43
 	movl	$6, %eax
-	jmp	L54
-L40:
+	jmp	L57
+L43:
 	movl	8(%ebp), %eax
 	movl	16(%eax), %eax
 	movl	%eax, -16(%ebp)
 	cmpl	$0, -16(%ebp)
-	jne	L42
+	jne	L45
 	movl	$6, %eax
-	jmp	L54
-L42:
+	jmp	L57
+L45:
 	movl	-16(%ebp), %eax
 	movl	24(%eax), %eax
 	testl	%eax, %eax
-	jne	L43
+	jne	L46
 	movl	$6, %eax
-	jmp	L54
-L43:
+	jmp	L57
+L46:
 	movl	_schedulerThreadList, %eax
 	testl	%eax, %eax
-	jne	L44
+	jne	L47
 	movl	$6, %eax
-	jmp	L54
-L44:
+	jmp	L57
+L47:
 	movl	_schedulerThreadList, %eax
 	movl	8(%ebp), %edx
 	movl	%edx, 4(%esp)
@@ -350,10 +596,18 @@ L44:
 	movl	-16(%ebp), %eax
 	movl	4(%eax), %eax
 	movl	%eax, -28(%ebp)
+	movl	8(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC21, (%esp)
+	call	_real_dprintf
 	movl	-16(%ebp), %eax
 	movl	$1, 20(%eax)
-	jmp	L45
-L50:
+	jmp	L48
+L53:
+	movl	8(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC22, (%esp)
+	call	_real_dprintf
 	movl	$-1, 12(%esp)
 	movl	$0, 8(%esp)
 	leal	-36(%ebp), %eax
@@ -363,21 +617,33 @@ L50:
 	call	*%eax
 	subl	$16, %esp
 	movl	%eax, -20(%ebp)
+	movl	8(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC23, (%esp)
+	call	_real_dprintf
 	movl	-20(%ebp), %eax
 	movl	%eax, -24(%ebp)
 	cmpl	$2, -24(%ebp)
-	je	L46
-	cmpl	$2, -24(%ebp)
-	ja	L55
-	cmpl	$0, -24(%ebp)
-	je	L48
-	cmpl	$1, -24(%ebp)
 	je	L49
-	jmp	L47
-L48:
+	cmpl	$2, -24(%ebp)
+	ja	L58
+	cmpl	$0, -24(%ebp)
+	je	L51
+	cmpl	$1, -24(%ebp)
+	je	L52
+	jmp	L50
+L51:
+	movl	8(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC24, (%esp)
+	call	_real_dprintf
 	movl	$1, -12(%ebp)
-	jmp	L45
-L49:
+	jmp	L48
+L52:
+	movl	8(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC25, (%esp)
+	call	_real_dprintf
 	movl	-16(%ebp), %eax
 	movl	$0, 20(%eax)
 	movl	-16(%ebp), %eax
@@ -387,7 +653,11 @@ L49:
 	call	_event_poll
 	movl	-16(%ebp), %eax
 	movl	$1, 20(%eax)
-L46:
+	movl	8(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC26, (%esp)
+	call	_real_dprintf
+L49:
 	movl	-16(%ebp), %eax
 	movl	24(%eax), %eax
 	movl	8(%ebp), %edx
@@ -400,13 +670,17 @@ L46:
 	movl	%ecx, 4(%esp)
 	movl	%edx, (%esp)
 	call	*%eax
-	jmp	L45
-L47:
-L55:
+	jmp	L48
+L50:
+L58:
 	nop
-L45:
+L48:
 	cmpl	$0, -12(%ebp)
-	je	L50
+	je	L53
+	movl	8(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC27, (%esp)
+	call	_real_dprintf
 	movl	_schedulerThreadList, %eax
 	movl	12(%eax), %eax
 	movl	%eax, (%esp)
@@ -417,11 +691,11 @@ L45:
 	movl	%eax, (%esp)
 	call	_list_remove
 	testl	%eax, %eax
-	je	L51
+	je	L54
 	movl	-16(%ebp), %eax
 	movl	28(%eax), %eax
 	testl	%eax, %eax
-	je	L52
+	je	L55
 	movl	-16(%ebp), %eax
 	movl	28(%eax), %eax
 	movl	8(%ebp), %edx
@@ -434,19 +708,26 @@ L45:
 	movl	%ecx, 4(%esp)
 	movl	%edx, (%esp)
 	call	*%eax
-	jmp	L53
-L52:
+	jmp	L56
+L55:
 	movl	-16(%ebp), %eax
 	movl	4(%eax), %eax
 	testl	%eax, %eax
-	je	L53
+	je	L56
+	movl	-16(%ebp), %eax
+	movl	4(%eax), %eax
+	movl	%eax, 8(%esp)
+	movl	8(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC28, (%esp)
+	call	_real_dprintf
 	movl	-16(%ebp), %eax
 	movl	4(%eax), %eax
 	movl	%eax, (%esp)
 	movl	__imp__CloseHandle@4, %eax
 	call	*%eax
 	subl	$4, %esp
-L53:
+L56:
 	movl	-16(%ebp), %eax
 	movl	12(%eax), %eax
 	movl	%eax, (%esp)
@@ -461,17 +742,19 @@ L53:
 	movl	-16(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_free
-L51:
+L54:
 	movl	_schedulerThreadList, %eax
 	movl	12(%eax), %eax
 	movl	%eax, (%esp)
 	call	_lock_release
 	movl	$0, %eax
-L54:
+L57:
 	movl	-4(%ebp), %ebx
 	leave
 	ret	$4
 	.ident	"GCC: (GNU) 9.3-win32 20200320"
+	.def	_strlen;	.scl	2;	.type	32;	.endef
+	.def	_vsnprintf_s;	.scl	2;	.type	32;	.endef
 	.def	_list_create;	.scl	2;	.type	32;	.endef
 	.def	_lock_acquire;	.scl	2;	.type	32;	.endef
 	.def	_list_count;	.scl	2;	.type	32;	.endef

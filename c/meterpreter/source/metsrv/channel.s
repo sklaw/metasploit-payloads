@@ -1,5 +1,67 @@
 	.file	"channel.c"
 	.text
+	.section .rdata,"dr"
+LC0:
+	.ascii "[%04x] \0"
+LC1:
+	.ascii "\15\12\0"
+	.text
+	.def	_real_dprintf;	.scl	3;	.type	32;	.endef
+_real_dprintf:
+	pushl	%ebp
+	movl	%esp, %ebp
+	pushl	%esi
+	pushl	%ebx
+	subl	$1072, %esp
+	movl	__imp__GetCurrentThreadId@0, %eax
+	call	*%eax
+	movl	%eax, 16(%esp)
+	movl	$LC0, 12(%esp)
+	movl	$1023, 8(%esp)
+	movl	$1024, 4(%esp)
+	leal	-1040(%ebp), %eax
+	movl	%eax, (%esp)
+	movl	__imp___snprintf_s, %eax
+	call	*%eax
+	leal	-1040(%ebp), %eax
+	movl	%eax, (%esp)
+	call	_strlen
+	movl	%eax, -12(%ebp)
+	leal	12(%ebp), %eax
+	movl	%eax, -16(%ebp)
+	movl	-16(%ebp), %ecx
+	movl	$1021, %eax
+	subl	-12(%ebp), %eax
+	movl	%eax, %edx
+	movl	$1024, %eax
+	subl	-12(%ebp), %eax
+	leal	-1040(%ebp), %esi
+	movl	-12(%ebp), %ebx
+	addl	%esi, %ebx
+	movl	%ecx, 16(%esp)
+	movl	8(%ebp), %ecx
+	movl	%ecx, 12(%esp)
+	movl	%edx, 8(%esp)
+	movl	%eax, 4(%esp)
+	movl	%ebx, (%esp)
+	call	_vsnprintf_s
+	movl	$LC1, 8(%esp)
+	movl	$1024, 4(%esp)
+	leal	-1040(%ebp), %eax
+	movl	%eax, (%esp)
+	movl	__imp__strcat_s, %eax
+	call	*%eax
+	leal	-1040(%ebp), %eax
+	movl	%eax, (%esp)
+	movl	__imp__OutputDebugStringA@4, %eax
+	call	*%eax
+	subl	$4, %esp
+	nop
+	leal	-8(%ebp), %esp
+	popl	%ebx
+	popl	%esi
+	popl	%ebp
+	ret
 	.globl	_channelList
 	.bss
 	.align 4
@@ -21,22 +83,22 @@ _channel_create:
 	call	_malloc
 	movl	%eax, -12(%ebp)
 	cmpl	$0, -12(%ebp)
-	je	L7
+	je	L8
 	movl	$64, 8(%esp)
 	movl	$0, 4(%esp)
 	movl	-12(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_memset
 	cmpl	$0, 8(%ebp)
-	jne	L4
+	jne	L5
 	movl	_channelIdPool, %eax
 	addl	$1, %eax
 	movl	%eax, _channelIdPool
 	movl	_channelIdPool, %eax
-	jmp	L5
-L4:
-	movl	8(%ebp), %eax
+	jmp	L6
 L5:
+	movl	8(%ebp), %eax
+L6:
 	movl	-12(%ebp), %edx
 	movl	%eax, (%edx)
 	movl	-12(%ebp), %eax
@@ -65,10 +127,10 @@ L5:
 	movl	-12(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_channel_add_list_entry
-	jmp	L3
-L7:
+	jmp	L4
+L8:
 	nop
-L3:
+L4:
 	movl	-12(%ebp), %eax
 	leave
 	ret
@@ -85,11 +147,11 @@ _channel_create_stream:
 	call	_channel_create
 	movl	%eax, -12(%ebp)
 	cmpl	$0, -12(%ebp)
-	je	L9
+	je	L10
 	movl	-12(%ebp), %eax
 	movl	$1, 4(%eax)
 	cmpl	$0, 16(%ebp)
-	je	L10
+	je	L11
 	movl	-12(%ebp), %eax
 	leal	24(%eax), %edx
 	movl	$16, 8(%esp)
@@ -97,15 +159,15 @@ _channel_create_stream:
 	movl	%eax, 4(%esp)
 	movl	%edx, (%esp)
 	call	_memcpy
-	jmp	L9
-L10:
+	jmp	L10
+L11:
 	movl	-12(%ebp), %eax
 	addl	$24, %eax
 	movl	$32, 8(%esp)
 	movl	$0, 4(%esp)
 	movl	%eax, (%esp)
 	call	_memset
-L9:
+L10:
 	movl	-12(%ebp), %eax
 	leave
 	ret
@@ -122,11 +184,11 @@ _channel_create_datagram:
 	call	_channel_create
 	movl	%eax, -12(%ebp)
 	cmpl	$0, -12(%ebp)
-	je	L13
+	je	L14
 	movl	-12(%ebp), %eax
 	movl	$2, 4(%eax)
 	cmpl	$0, 16(%ebp)
-	je	L14
+	je	L15
 	movl	-12(%ebp), %eax
 	leal	24(%eax), %edx
 	movl	$16, 8(%esp)
@@ -134,15 +196,15 @@ _channel_create_datagram:
 	movl	%eax, 4(%esp)
 	movl	%edx, (%esp)
 	call	_memcpy
-	jmp	L13
-L14:
+	jmp	L14
+L15:
 	movl	-12(%ebp), %eax
 	addl	$24, %eax
 	movl	$32, 8(%esp)
 	movl	$0, 4(%esp)
 	movl	%eax, (%esp)
 	call	_memset
-L13:
+L14:
 	movl	-12(%ebp), %eax
 	leave
 	ret
@@ -159,11 +221,11 @@ _channel_create_pool:
 	call	_channel_create
 	movl	%eax, -12(%ebp)
 	cmpl	$0, -12(%ebp)
-	je	L17
+	je	L18
 	movl	-12(%ebp), %eax
 	movl	$3, 4(%eax)
 	cmpl	$0, 16(%ebp)
-	je	L18
+	je	L19
 	movl	-12(%ebp), %eax
 	leal	24(%eax), %edx
 	movl	$32, 8(%esp)
@@ -171,18 +233,26 @@ _channel_create_pool:
 	movl	%eax, 4(%esp)
 	movl	%edx, (%esp)
 	call	_memcpy
-	jmp	L17
-L18:
+	jmp	L18
+L19:
 	movl	-12(%ebp), %eax
 	addl	$24, %eax
 	movl	$32, 8(%esp)
 	movl	$0, 4(%esp)
 	movl	%eax, (%esp)
 	call	_memset
-L17:
+L18:
 	movl	-12(%ebp), %eax
 	leave
 	ret
+	.section .rdata,"dr"
+	.align 4
+LC2:
+	.ascii "[CHANNEL] channel_destroy. channel=0x%08X\0"
+	.align 4
+LC3:
+	.ascii "[CHANNEL] Free up the channel context 0x%p\0"
+	.text
 	.globl	_channel_destroy
 	.def	_channel_destroy;	.scl	2;	.type	32;	.endef
 _channel_destroy:
@@ -190,14 +260,18 @@ _channel_destroy:
 	movl	%esp, %ebp
 	subl	$56, %esp
 	movl	8(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC2, (%esp)
+	call	_real_dprintf
+	movl	8(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_channel_get_class
 	testl	%eax, %eax
-	jne	L21
+	jne	L22
 	movl	8(%ebp), %eax
 	movl	36(%eax), %eax
 	testl	%eax, %eax
-	je	L21
+	je	L22
 	movl	8(%ebp), %eax
 	movl	36(%eax), %eax
 	movl	8(%ebp), %edx
@@ -216,20 +290,20 @@ _channel_destroy:
 	movl	8(%ebp), %eax
 	movl	24(%eax), %eax
 	testl	%eax, %eax
-	je	L23
+	je	L24
 	movl	8(%ebp), %eax
 	movl	24(%eax), %eax
 	movl	%eax, (%esp)
 	call	_free
-	jmp	L23
-L21:
+	jmp	L24
+L22:
 	movl	8(%ebp), %eax
 	addl	$24, %eax
 	movl	%eax, -12(%ebp)
 	movl	-12(%ebp), %eax
 	movl	8(%eax), %eax
 	testl	%eax, %eax
-	je	L23
+	je	L24
 	movl	-12(%ebp), %eax
 	movl	8(%eax), %eax
 	movl	-12(%ebp), %edx
@@ -240,7 +314,7 @@ L21:
 	movl	8(%ebp), %edx
 	movl	%edx, (%esp)
 	call	*%eax
-L23:
+L24:
 	movl	8(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_channel_remove_list_entry
@@ -248,6 +322,10 @@ L23:
 	movl	20(%eax), %eax
 	movl	%eax, (%esp)
 	call	_lock_destroy
+	movl	8(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC3, (%esp)
+	call	_real_dprintf
 	movl	8(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_free
@@ -272,23 +350,23 @@ _channel_set_type:
 	movl	8(%ebp), %eax
 	movl	8(%eax), %eax
 	testl	%eax, %eax
-	je	L27
+	je	L28
 	movl	8(%ebp), %eax
 	movl	8(%eax), %eax
 	movl	%eax, (%esp)
 	call	_free
-L27:
+L28:
 	movl	8(%ebp), %eax
 	movl	$0, 8(%eax)
 	cmpl	$0, 12(%ebp)
-	je	L29
+	je	L30
 	movl	12(%ebp), %eax
 	movl	%eax, (%esp)
 	movl	__imp___strdup, %eax
 	call	*%eax
 	movl	8(%ebp), %edx
 	movl	%eax, 8(%edx)
-L29:
+L30:
 	nop
 	leave
 	ret
@@ -400,10 +478,10 @@ _channel_write_to_remote:
 	movl	%eax, -16(%ebp)
 	movl	$0, -12(%ebp)
 	cmpl	$0, -16(%ebp)
-	jne	L46
+	jne	L47
 	movl	$8, -12(%ebp)
-	jmp	L47
-L46:
+	jmp	L48
+L47:
 	movl	12(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_channel_get_id
@@ -421,12 +499,12 @@ L46:
 	movl	%eax, (%esp)
 	call	_channel_is_flag
 	testb	%al, %al
-	je	L48
+	je	L49
 	movl	$537133108, -24(%ebp)
-	jmp	L49
-L48:
-	movl	$262196, -24(%ebp)
+	jmp	L50
 L49:
+	movl	$262196, -24(%ebp)
+L50:
 	movl	20(%ebp), %eax
 	movl	%eax, -28(%ebp)
 	movl	16(%ebp), %eax
@@ -440,7 +518,7 @@ L49:
 	call	_packet_add_tlv_group
 	movl	%eax, -12(%ebp)
 	cmpl	$0, -12(%ebp)
-	jne	L52
+	jne	L53
 	movl	$0, 8(%esp)
 	movl	-16(%ebp), %eax
 	movl	%eax, 4(%esp)
@@ -448,10 +526,10 @@ L49:
 	movl	%eax, (%esp)
 	call	_packet_transmit
 	movl	%eax, -12(%ebp)
-	jmp	L47
-L52:
+	jmp	L48
+L53:
 	nop
-L47:
+L48:
 	movl	-12(%ebp), %eax
 	leave
 	ret
@@ -519,10 +597,10 @@ _channel_set_buffer_io_handler:
 	pushl	%ebp
 	movl	%esp, %ebp
 	cmpl	$0, 16(%ebp)
-	jne	L58
+	jne	L59
 	movl	$_channel_default_io_handler, 16(%ebp)
 	movl	$0, 12(%ebp)
-L58:
+L59:
 	movl	8(%ebp), %eax
 	movl	12(%ebp), %edx
 	movl	%edx, 16(%eax)
@@ -571,17 +649,25 @@ _channel_duplicate_completion_routine:
 	call	_malloc
 	movl	%eax, -12(%ebp)
 	cmpl	$0, -12(%ebp)
-	je	L63
+	je	L64
 	movl	$24, 8(%esp)
 	movl	8(%ebp), %eax
 	movl	%eax, 4(%esp)
 	movl	-12(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_memcpy
-L63:
+L64:
 	movl	-12(%ebp), %eax
 	leave
 	ret
+	.section .rdata,"dr"
+	.align 4
+LC4:
+	.ascii "[CHANNEL] _channel_packet_completion_routine. channel=0x%08X commandId=%u\0"
+	.align 4
+LC5:
+	.ascii "[CHANNEL] freeing up the completion context\0"
+	.text
 	.globl	__channel_packet_completion_routine
 	.def	__channel_packet_completion_routine;	.scl	2;	.type	32;	.endef
 __channel_packet_completion_routine:
@@ -600,19 +686,25 @@ __channel_packet_completion_routine:
 	call	_channel_find_by_id
 	movl	%eax, -32(%ebp)
 	movl	$1168, -12(%ebp)
+	movl	20(%ebp), %eax
+	movl	%eax, 8(%esp)
+	movl	-32(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC4, (%esp)
+	call	_real_dprintf
 	cmpl	$0, -32(%ebp)
-	jne	L66
+	jne	L67
 	cmpl	$4, 20(%ebp)
-	je	L66
+	je	L67
 	movl	$1168, %eax
-	jmp	L67
-L66:
+	jmp	L68
+L67:
 	cmpl	$4, 20(%ebp)
-	jne	L68
+	jne	L69
 	movl	-24(%ebp), %eax
 	movl	4(%eax), %eax
 	testl	%eax, %eax
-	je	L68
+	je	L69
 	movl	-24(%ebp), %eax
 	movl	4(%eax), %eax
 	movl	-24(%ebp), %edx
@@ -626,14 +718,14 @@ L66:
 	movl	%edx, (%esp)
 	call	*%eax
 	movl	%eax, -12(%ebp)
-	jmp	L69
-L68:
+	jmp	L70
+L69:
 	cmpl	$5, 20(%ebp)
-	jne	L70
+	jne	L71
 	movl	-24(%ebp), %eax
 	movl	8(%eax), %eax
 	testl	%eax, %eax
-	je	L70
+	je	L71
 	movl	$0, -36(%ebp)
 	movl	$0, -40(%ebp)
 	movl	$0, -16(%ebp)
@@ -643,13 +735,13 @@ L68:
 	call	_packet_get_tlv_value_uint
 	movl	%eax, -36(%ebp)
 	cmpl	$0, -36(%ebp)
-	je	L71
+	je	L72
 	movl	-36(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_malloc
 	movl	%eax, -16(%ebp)
 	cmpl	$0, -16(%ebp)
-	je	L71
+	je	L72
 	movl	-36(%ebp), %eax
 	movl	%eax, 8(%esp)
 	movl	$0, 4(%esp)
@@ -665,7 +757,7 @@ L68:
 	movl	-32(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_channel_read_from_buffered
-L71:
+L72:
 	movl	-24(%ebp), %eax
 	movl	8(%eax), %eax
 	movl	-40(%ebp), %ecx
@@ -684,18 +776,18 @@ L71:
 	call	*%eax
 	movl	%eax, -12(%ebp)
 	cmpl	$0, -16(%ebp)
-	je	L76
+	je	L77
 	movl	-16(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_free
-	jmp	L76
-L70:
+	jmp	L77
+L71:
 	cmpl	$8, 20(%ebp)
-	jne	L73
+	jne	L74
 	movl	-24(%ebp), %eax
 	movl	12(%eax), %eax
 	testl	%eax, %eax
-	je	L73
+	je	L74
 	movl	$0, -20(%ebp)
 	leal	-52(%ebp), %eax
 	movl	%eax, 8(%esp)
@@ -704,10 +796,10 @@ L70:
 	movl	%eax, (%esp)
 	call	_packet_get_tlv
 	testl	%eax, %eax
-	jne	L74
+	jne	L75
 	movl	-52(%ebp), %eax
 	cmpl	$3, %eax
-	jbe	L74
+	jbe	L75
 	movl	-44(%ebp), %eax
 	movl	(%eax), %eax
 	movl	%eax, (%esp)
@@ -715,7 +807,7 @@ L70:
 	call	*%eax
 	subl	$4, %esp
 	movl	%eax, -20(%ebp)
-L74:
+L75:
 	movl	-24(%ebp), %eax
 	movl	12(%eax), %eax
 	movl	-24(%ebp), %edx
@@ -731,14 +823,16 @@ L74:
 	movl	%edx, (%esp)
 	call	*%eax
 	movl	%eax, -12(%ebp)
-	jmp	L69
-L73:
+	jmp	L70
+L74:
 	cmpl	$1, 20(%ebp)
-	jne	L75
+	jne	L76
 	movl	-24(%ebp), %eax
 	movl	16(%eax), %eax
 	testl	%eax, %eax
-	je	L75
+	je	L76
+	movl	$LC5, (%esp)
+	call	_real_dprintf
 	movl	-24(%ebp), %eax
 	movl	16(%eax), %eax
 	movl	-24(%ebp), %edx
@@ -752,36 +846,38 @@ L73:
 	movl	%edx, (%esp)
 	call	*%eax
 	movl	%eax, -12(%ebp)
-	jmp	L69
-L75:
-	cmpl	$3, 20(%ebp)
-	jne	L69
-	movl	-24(%ebp), %eax
-	movl	20(%eax), %eax
-	testl	%eax, %eax
-	je	L69
-	movl	-24(%ebp), %eax
-	movl	20(%eax), %eax
-	movl	-24(%ebp), %edx
-	movl	(%edx), %edx
-	movl	24(%ebp), %ecx
-	movl	%ecx, 12(%esp)
-	movl	%edx, 8(%esp)
-	movl	-32(%ebp), %edx
-	movl	%edx, 4(%esp)
-	movl	8(%ebp), %edx
-	movl	%edx, (%esp)
-	call	*%eax
-	movl	%eax, -12(%ebp)
-	jmp	L69
+	jmp	L70
 L76:
+	cmpl	$3, 20(%ebp)
+	jne	L70
+	movl	-24(%ebp), %eax
+	movl	20(%eax), %eax
+	testl	%eax, %eax
+	je	L70
+	movl	-24(%ebp), %eax
+	movl	20(%eax), %eax
+	movl	-24(%ebp), %edx
+	movl	(%edx), %edx
+	movl	24(%ebp), %ecx
+	movl	%ecx, 12(%esp)
+	movl	%edx, 8(%esp)
+	movl	-32(%ebp), %edx
+	movl	%edx, 4(%esp)
+	movl	8(%ebp), %edx
+	movl	%edx, (%esp)
+	call	*%eax
+	movl	%eax, -12(%ebp)
+	jmp	L70
+L77:
 	nop
-L69:
+L70:
+	movl	$LC5, (%esp)
+	call	_real_dprintf
 	movl	-24(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_free
 	movl	-12(%ebp), %eax
-L67:
+L68:
 	leave
 	ret
 	.globl	_channel_open
@@ -797,10 +893,10 @@ _channel_open:
 	call	_packet_create
 	movl	%eax, -20(%ebp)
 	cmpl	$0, -20(%ebp)
-	jne	L78
+	jne	L79
 	movl	$8, -16(%ebp)
-	jmp	L79
-L78:
+	jmp	L80
+L79:
 	movl	16(%ebp), %eax
 	movl	%eax, 8(%esp)
 	movl	12(%ebp), %eax
@@ -815,15 +911,15 @@ L78:
 	movl	%eax, (%esp)
 	call	_packet_get_tlv
 	testl	%eax, %eax
-	je	L80
+	je	L81
 	movl	$4, 8(%esp)
 	movl	$131073, 4(%esp)
 	movl	-20(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_packet_add_tlv_uint
-L80:
+L81:
 	cmpl	$0, 20(%ebp)
-	je	L81
+	je	L82
 	movl	20(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_channel_duplicate_completion_routine
@@ -831,7 +927,7 @@ L80:
 	movl	$__channel_packet_completion_routine, -28(%ebp)
 	leal	-32(%ebp), %eax
 	movl	%eax, -12(%ebp)
-L81:
+L82:
 	movl	-12(%ebp), %eax
 	movl	%eax, 8(%esp)
 	movl	-20(%ebp), %eax
@@ -840,7 +936,7 @@ L81:
 	movl	%eax, (%esp)
 	call	_packet_transmit
 	movl	%eax, -16(%ebp)
-L79:
+L80:
 	movl	-16(%ebp), %eax
 	leave
 	ret
@@ -857,10 +953,10 @@ _channel_read:
 	call	_packet_create
 	movl	%eax, -20(%ebp)
 	cmpl	$0, -20(%ebp)
-	jne	L84
+	jne	L85
 	movl	$8, -16(%ebp)
-	jmp	L85
-L84:
+	jmp	L86
+L85:
 	movl	20(%ebp), %eax
 	movl	%eax, 8(%esp)
 	movl	16(%ebp), %eax
@@ -875,13 +971,13 @@ L84:
 	movl	%eax, (%esp)
 	call	_packet_get_tlv
 	testl	%eax, %eax
-	je	L86
+	je	L87
 	movl	$5, 8(%esp)
 	movl	$131073, 4(%esp)
 	movl	-20(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_packet_add_tlv_uint
-L86:
+L87:
 	movl	8(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_channel_get_id
@@ -897,7 +993,7 @@ L86:
 	movl	%eax, (%esp)
 	call	_packet_add_tlv_uint
 	cmpl	$0, 28(%ebp)
-	je	L87
+	je	L88
 	movl	28(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_channel_duplicate_completion_routine
@@ -905,7 +1001,7 @@ L86:
 	movl	$__channel_packet_completion_routine, -28(%ebp)
 	leal	-32(%ebp), %eax
 	movl	%eax, -12(%ebp)
-L87:
+L88:
 	movl	-12(%ebp), %eax
 	movl	%eax, 8(%esp)
 	movl	-20(%ebp), %eax
@@ -914,10 +1010,21 @@ L87:
 	movl	%eax, (%esp)
 	call	_packet_transmit
 	movl	%eax, -16(%ebp)
-L85:
+L86:
 	movl	-16(%ebp), %eax
 	leave
 	ret
+	.section .rdata,"dr"
+	.align 4
+LC6:
+	.ascii "[CHANNEL] channel_write: adding TLVs\0"
+	.align 4
+LC7:
+	.ascii "[CHANNEL] channel_write: adding command id of %u\0"
+	.align 4
+LC8:
+	.ascii "[CHANNEL] channel_write: apparently already have a command ID of %u\0"
+	.text
 	.globl	_channel_write
 	.def	_channel_write;	.scl	2;	.type	32;	.endef
 _channel_write:
@@ -931,10 +1038,12 @@ _channel_write:
 	call	_packet_create
 	movl	%eax, -20(%ebp)
 	cmpl	$0, -20(%ebp)
-	jne	L90
+	jne	L91
 	movl	$8, -16(%ebp)
-	jmp	L91
-L90:
+	jmp	L92
+L91:
+	movl	$LC6, (%esp)
+	call	_real_dprintf
 	movl	20(%ebp), %eax
 	movl	%eax, 8(%esp)
 	movl	16(%ebp), %eax
@@ -949,13 +1058,25 @@ L90:
 	movl	%eax, (%esp)
 	call	_packet_get_tlv
 	testl	%eax, %eax
-	je	L92
+	je	L93
+	movl	$8, 4(%esp)
+	movl	$LC7, (%esp)
+	call	_real_dprintf
 	movl	$8, 8(%esp)
 	movl	$131073, 4(%esp)
 	movl	-20(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_packet_add_tlv_uint
-L92:
+	jmp	L94
+L93:
+	movl	$131073, 4(%esp)
+	movl	-20(%ebp), %eax
+	movl	%eax, (%esp)
+	call	_packet_get_tlv_value_uint
+	movl	%eax, 4(%esp)
+	movl	$LC8, (%esp)
+	call	_real_dprintf
+L94:
 	movl	8(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_channel_get_id
@@ -969,7 +1090,7 @@ L92:
 	movl	%eax, (%esp)
 	call	_channel_is_flag
 	testb	%al, %al
-	je	L93
+	je	L95
 	movl	28(%ebp), %eax
 	movl	%eax, 12(%esp)
 	movl	24(%ebp), %eax
@@ -978,8 +1099,8 @@ L92:
 	movl	-20(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_packet_add_tlv_raw
-	jmp	L94
-L93:
+	jmp	L96
+L95:
 	movl	28(%ebp), %eax
 	movl	%eax, 12(%esp)
 	movl	24(%ebp), %eax
@@ -988,7 +1109,7 @@ L93:
 	movl	-20(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_packet_add_tlv_raw
-L94:
+L96:
 	movl	8(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_channel_get_id
@@ -998,7 +1119,7 @@ L94:
 	movl	%eax, (%esp)
 	call	_packet_add_tlv_uint
 	cmpl	$0, 32(%ebp)
-	je	L95
+	je	L97
 	movl	32(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_channel_duplicate_completion_routine
@@ -1006,7 +1127,7 @@ L94:
 	movl	$__channel_packet_completion_routine, -28(%ebp)
 	leal	-32(%ebp), %eax
 	movl	%eax, -12(%ebp)
-L95:
+L97:
 	movl	-12(%ebp), %eax
 	movl	%eax, 8(%esp)
 	movl	-20(%ebp), %eax
@@ -1015,10 +1136,15 @@ L95:
 	movl	%eax, (%esp)
 	call	_packet_transmit
 	movl	%eax, -16(%ebp)
-L91:
+L92:
 	movl	-16(%ebp), %eax
 	leave
 	ret
+	.section .rdata,"dr"
+	.align 4
+LC9:
+	.ascii "[CHANNEL] channel_close. channel=0x%08X completion=0x%.8x\0"
+	.text
 	.globl	_channel_close
 	.def	_channel_close;	.scl	2;	.type	32;	.endef
 _channel_close:
@@ -1032,10 +1158,10 @@ _channel_close:
 	call	_packet_create
 	movl	%eax, -20(%ebp)
 	cmpl	$0, -20(%ebp)
-	jne	L98
+	jne	L100
 	movl	$8, -16(%ebp)
-	jmp	L99
-L98:
+	jmp	L101
+L100:
 	movl	20(%ebp), %eax
 	movl	%eax, 8(%esp)
 	movl	16(%ebp), %eax
@@ -1050,13 +1176,13 @@ L98:
 	movl	%eax, (%esp)
 	call	_packet_get_tlv
 	testl	%eax, %eax
-	je	L100
+	je	L102
 	movl	$1, 8(%esp)
 	movl	$131073, 4(%esp)
 	movl	-20(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_packet_add_tlv_uint
-L100:
+L102:
 	movl	8(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_channel_get_id
@@ -1066,7 +1192,7 @@ L100:
 	movl	%eax, (%esp)
 	call	_packet_add_tlv_uint
 	cmpl	$0, 24(%ebp)
-	je	L101
+	je	L103
 	movl	24(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_channel_duplicate_completion_routine
@@ -1074,7 +1200,13 @@ L100:
 	movl	$__channel_packet_completion_routine, -28(%ebp)
 	leal	-32(%ebp), %eax
 	movl	%eax, -12(%ebp)
-L101:
+L103:
+	movl	24(%ebp), %eax
+	movl	%eax, 8(%esp)
+	movl	8(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC9, (%esp)
+	call	_real_dprintf
 	movl	-12(%ebp), %eax
 	movl	%eax, 8(%esp)
 	movl	-20(%ebp), %eax
@@ -1083,7 +1215,7 @@ L101:
 	movl	%eax, (%esp)
 	call	_packet_transmit
 	movl	%eax, -16(%ebp)
-L99:
+L101:
 	movl	-16(%ebp), %eax
 	leave
 	ret
@@ -1100,10 +1232,10 @@ _channel_interact:
 	call	_packet_create
 	movl	%eax, -20(%ebp)
 	cmpl	$0, -20(%ebp)
-	jne	L104
+	jne	L106
 	movl	$8, -16(%ebp)
-	jmp	L105
-L104:
+	jmp	L107
+L106:
 	movl	20(%ebp), %eax
 	movl	%eax, 8(%esp)
 	movl	16(%ebp), %eax
@@ -1118,13 +1250,13 @@ L104:
 	movl	%eax, (%esp)
 	call	_packet_get_tlv
 	testl	%eax, %eax
-	je	L106
+	je	L108
 	movl	$3, 8(%esp)
 	movl	$131073, 4(%esp)
 	movl	-20(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_packet_add_tlv_uint
-L106:
+L108:
 	movl	8(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_channel_get_id
@@ -1140,7 +1272,7 @@ L106:
 	movl	%eax, (%esp)
 	call	_packet_add_tlv_bool
 	cmpl	$0, 28(%ebp)
-	je	L107
+	je	L109
 	movl	28(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_channel_duplicate_completion_routine
@@ -1148,7 +1280,7 @@ L106:
 	movl	$__channel_packet_completion_routine, -28(%ebp)
 	leal	-32(%ebp), %eax
 	movl	%eax, -12(%ebp)
-L107:
+L109:
 	movl	-12(%ebp), %eax
 	movl	%eax, 8(%esp)
 	movl	-20(%ebp), %eax
@@ -1157,7 +1289,7 @@ L107:
 	movl	%eax, (%esp)
 	call	_packet_transmit
 	movl	%eax, -16(%ebp)
-L105:
+L107:
 	movl	-16(%ebp), %eax
 	leave
 	ret
@@ -1169,22 +1301,22 @@ _channel_find_by_id:
 	subl	$16, %esp
 	movl	_channelList, %eax
 	movl	%eax, -4(%ebp)
-	jmp	L110
-L113:
+	jmp	L112
+L115:
 	movl	-4(%ebp), %eax
 	movl	(%eax), %eax
 	cmpl	%eax, 8(%ebp)
-	je	L115
+	je	L117
 	movl	-4(%ebp), %eax
 	movl	60(%eax), %eax
 	movl	%eax, -4(%ebp)
-L110:
-	cmpl	$0, -4(%ebp)
-	jne	L113
-	jmp	L112
-L115:
-	nop
 L112:
+	cmpl	$0, -4(%ebp)
+	jne	L115
+	jmp	L114
+L117:
+	nop
+L114:
 	movl	-4(%ebp), %eax
 	leave
 	ret
@@ -1195,11 +1327,11 @@ _channel_add_list_entry:
 	movl	%esp, %ebp
 	movl	_channelList, %eax
 	testl	%eax, %eax
-	je	L117
+	je	L119
 	movl	_channelList, %eax
 	movl	8(%ebp), %edx
 	movl	%edx, 56(%eax)
-L117:
+L119:
 	movl	_channelList, %edx
 	movl	8(%ebp), %eax
 	movl	%edx, 60(%eax)
@@ -1218,28 +1350,28 @@ _channel_remove_list_entry:
 	movl	8(%ebp), %eax
 	movl	56(%eax), %eax
 	testl	%eax, %eax
-	je	L119
+	je	L121
 	movl	8(%ebp), %eax
 	movl	56(%eax), %eax
 	movl	8(%ebp), %edx
 	movl	60(%edx), %edx
 	movl	%edx, 60(%eax)
-	jmp	L120
-L119:
+	jmp	L122
+L121:
 	movl	8(%ebp), %eax
 	movl	60(%eax), %eax
 	movl	%eax, _channelList
-L120:
+L122:
 	movl	8(%ebp), %eax
 	movl	60(%eax), %eax
 	testl	%eax, %eax
-	je	L122
+	je	L124
 	movl	8(%ebp), %eax
 	movl	60(%eax), %eax
 	movl	8(%ebp), %edx
 	movl	56(%edx), %edx
 	movl	%edx, 56(%eax)
-L122:
+L124:
 	nop
 	popl	%ebp
 	ret
@@ -1251,22 +1383,22 @@ _channel_exists:
 	subl	$16, %esp
 	movl	_channelList, %eax
 	movl	%eax, -4(%ebp)
-	jmp	L124
-L127:
+	jmp	L126
+L129:
 	movl	-4(%ebp), %eax
 	cmpl	8(%ebp), %eax
-	jne	L125
+	jne	L127
 	movl	$1, %eax
-	jmp	L126
-L125:
+	jmp	L128
+L127:
 	movl	-4(%ebp), %eax
 	movl	60(%eax), %eax
 	movl	%eax, -4(%ebp)
-L124:
-	cmpl	$0, -4(%ebp)
-	jne	L127
-	movl	$0, %eax
 L126:
+	cmpl	$0, -4(%ebp)
+	jne	L129
+	movl	$0, %eax
+L128:
 	leave
 	ret
 	.globl	_channel_default_io_handler
@@ -1276,11 +1408,11 @@ _channel_default_io_handler:
 	movl	%esp, %ebp
 	subl	$40, %esp
 	cmpl	$1, 20(%ebp)
-	je	L129
+	je	L131
 	cmpl	$2, 20(%ebp)
-	je	L130
-	jmp	L132
-L129:
+	je	L132
+	jmp	L134
+L131:
 	movl	32(%ebp), %eax
 	movl	%eax, 16(%esp)
 	movl	28(%ebp), %eax
@@ -1292,8 +1424,8 @@ L129:
 	movl	8(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_channel_read_buffer
-	jmp	L132
-L130:
+	jmp	L134
+L132:
 	movl	32(%ebp), %eax
 	movl	%eax, 16(%esp)
 	movl	28(%ebp), %eax
@@ -1306,7 +1438,7 @@ L130:
 	movl	%eax, (%esp)
 	call	_channel_write_buffer
 	nop
-L132:
+L134:
 	movl	$0, %eax
 	leave
 	ret
@@ -1323,7 +1455,7 @@ _channel_write_buffer:
 	movl	12(%ebp), %eax
 	movl	8(%eax), %eax
 	cmpl	%eax, %edx
-	jbe	L135
+	jbe	L137
 	movl	$0, -12(%ebp)
 	movl	$0, -16(%ebp)
 	movl	12(%ebp), %eax
@@ -1341,7 +1473,7 @@ _channel_write_buffer:
 	movl	12(%ebp), %eax
 	movl	8(%eax), %eax
 	testl	%eax, %eax
-	je	L136
+	je	L138
 	movl	12(%ebp), %eax
 	movl	(%eax), %eax
 	movl	-16(%ebp), %edx
@@ -1349,40 +1481,40 @@ _channel_write_buffer:
 	movl	%eax, (%esp)
 	call	_realloc
 	movl	%eax, -12(%ebp)
-	jmp	L137
-L136:
+	jmp	L139
+L138:
 	movl	-16(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_malloc
 	movl	%eax, -12(%ebp)
-L137:
+L139:
 	cmpl	$0, -12(%ebp)
-	jne	L138
+	jne	L140
 	movl	12(%ebp), %eax
 	movl	(%eax), %eax
 	testl	%eax, %eax
-	je	L139
+	je	L141
 	movl	12(%ebp), %eax
 	movl	(%eax), %eax
 	movl	%eax, (%esp)
 	call	_free
 	movl	12(%ebp), %eax
 	movl	$0, (%eax)
-L139:
+L141:
 	movl	$20, 8(%esp)
 	movl	$0, 4(%esp)
 	movl	12(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_memset
-	jmp	L134
-L138:
+	jmp	L136
+L140:
 	movl	12(%ebp), %eax
 	movl	-12(%ebp), %edx
 	movl	%edx, (%eax)
 	movl	12(%ebp), %eax
 	movl	-16(%ebp), %edx
 	movl	%edx, 8(%eax)
-L135:
+L137:
 	movl	12(%ebp), %eax
 	movl	(%eax), %edx
 	movl	12(%ebp), %eax
@@ -1401,11 +1533,11 @@ L135:
 	movl	12(%ebp), %eax
 	movl	%edx, 4(%eax)
 	cmpl	$0, 24(%ebp)
-	je	L134
+	je	L136
 	movl	24(%ebp), %eax
 	movl	20(%ebp), %edx
 	movl	%edx, (%eax)
-L134:
+L136:
 	leave
 	ret
 	.globl	_channel_read_buffer
@@ -1419,11 +1551,11 @@ _channel_read_buffer:
 	movl	12(%ebp), %eax
 	movl	4(%eax), %eax
 	cmpl	%eax, -12(%ebp)
-	jbe	L142
+	jbe	L144
 	movl	12(%ebp), %eax
 	movl	4(%eax), %eax
 	movl	%eax, -12(%ebp)
-L142:
+L144:
 	movl	12(%ebp), %eax
 	movl	(%eax), %eax
 	movl	-12(%ebp), %edx
@@ -1435,7 +1567,7 @@ L142:
 	movl	12(%ebp), %eax
 	movl	4(%eax), %eax
 	cmpl	%eax, -12(%ebp)
-	je	L143
+	je	L145
 	movl	12(%ebp), %eax
 	movl	4(%eax), %eax
 	subl	-12(%ebp), %eax
@@ -1450,7 +1582,7 @@ L142:
 	movl	%ecx, 4(%esp)
 	movl	%eax, (%esp)
 	call	_memcpy
-L143:
+L145:
 	movl	12(%ebp), %eax
 	movl	4(%eax), %eax
 	subl	-12(%ebp), %eax
@@ -1458,15 +1590,17 @@ L143:
 	movl	12(%ebp), %eax
 	movl	%edx, 4(%eax)
 	cmpl	$0, 24(%ebp)
-	je	L145
+	je	L147
 	movl	24(%ebp), %eax
 	movl	-12(%ebp), %edx
 	movl	%edx, (%eax)
-L145:
+L147:
 	nop
 	leave
 	ret
 	.ident	"GCC: (GNU) 9.3-win32 20200320"
+	.def	_strlen;	.scl	2;	.type	32;	.endef
+	.def	_vsnprintf_s;	.scl	2;	.type	32;	.endef
 	.def	_malloc;	.scl	2;	.type	32;	.endef
 	.def	_memset;	.scl	2;	.type	32;	.endef
 	.def	_lock_create;	.scl	2;	.type	32;	.endef

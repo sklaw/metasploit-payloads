@@ -1,12 +1,197 @@
 	.file	"server_transport_wininet.c"
 	.text
 	.section .rdata,"dr"
-	.align 2
 LC0:
+	.ascii "[%04x] \0"
+LC1:
+	.ascii "\15\12\0"
+	.text
+	.def	_real_dprintf;	.scl	3;	.type	32;	.endef
+_real_dprintf:
+	pushl	%ebp
+push %eax
+pop %eax
+	movl	%esp, %ebp
+push %eax
+pop %eax
+	pushl	%esi
+push %eax
+pop %eax
+	pushl	%ebx
+push %eax
+pop %eax
+	subl	$1072, %esp
+push %eax
+pop %eax
+	movl	__imp__GetCurrentThreadId@0, %eax
+push %eax
+pop %eax
+	call	*%eax
+push %eax
+pop %eax
+	movl	%eax, 16(%esp)
+push %eax
+pop %eax
+	movl	$LC0, 12(%esp)
+push %eax
+pop %eax
+	movl	$1023, 8(%esp)
+push %eax
+pop %eax
+	movl	$1024, 4(%esp)
+push %eax
+pop %eax
+	leal	-1040(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, (%esp)
+push %eax
+pop %eax
+	movl	__imp___snprintf_s, %eax
+push %eax
+pop %eax
+	call	*%eax
+push %eax
+pop %eax
+	leal	-1040(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, (%esp)
+push %eax
+pop %eax
+	call	_strlen
+push %eax
+pop %eax
+	movl	%eax, -12(%ebp)
+push %eax
+pop %eax
+	leal	12(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, -16(%ebp)
+push %eax
+pop %eax
+	movl	-16(%ebp), %ecx
+push %eax
+pop %eax
+	movl	$1021, %eax
+push %eax
+pop %eax
+	subl	-12(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, %edx
+push %eax
+pop %eax
+	movl	$1024, %eax
+push %eax
+pop %eax
+	subl	-12(%ebp), %eax
+push %eax
+pop %eax
+	leal	-1040(%ebp), %esi
+push %eax
+pop %eax
+	movl	-12(%ebp), %ebx
+push %eax
+pop %eax
+	addl	%esi, %ebx
+push %eax
+pop %eax
+	movl	%ecx, 16(%esp)
+push %eax
+pop %eax
+	movl	8(%ebp), %ecx
+push %eax
+pop %eax
+	movl	%ecx, 12(%esp)
+push %eax
+pop %eax
+	movl	%edx, 8(%esp)
+push %eax
+pop %eax
+	movl	%eax, 4(%esp)
+push %eax
+pop %eax
+	movl	%ebx, (%esp)
+push %eax
+pop %eax
+	call	_vsnprintf_s
+push %eax
+pop %eax
+	movl	$LC1, 8(%esp)
+push %eax
+pop %eax
+	movl	$1024, 4(%esp)
+push %eax
+pop %eax
+	leal	-1040(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, (%esp)
+push %eax
+pop %eax
+	movl	__imp__strcat_s, %eax
+push %eax
+pop %eax
+	call	*%eax
+push %eax
+pop %eax
+	leal	-1040(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, (%esp)
+push %eax
+pop %eax
+	movl	__imp__OutputDebugStringA@4, %eax
+push %eax
+pop %eax
+	call	*%eax
+push %eax
+pop %eax
+	subl	$4, %esp
+push %eax
+pop %eax
+	nop
+push %eax
+pop %eax
+	leal	-8(%ebp), %esp
+push %eax
+pop %eax
+	popl	%ebx
+push %eax
+pop %eax
+	popl	%esi
+push %eax
+pop %eax
+	popl	%ebp
+push %eax
+pop %eax
+	ret
+push %eax
+pop %eax
+	.section .rdata,"dr"
+	.align 4
+LC2:
+	.ascii "[%s] Setting secure request flag..\0"
+	.align 4
+LC3:
+	.ascii "[%s] opening request on connection %x to %S\0"
+	.align 2
+LC4:
 	.ascii "G\0E\0T\0\0\0"
 	.align 2
-LC1:
+LC5:
 	.ascii "P\0O\0S\0T\0\0\0"
+	.align 4
+LC6:
+	.ascii "[%s] Failed HttpOpenRequestW: %d\0"
+	.align 4
+LC7:
+	.ascii "[%s] Setting secure option flags\0"
+	.align 4
+LC8:
+	.ascii "[%s] Failed InternetSetOptionW: %d\0"
 	.text
 	.def	_get_request_wininet;	.scl	3;	.type	32;	.endef
 _get_request_wininet:
@@ -37,13 +222,55 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	je	L2
+	je	L3
 push %eax
 pop %eax
 	orl	$8400896, -12(%ebp)
 push %eax
 pop %eax
-L2:
+	movl	16(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC2, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
+L3:
+	movl	8(%ebp), %eax
+push %eax
+pop %eax
+	movl	24(%eax), %edx
+push %eax
+pop %eax
+	movl	8(%ebp), %eax
+push %eax
+pop %eax
+	movl	8(%eax), %eax
+push %eax
+pop %eax
+	movl	%edx, 12(%esp)
+push %eax
+pop %eax
+	movl	%eax, 8(%esp)
+push %eax
+pop %eax
+	movl	16(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC3, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
 	movl	8(%ebp), %eax
 push %eax
 pop %eax
@@ -53,20 +280,20 @@ pop %eax
 	cmpl	$0, 12(%ebp)
 push %eax
 pop %eax
-	je	L3
+	je	L4
 push %eax
 pop %eax
-	movl	$LC0, %ebx
+	movl	$LC4, %ebx
 push %eax
 pop %eax
-	jmp	L4
-push %eax
-pop %eax
-L3:
-	movl	$LC1, %ebx
+	jmp	L5
 push %eax
 pop %eax
 L4:
+	movl	$LC5, %ebx
+push %eax
+pop %eax
+L5:
 	movl	8(%ebp), %eax
 push %eax
 pop %eax
@@ -115,7 +342,28 @@ pop %eax
 	cmpl	$0, -16(%ebp)
 push %eax
 pop %eax
-	jne	L5
+	jne	L6
+push %eax
+pop %eax
+	movl	__imp__GetLastError@0, %eax
+push %eax
+pop %eax
+	call	*%eax
+push %eax
+pop %eax
+	movl	%eax, 8(%esp)
+push %eax
+pop %eax
+	movl	16(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC6, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
 push %eax
 pop %eax
 	movl	$1168, (%esp)
@@ -130,10 +378,10 @@ pop %eax
 	subl	$4, %esp
 push %eax
 pop %eax
-	jmp	L6
+	jmp	L7
 push %eax
 pop %eax
-L5:
+L6:
 	movl	8(%ebp), %eax
 push %eax
 pop %eax
@@ -143,10 +391,22 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	je	L7
+	je	L8
 push %eax
 pop %eax
 	movl	$13184, -20(%ebp)
+push %eax
+pop %eax
+	movl	16(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC7, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
 push %eax
 pop %eax
 	movl	$4, 12(%esp)
@@ -179,7 +439,28 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	jne	L7
+	jne	L8
+push %eax
+pop %eax
+	movl	__imp__GetLastError@0, %eax
+push %eax
+pop %eax
+	call	*%eax
+push %eax
+pop %eax
+	movl	%eax, 8(%esp)
+push %eax
+pop %eax
+	movl	16(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC8, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
 push %eax
 pop %eax
 	movl	$1168, (%esp)
@@ -194,21 +475,21 @@ pop %eax
 	subl	$4, %esp
 push %eax
 pop %eax
-	jmp	L6
+	jmp	L7
 push %eax
 pop %eax
-L7:
+L8:
 	movl	-16(%ebp), %eax
 push %eax
 pop %eax
-	jmp	L9
+	jmp	L10
 push %eax
 pop %eax
-L6:
+L7:
 	cmpl	$0, -16(%ebp)
 push %eax
 pop %eax
-	je	L10
+	je	L11
 push %eax
 pop %eax
 	movl	-16(%ebp), %eax
@@ -226,11 +507,11 @@ pop %eax
 	subl	$4, %esp
 push %eax
 pop %eax
-L10:
+L11:
 	movl	$0, %eax
 push %eax
 pop %eax
-L9:
+L10:
 	movl	-4(%ebp), %ebx
 push %eax
 pop %eax
@@ -322,6 +603,11 @@ pop %eax
 	ret
 push %eax
 pop %eax
+	.section .rdata,"dr"
+	.align 4
+LC9:
+	.ascii "[WINHTTP] Sending with custom headers: %S\0"
+	.text
 	.def	_send_request_wininet;	.scl	3;	.type	32;	.endef
 _send_request_wininet:
 	pushl	%ebp
@@ -342,7 +628,22 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	je	L16
+	je	L17
+push %eax
+pop %eax
+	movl	8(%ebp), %eax
+push %eax
+pop %eax
+	movl	44(%eax), %eax
+push %eax
+pop %eax
+	movl	%eax, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC9, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
 push %eax
 pop %eax
 	movl	8(%ebp), %eax
@@ -384,10 +685,10 @@ pop %eax
 	subl	$20, %esp
 push %eax
 pop %eax
-	jmp	L17
+	jmp	L18
 push %eax
 pop %eax
-L16:
+L17:
 	movl	20(%ebp), %eax
 push %eax
 pop %eax
@@ -421,13 +722,21 @@ pop %eax
 	subl	$20, %esp
 push %eax
 pop %eax
-L17:
+L18:
 	leave
 push %eax
 pop %eax
 	ret
 push %eax
 pop %eax
+	.section .rdata,"dr"
+	.align 4
+LC10:
+	.ascii "[PACKET RECEIVE WININET] Getting the result code...\0"
+	.align 4
+LC11:
+	.ascii "[PACKET RECEIVE WININET] Returned status code is %d\0"
+	.text
 	.def	_validate_response_wininet;	.scl	3;	.type	32;	.endef
 _validate_response_wininet:
 	pushl	%ebp
@@ -440,6 +749,12 @@ pop %eax
 push %eax
 pop %eax
 	movl	$4, -16(%ebp)
+push %eax
+pop %eax
+	movl	$LC10, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
 push %eax
 pop %eax
 	movl	$0, 16(%esp)
@@ -478,7 +793,19 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	je	L19
+	je	L20
+push %eax
+pop %eax
+	movl	-12(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC11, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
 push %eax
 pop %eax
 	movl	-12(%ebp), %eax
@@ -487,26 +814,52 @@ pop %eax
 	cmpl	$200, %eax
 push %eax
 pop %eax
-	je	L19
+	je	L20
 push %eax
 pop %eax
 	movl	$1610, %eax
 push %eax
 pop %eax
-	jmp	L21
+	jmp	L22
 push %eax
 pop %eax
-L19:
+L20:
 	movl	$0, %eax
 push %eax
 pop %eax
-L21:
+L22:
 	leave
 push %eax
 pop %eax
 	ret
 push %eax
 pop %eax
+	.section .rdata,"dr"
+LC12:
+	.ascii "[WININET] Initialising ...\0"
+	.align 4
+LC13:
+	.ascii "[DISPATCH] Configuring with proxy: %S\0"
+	.align 4
+LC14:
+	.ascii "[DISPATCH] Failed InternetOpenW: %d\0"
+	.align 4
+LC15:
+	.ascii "[DISPATCH] Configured hInternet: 0x%.8x\0"
+	.align 4
+LC16:
+	.ascii "[DISPATCH] About to crack URL: %S\0"
+LC17:
+	.ascii "[DISPATCH] Configured URI: %S\0"
+LC18:
+	.ascii "[DISPATCH] Host: %S Port: %u\0"
+	.align 4
+LC19:
+	.ascii "[DISPATCH] Failed InternetConnect: %d\0"
+	.align 4
+LC20:
+	.ascii "[DISPATCH] Configured hConnection: 0x%.8x\0"
+	.text
 	.def	_server_init_wininet;	.scl	3;	.type	32;	.endef
 _server_init_wininet:
 	pushl	%ebp
@@ -527,6 +880,12 @@ pop %eax
 	movl	%eax, -12(%ebp)
 push %eax
 pop %eax
+	movl	$LC12, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
 	movl	-12(%ebp), %eax
 push %eax
 pop %eax
@@ -536,7 +895,22 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	je	L23
+	je	L24
+push %eax
+pop %eax
+	movl	-12(%ebp), %eax
+push %eax
+pop %eax
+	movl	32(%eax), %eax
+push %eax
+pop %eax
+	movl	%eax, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC13, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
 push %eax
 pop %eax
 	movl	-12(%ebp), %eax
@@ -581,10 +955,10 @@ pop %eax
 	movl	%eax, 4(%edx)
 push %eax
 pop %eax
-	jmp	L24
+	jmp	L25
 push %eax
 pop %eax
-L23:
+L24:
 	movl	-12(%ebp), %eax
 push %eax
 pop %eax
@@ -621,7 +995,7 @@ pop %eax
 	movl	%eax, 4(%edx)
 push %eax
 pop %eax
-L24:
+L25:
 	movl	-12(%ebp), %eax
 push %eax
 pop %eax
@@ -631,7 +1005,7 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	jne	L25
+	jne	L26
 push %eax
 pop %eax
 	movl	__imp__GetLastError@0, %eax
@@ -640,10 +1014,40 @@ pop %eax
 	call	*%eax
 push %eax
 pop %eax
-	jmp	L31
+	movl	%eax, 4(%esp)
 push %eax
 pop %eax
-L25:
+	movl	$LC14, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
+	movl	__imp__GetLastError@0, %eax
+push %eax
+pop %eax
+	call	*%eax
+push %eax
+pop %eax
+	jmp	L32
+push %eax
+pop %eax
+L26:
+	movl	-12(%ebp), %eax
+push %eax
+pop %eax
+	movl	4(%eax), %eax
+push %eax
+pop %eax
+	movl	%eax, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC15, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
 	movl	$1024, 8(%esp)
 push %eax
 pop %eax
@@ -716,6 +1120,21 @@ pop %eax
 	movl	44(%eax), %eax
 push %eax
 pop %eax
+	movl	%eax, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC16, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
+	movl	8(%ebp), %eax
+push %eax
+pop %eax
+	movl	44(%eax), %eax
+push %eax
+pop %eax
 	leal	-72(%ebp), %edx
 push %eax
 pop %eax
@@ -749,7 +1168,7 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	je	L27
+	je	L28
 push %eax
 pop %eax
 	movl	-12(%ebp), %eax
@@ -770,7 +1189,7 @@ pop %eax
 	movl	$0, 24(%eax)
 push %eax
 pop %eax
-L27:
+L28:
 	leal	-2120(%ebp), %eax
 push %eax
 pop %eax
@@ -796,6 +1215,42 @@ pop %eax
 push %eax
 pop %eax
 	movl	%eax, 64(%edx)
+push %eax
+pop %eax
+	movl	-12(%ebp), %eax
+push %eax
+pop %eax
+	movl	24(%eax), %eax
+push %eax
+pop %eax
+	movl	%eax, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC17, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
+	movzwl	-48(%ebp), %eax
+push %eax
+pop %eax
+	movzwl	%ax, %eax
+push %eax
+pop %eax
+	movl	%eax, 8(%esp)
+push %eax
+pop %eax
+	leal	-1096(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC18, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
 push %eax
 pop %eax
 	movzwl	-48(%ebp), %eax
@@ -861,7 +1316,7 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	jne	L28
+	jne	L29
 push %eax
 pop %eax
 	movl	__imp__GetLastError@0, %eax
@@ -870,10 +1325,25 @@ pop %eax
 	call	*%eax
 push %eax
 pop %eax
-	jmp	L31
+	movl	%eax, 4(%esp)
 push %eax
 pop %eax
-L28:
+	movl	$LC19, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
+	movl	__imp__GetLastError@0, %eax
+push %eax
+pop %eax
+	call	*%eax
+push %eax
+pop %eax
+	jmp	L32
+push %eax
+pop %eax
+L29:
 	movl	-12(%ebp), %eax
 push %eax
 pop %eax
@@ -883,7 +1353,7 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	je	L29
+	je	L30
 push %eax
 pop %eax
 	movl	-12(%ebp), %eax
@@ -895,7 +1365,7 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	je	L30
+	je	L31
 push %eax
 pop %eax
 	movl	-12(%ebp), %eax
@@ -943,7 +1413,7 @@ pop %eax
 	subl	$16, %esp
 push %eax
 pop %eax
-L30:
+L31:
 	movl	-12(%ebp), %eax
 push %eax
 pop %eax
@@ -953,7 +1423,7 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	je	L29
+	je	L30
 push %eax
 pop %eax
 	movl	-12(%ebp), %eax
@@ -1001,11 +1471,26 @@ pop %eax
 	subl	$16, %esp
 push %eax
 pop %eax
-L29:
+L30:
+	movl	-12(%ebp), %eax
+push %eax
+pop %eax
+	movl	8(%eax), %eax
+push %eax
+pop %eax
+	movl	%eax, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC20, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
 	movl	$0, %eax
 push %eax
 pop %eax
-L31:
+L32:
 	leave
 push %eax
 pop %eax
@@ -1085,6 +1570,8 @@ pop %eax
 push %eax
 pop %eax
 	.ident	"GCC: (GNU) 9.3-win32 20200320"
+	.def	_strlen;	.scl	2;	.type	32;	.endef
+	.def	_vsnprintf_s;	.scl	2;	.type	32;	.endef
 	.def	_memset;	.scl	2;	.type	32;	.endef
 	.def	_free;	.scl	2;	.type	32;	.endef
 	.def	_current_unix_timestamp;	.scl	2;	.type	32;	.endef

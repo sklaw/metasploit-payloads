@@ -1,5 +1,67 @@
 	.file	"core.c"
 	.text
+	.section .rdata,"dr"
+LC0:
+	.ascii "[%04x] \0"
+LC1:
+	.ascii "\15\12\0"
+	.text
+	.def	_real_dprintf;	.scl	3;	.type	32;	.endef
+_real_dprintf:
+	pushl	%ebp
+	movl	%esp, %ebp
+	pushl	%esi
+	pushl	%ebx
+	subl	$1072, %esp
+	movl	__imp__GetCurrentThreadId@0, %eax
+	call	*%eax
+	movl	%eax, 16(%esp)
+	movl	$LC0, 12(%esp)
+	movl	$1023, 8(%esp)
+	movl	$1024, 4(%esp)
+	leal	-1040(%ebp), %eax
+	movl	%eax, (%esp)
+	movl	__imp___snprintf_s, %eax
+	call	*%eax
+	leal	-1040(%ebp), %eax
+	movl	%eax, (%esp)
+	call	_strlen
+	movl	%eax, -12(%ebp)
+	leal	12(%ebp), %eax
+	movl	%eax, -16(%ebp)
+	movl	-16(%ebp), %ecx
+	movl	$1021, %eax
+	subl	-12(%ebp), %eax
+	movl	%eax, %edx
+	movl	$1024, %eax
+	subl	-12(%ebp), %eax
+	leal	-1040(%ebp), %esi
+	movl	-12(%ebp), %ebx
+	addl	%esi, %ebx
+	movl	%ecx, 16(%esp)
+	movl	8(%ebp), %ecx
+	movl	%ecx, 12(%esp)
+	movl	%edx, 8(%esp)
+	movl	%eax, 4(%esp)
+	movl	%ebx, (%esp)
+	call	_vsnprintf_s
+	movl	$LC1, 8(%esp)
+	movl	$1024, 4(%esp)
+	leal	-1040(%ebp), %eax
+	movl	%eax, (%esp)
+	movl	__imp__strcat_s, %eax
+	call	*%eax
+	leal	-1040(%ebp), %eax
+	movl	%eax, (%esp)
+	movl	__imp__OutputDebugStringA@4, %eax
+	call	*%eax
+	subl	$4, %esp
+	nop
+	leal	-8(%ebp), %esp
+	popl	%ebx
+	popl	%esi
+	popl	%ebp
+	ret
 	.globl	_packetCompletionRoutineList
 	.bss
 	.align 4
@@ -21,30 +83,30 @@ _core_update_thread_token:
 	movl	32(%eax), %eax
 	movl	%eax, -12(%ebp)
 	cmpl	$0, 12(%ebp)
-	jne	L2
+	jne	L3
 	movl	8(%ebp), %eax
 	movl	28(%eax), %eax
 	movl	%eax, 12(%ebp)
-L2:
+L3:
 	movl	8(%ebp), %eax
 	movl	12(%ebp), %edx
 	movl	%edx, 32(%eax)
 	cmpl	$0, -12(%ebp)
-	je	L3
+	je	L4
 	movl	8(%ebp), %eax
 	movl	28(%eax), %eax
 	cmpl	%eax, -12(%ebp)
-	je	L3
+	je	L4
 	movl	8(%ebp), %eax
 	movl	32(%eax), %eax
 	cmpl	%eax, -12(%ebp)
-	je	L3
+	je	L4
 	movl	-12(%ebp), %eax
 	movl	%eax, (%esp)
 	movl	__imp__CloseHandle@4, %eax
 	call	*%eax
 	subl	$4, %esp
-L3:
+L4:
 	movl	8(%ebp), %eax
 	movl	20(%eax), %eax
 	movl	%eax, (%esp)
@@ -69,11 +131,11 @@ _core_update_desktop:
 	movl	40(%eax), %eax
 	movl	%eax, -12(%ebp)
 	cmpl	$-1, 12(%ebp)
-	jne	L6
+	jne	L7
 	movl	8(%ebp), %eax
 	movl	36(%eax), %eax
 	movl	%eax, 12(%ebp)
-L6:
+L7:
 	movl	8(%ebp), %eax
 	movl	12(%ebp), %edx
 	movl	%edx, 40(%eax)
@@ -81,11 +143,11 @@ L6:
 	movl	48(%eax), %eax
 	movl	%eax, -16(%ebp)
 	cmpl	$0, 16(%ebp)
-	jne	L7
+	jne	L8
 	movl	8(%ebp), %eax
 	movl	44(%eax), %eax
 	movl	%eax, 16(%ebp)
-L7:
+L8:
 	movl	16(%ebp), %eax
 	movl	%eax, (%esp)
 	movl	__imp___strdup, %eax
@@ -93,28 +155,28 @@ L7:
 	movl	8(%ebp), %edx
 	movl	%eax, 48(%edx)
 	cmpl	$0, -16(%ebp)
-	je	L8
+	je	L9
 	movl	8(%ebp), %eax
 	movl	44(%eax), %eax
 	cmpl	%eax, -16(%ebp)
-	je	L8
+	je	L9
 	movl	8(%ebp), %eax
 	movl	48(%eax), %eax
 	cmpl	%eax, -16(%ebp)
-	je	L8
+	je	L9
 	movl	-16(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_free
-L8:
+L9:
 	movl	8(%ebp), %eax
 	movl	56(%eax), %eax
 	movl	%eax, -20(%ebp)
 	cmpl	$0, 20(%ebp)
-	jne	L9
+	jne	L10
 	movl	8(%ebp), %eax
 	movl	52(%eax), %eax
 	movl	%eax, 20(%ebp)
-L9:
+L10:
 	movl	20(%ebp), %eax
 	movl	%eax, (%esp)
 	movl	__imp___strdup, %eax
@@ -122,19 +184,19 @@ L9:
 	movl	8(%ebp), %edx
 	movl	%eax, 56(%edx)
 	cmpl	$0, -20(%ebp)
-	je	L10
+	je	L11
 	movl	8(%ebp), %eax
 	movl	52(%eax), %eax
 	cmpl	%eax, -20(%ebp)
-	je	L10
+	je	L11
 	movl	8(%ebp), %eax
 	movl	56(%eax), %eax
 	cmpl	%eax, -20(%ebp)
-	je	L10
+	je	L11
 	movl	-20(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_free
-L10:
+L11:
 	movl	8(%ebp), %eax
 	movl	20(%eax), %eax
 	movl	%eax, (%esp)
@@ -154,7 +216,7 @@ _packet_create:
 	call	_malloc
 	movl	%eax, -12(%ebp)
 	cmpl	$0, -12(%ebp)
-	je	L17
+	je	L18
 	movl	$52, 8(%esp)
 	movl	$0, 4(%esp)
 	movl	-12(%ebp), %eax
@@ -178,7 +240,7 @@ _packet_create:
 	movl	-12(%ebp), %eax
 	movl	$0, 36(%eax)
 	cmpl	$0, 12(%ebp)
-	je	L14
+	je	L15
 	movl	12(%ebp), %eax
 	movl	%eax, 8(%esp)
 	movl	$131073, 4(%esp)
@@ -186,25 +248,25 @@ _packet_create:
 	movl	%eax, (%esp)
 	call	_packet_add_tlv_uint
 	testl	%eax, %eax
-	jne	L18
-L14:
+	jne	L19
+L15:
 	movl	$1, -16(%ebp)
-	jmp	L13
-L17:
-	nop
-	jmp	L13
+	jmp	L14
 L18:
 	nop
-L13:
+	jmp	L14
+L19:
+	nop
+L14:
 	cmpl	$0, -16(%ebp)
-	jne	L15
+	jne	L16
 	cmpl	$0, -12(%ebp)
-	je	L15
+	je	L16
 	movl	-12(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_packet_destroy
 	movl	$0, -12(%ebp)
-L15:
+L16:
 	movl	-12(%ebp), %eax
 	leave
 	ret
@@ -219,7 +281,7 @@ _packet_create_group:
 	call	_malloc
 	movl	%eax, -12(%ebp)
 	cmpl	$0, -12(%ebp)
-	je	L25
+	je	L26
 	movl	$52, 8(%esp)
 	movl	$0, 4(%esp)
 	movl	-12(%ebp), %eax
@@ -230,18 +292,18 @@ _packet_create_group:
 	movl	-12(%ebp), %eax
 	movl	$0, 36(%eax)
 	movl	-12(%ebp), %eax
-	jmp	L22
-L25:
+	jmp	L23
+L26:
 	nop
 	cmpl	$0, -12(%ebp)
-	je	L23
+	je	L24
 	movl	-12(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_free
 	movl	$0, -12(%ebp)
-L23:
+L24:
 	movl	$0, %eax
-L22:
+L23:
 	leave
 	ret
 	.globl	_packet_add_group
@@ -263,17 +325,25 @@ _packet_add_group:
 	call	_packet_add_tlv_raw
 	movl	%eax, -12(%ebp)
 	cmpl	$0, -12(%ebp)
-	jne	L27
+	jne	L28
 	movl	16(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_packet_destroy
 	movl	$0, %eax
-	jmp	L28
-L27:
-	movl	-12(%ebp), %eax
+	jmp	L29
 L28:
+	movl	-12(%ebp), %eax
+L29:
 	leave
 	ret
+	.section .rdata,"dr"
+LC2:
+	.ascii "[PKT] Can't find command ID\0"
+LC3:
+	.ascii "[PKT] Can't create response\0"
+LC4:
+	.ascii "[PKT] Can't find request ID\0"
+	.text
 	.globl	_packet_create_response
 	.def	_packet_create_response;	.scl	2;	.type	32;	.endef
 _packet_create_response:
@@ -286,19 +356,23 @@ _packet_create_response:
 	movl	%eax, (%esp)
 	call	_packet_get_type
 	cmpl	$10, %eax
-	jne	L30
+	jne	L31
 	movl	$11, -20(%ebp)
-	jmp	L31
-L30:
-	movl	$1, -20(%ebp)
+	jmp	L32
 L31:
+	movl	$1, -20(%ebp)
+L32:
 	movl	$131073, 4(%esp)
 	movl	8(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_packet_get_tlv_value_uint
 	movl	%eax, -24(%ebp)
 	cmpl	$0, -24(%ebp)
-	je	L40
+	jne	L33
+	movl	$LC2, (%esp)
+	call	_real_dprintf
+	jmp	L34
+L33:
 	movl	-24(%ebp), %eax
 	movl	%eax, 4(%esp)
 	movl	-20(%ebp), %eax
@@ -306,7 +380,11 @@ L31:
 	call	_packet_create
 	movl	%eax, -12(%ebp)
 	cmpl	$0, -12(%ebp)
-	je	L41
+	jne	L35
+	movl	$LC3, (%esp)
+	call	_real_dprintf
+	jmp	L34
+L35:
 	leal	-36(%ebp), %eax
 	movl	%eax, 8(%esp)
 	movl	$65538, 4(%esp)
@@ -314,7 +392,11 @@ L31:
 	movl	%eax, (%esp)
 	call	_packet_get_tlv_string
 	testl	%eax, %eax
-	jne	L42
+	je	L36
+	movl	$LC4, (%esp)
+	call	_real_dprintf
+	jmp	L34
+L36:
 	movl	-28(%ebp), %eax
 	movl	%eax, 8(%esp)
 	movl	$65538, 4(%esp)
@@ -324,35 +406,26 @@ L31:
 	movl	8(%ebp), %eax
 	movl	44(%eax), %eax
 	testl	%eax, %eax
-	je	L36
+	je	L37
 	movl	8(%ebp), %eax
 	movl	-12(%ebp), %edx
 	movl	%edx, 48(%eax)
 	movl	-12(%ebp), %eax
 	movl	8(%ebp), %edx
 	movl	%edx, 48(%eax)
-L36:
+L37:
 	movl	$1, -16(%ebp)
-	jmp	L33
-L40:
-	nop
-	jmp	L33
-L41:
-	nop
-	jmp	L33
-L42:
-	nop
-L33:
+L34:
 	cmpl	$0, -16(%ebp)
-	jne	L37
+	jne	L38
 	cmpl	$0, -12(%ebp)
-	je	L38
+	je	L39
 	movl	-12(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_packet_destroy
-L38:
+L39:
 	movl	$0, -12(%ebp)
-L37:
+L38:
 	movl	-12(%ebp), %eax
 	leave
 	ret
@@ -363,11 +436,11 @@ _packet_destroy:
 	movl	%esp, %ebp
 	subl	$40, %esp
 	cmpl	$0, 8(%ebp)
-	je	L53
+	je	L51
 	movl	8(%ebp), %eax
 	movl	32(%eax), %eax
 	testl	%eax, %eax
-	je	L46
+	je	L44
 	movl	8(%ebp), %eax
 	movl	36(%eax), %edx
 	movl	8(%ebp), %eax
@@ -380,23 +453,23 @@ _packet_destroy:
 	movl	32(%eax), %eax
 	movl	%eax, (%esp)
 	call	_free
-L46:
+L44:
 	movl	8(%ebp), %eax
 	movl	40(%eax), %eax
 	testl	%eax, %eax
-	je	L47
-L51:
+	je	L45
+L49:
 	movl	8(%ebp), %eax
 	movl	40(%eax), %eax
 	movl	%eax, (%esp)
 	call	_list_pop
 	movl	%eax, -12(%ebp)
 	cmpl	$0, -12(%ebp)
-	je	L54
+	je	L52
 	movl	-12(%ebp), %eax
 	movl	(%eax), %eax
 	testl	%eax, %eax
-	je	L50
+	je	L48
 	movl	-12(%ebp), %eax
 	movl	4(%eax), %edx
 	movl	-12(%ebp), %eax
@@ -409,18 +482,18 @@ L51:
 	movl	(%eax), %eax
 	movl	%eax, (%esp)
 	call	_free
-L50:
+L48:
 	movl	-12(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_free
-	jmp	L51
-L54:
+	jmp	L49
+L52:
 	nop
 	movl	8(%ebp), %eax
 	movl	40(%eax), %eax
 	movl	%eax, (%esp)
 	call	_list_destroy
-L47:
+L45:
 	movl	$52, 8(%esp)
 	movl	$0, 4(%esp)
 	movl	8(%ebp), %eax
@@ -429,10 +502,10 @@ L47:
 	movl	8(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_free
-	jmp	L43
-L53:
+	jmp	L41
+L51:
 	nop
-L43:
+L41:
 	leave
 	ret
 	.globl	_packet_add_tlv_string
@@ -467,7 +540,7 @@ _packet_add_tlv_wstring_len:
 	call	_malloc
 	movl	%eax, -16(%ebp)
 	cmpl	$0, -16(%ebp)
-	je	L58
+	je	L56
 	movl	20(%ebp), %eax
 	movl	%eax, 8(%esp)
 	movl	16(%ebp), %eax
@@ -493,10 +566,10 @@ _packet_add_tlv_wstring_len:
 	movl	-16(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_free
-	jmp	L59
-L58:
+	jmp	L57
+L56:
 	movl	$8, -12(%ebp)
-L59:
+L57:
 	movl	-12(%ebp), %eax
 	leave
 	ret
@@ -626,8 +699,8 @@ _packet_add_tlv_group:
 	movl	$0, -24(%ebp)
 	movl	$0, -28(%ebp)
 	movl	$0, -20(%ebp)
-	jmp	L70
-L71:
+	jmp	L68
+L69:
 	movl	-20(%ebp), %edx
 	movl	%edx, %eax
 	addl	%eax, %eax
@@ -642,22 +715,22 @@ L71:
 	addl	$8, %eax
 	movl	%eax, -12(%ebp)
 	addl	$1, -20(%ebp)
-L70:
+L68:
 	movl	-20(%ebp), %eax
 	cmpl	20(%ebp), %eax
-	jb	L71
+	jb	L69
 	movl	-12(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_malloc
 	movl	%eax, -28(%ebp)
 	cmpl	$0, -28(%ebp)
-	jne	L72
+	jne	L70
 	movl	$8, -24(%ebp)
-	jmp	L73
-L72:
+	jmp	L71
+L70:
 	movl	$0, -20(%ebp)
-	jmp	L74
-L75:
+	jmp	L72
+L73:
 	movl	-20(%ebp), %edx
 	movl	%edx, %eax
 	addl	%eax, %eax
@@ -734,10 +807,10 @@ L75:
 	addl	$8, %eax
 	movl	%eax, -16(%ebp)
 	addl	$1, -20(%ebp)
-L74:
+L72:
 	movl	-20(%ebp), %eax
 	cmpl	20(%ebp), %eax
-	jb	L75
+	jb	L73
 	movl	-12(%ebp), %eax
 	movl	%eax, 12(%esp)
 	movl	-28(%ebp), %eax
@@ -748,14 +821,14 @@ L74:
 	movl	%eax, (%esp)
 	call	_packet_add_tlv_raw
 	movl	%eax, -24(%ebp)
-L73:
+L71:
 	cmpl	$0, -28(%ebp)
-	je	L76
+	je	L74
 	movl	-28(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_free
 	movl	$0, -28(%ebp)
-L76:
+L74:
 	movl	-24(%ebp), %eax
 	movl	-4(%ebp), %ebx
 	leave
@@ -768,8 +841,8 @@ _packet_add_tlvs:
 	pushl	%ebx
 	subl	$36, %esp
 	movl	$0, -12(%ebp)
-	jmp	L79
-L80:
+	jmp	L77
+L78:
 	movl	-12(%ebp), %edx
 	movl	%edx, %eax
 	addl	%eax, %eax
@@ -804,10 +877,10 @@ L80:
 	movl	%eax, (%esp)
 	call	_packet_add_tlv_raw
 	addl	$1, -12(%ebp)
-L79:
+L77:
 	movl	-12(%ebp), %eax
 	cmpl	16(%ebp), %eax
-	jb	L80
+	jb	L78
 	movl	$0, %eax
 	addl	$36, %esp
 	popl	%ebx
@@ -831,7 +904,7 @@ _packet_add_tlv_raw_compressed:
 	movl	%eax, -56(%ebp)
 	movl	$0, -52(%ebp)
 	fildq	-56(%ebp)
-	fldl	LC0
+	fldl	LC5
 	fmulp	%st, %st(1)
 	fld1
 	faddp	%st, %st(1)
@@ -849,10 +922,10 @@ _packet_add_tlv_raw_compressed:
 	call	_malloc
 	movl	%eax, -24(%ebp)
 	cmpl	$0, -24(%ebp)
-	jne	L83
+	jne	L81
 	movl	$8, -12(%ebp)
-	jmp	L84
-L83:
+	jmp	L82
+L81:
 	movl	$9, 16(%esp)
 	movl	20(%ebp), %eax
 	movl	%eax, 12(%esp)
@@ -864,10 +937,10 @@ L83:
 	movl	%eax, (%esp)
 	call	_compress2
 	testl	%eax, %eax
-	je	L85
+	je	L83
 	movl	$618, -12(%ebp)
-	jmp	L84
-L85:
+	jmp	L82
+L83:
 	movl	-36(%ebp), %edx
 	movl	-20(%ebp), %eax
 	addl	%edx, %eax
@@ -880,7 +953,7 @@ L85:
 	movl	8(%ebp), %eax
 	movl	32(%eax), %eax
 	testl	%eax, %eax
-	je	L86
+	je	L84
 	movl	8(%ebp), %eax
 	movl	32(%eax), %eax
 	movl	-32(%ebp), %edx
@@ -888,18 +961,18 @@ L85:
 	movl	%eax, (%esp)
 	call	_realloc
 	movl	%eax, -16(%ebp)
-	jmp	L87
-L86:
+	jmp	L85
+L84:
 	movl	-32(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_malloc
 	movl	%eax, -16(%ebp)
-L87:
+L85:
 	cmpl	$0, -16(%ebp)
-	jne	L88
+	jne	L86
 	movl	$8, -12(%ebp)
-	jmp	L84
-L88:
+	jmp	L82
+L86:
 	movl	8(%ebp), %eax
 	movl	36(%eax), %edx
 	movl	-16(%ebp), %eax
@@ -954,14 +1027,14 @@ L88:
 	movl	-32(%ebp), %edx
 	movl	%edx, 36(%eax)
 	movl	$0, -12(%ebp)
-L84:
+L82:
 	cmpl	$0, -24(%ebp)
-	je	L89
+	je	L87
 	movl	-24(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_free
 	movl	$0, -24(%ebp)
-L89:
+L87:
 	movl	-12(%ebp), %eax
 	movl	-4(%ebp), %ebx
 	leave
@@ -987,7 +1060,7 @@ _packet_add_tlv_raw:
 	movl	12(%ebp), %eax
 	andl	$536870912, %eax
 	testl	%eax, %eax
-	je	L92
+	je	L90
 	movl	20(%ebp), %eax
 	movl	%eax, 12(%esp)
 	movl	16(%ebp), %eax
@@ -997,12 +1070,12 @@ _packet_add_tlv_raw:
 	movl	8(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_packet_add_tlv_raw_compressed
-	jmp	L93
-L92:
+	jmp	L91
+L90:
 	movl	8(%ebp), %eax
 	movl	32(%eax), %eax
 	testl	%eax, %eax
-	je	L94
+	je	L92
 	movl	8(%ebp), %eax
 	movl	32(%eax), %eax
 	movl	-24(%ebp), %edx
@@ -1010,18 +1083,18 @@ L92:
 	movl	%eax, (%esp)
 	call	_realloc
 	movl	%eax, -12(%ebp)
-	jmp	L95
-L94:
+	jmp	L93
+L92:
 	movl	-24(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_malloc
 	movl	%eax, -12(%ebp)
-L95:
+L93:
 	cmpl	$0, -12(%ebp)
-	jne	L96
+	jne	L94
 	movl	$8, %eax
-	jmp	L93
-L96:
+	jmp	L91
+L94:
 	movl	8(%ebp), %eax
 	movl	36(%eax), %edx
 	movl	-12(%ebp), %eax
@@ -1076,7 +1149,7 @@ L96:
 	movl	-24(%ebp), %edx
 	movl	%edx, 36(%eax)
 	movl	$0, %eax
-L93:
+L91:
 	movl	-4(%ebp), %ebx
 	leave
 	ret
@@ -1088,7 +1161,7 @@ _packet_is_tlv_null_terminated:
 	movl	8(%ebp), %eax
 	movl	(%eax), %eax
 	testl	%eax, %eax
-	je	L98
+	je	L96
 	movl	8(%ebp), %eax
 	movl	8(%eax), %edx
 	movl	8(%ebp), %eax
@@ -1097,12 +1170,12 @@ _packet_is_tlv_null_terminated:
 	addl	%edx, %eax
 	movzbl	(%eax), %eax
 	testb	%al, %al
-	je	L98
+	je	L96
 	movl	$1168, %eax
-	jmp	L99
-L98:
+	jmp	L97
+L96:
 	movl	$0, %eax
-L99:
+L97:
 	popl	%ebp
 	ret
 	.globl	_packet_get_type
@@ -1160,12 +1233,12 @@ _packet_get_tlv_string:
 	call	_packet_get_tlv
 	movl	%eax, -12(%ebp)
 	cmpl	$0, -12(%ebp)
-	jne	L107
+	jne	L105
 	movl	16(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_packet_is_tlv_null_terminated
 	movl	%eax, -12(%ebp)
-L107:
+L105:
 	movl	-12(%ebp), %eax
 	leave
 	ret
@@ -1229,10 +1302,10 @@ _packet_get_tlv_value_string:
 	movl	%eax, (%esp)
 	call	_packet_get_tlv_string
 	testl	%eax, %eax
-	jne	L114
+	jne	L112
 	movl	-16(%ebp), %eax
 	movl	%eax, -12(%ebp)
-L114:
+L112:
 	movl	-12(%ebp), %eax
 	leave
 	ret
@@ -1248,22 +1321,22 @@ _packet_get_tlv_value_reflective_loader:
 	call	_packet_get_tlv_value_string
 	movl	%eax, -12(%ebp)
 	cmpl	$0, -12(%ebp)
-	jne	L117
+	jne	L115
 	movl	$131485, 4(%esp)
 	movl	8(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_packet_get_tlv_value_uint
 	movl	%eax, -16(%ebp)
 	cmpl	$0, -16(%ebp)
-	je	L118
+	je	L116
 	movl	-16(%ebp), %eax
 	movzwl	%ax, %eax
-	jmp	L119
-L118:
+	jmp	L117
+L116:
 	movl	$1, %eax
-L119:
-	movl	%eax, -12(%ebp)
 L117:
+	movl	%eax, -12(%ebp)
+L115:
 	movl	-12(%ebp), %eax
 	leave
 	ret
@@ -1281,7 +1354,7 @@ _packet_get_tlv_value_wstring:
 	call	_packet_get_tlv_value_string
 	movl	%eax, -16(%ebp)
 	cmpl	$0, -16(%ebp)
-	je	L122
+	je	L120
 	movl	$0, 8(%esp)
 	movl	-16(%ebp), %eax
 	movl	%eax, 4(%esp)
@@ -1295,7 +1368,7 @@ _packet_get_tlv_value_wstring:
 	call	_calloc
 	movl	%eax, -12(%ebp)
 	cmpl	$0, -12(%ebp)
-	je	L122
+	je	L120
 	movl	-20(%ebp), %eax
 	movl	%eax, 8(%esp)
 	movl	-16(%ebp), %eax
@@ -1303,7 +1376,7 @@ _packet_get_tlv_value_wstring:
 	movl	-12(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_mbstowcs
-L122:
+L120:
 	movl	-12(%ebp), %eax
 	leave
 	ret
@@ -1321,21 +1394,21 @@ _packet_get_tlv_value_uint:
 	movl	%eax, (%esp)
 	call	_packet_get_tlv
 	testl	%eax, %eax
-	jne	L125
+	jne	L123
 	movl	-20(%ebp), %eax
 	cmpl	$3, %eax
-	ja	L126
-L125:
+	ja	L124
+L123:
 	movl	$0, %eax
-	jmp	L128
-L126:
+	jmp	L126
+L124:
 	movl	-12(%ebp), %eax
 	movl	(%eax), %eax
 	movl	%eax, (%esp)
 	movl	__imp__ntohl@4, %eax
 	call	*%eax
 	subl	$4, %esp
-L128:
+L126:
 	leave
 	ret
 	.globl	_packet_get_tlv_value_raw
@@ -1352,15 +1425,15 @@ _packet_get_tlv_value_raw:
 	movl	%eax, (%esp)
 	call	_packet_get_tlv
 	testl	%eax, %eax
-	je	L130
+	je	L128
 	movl	$0, %eax
-	jmp	L132
-L130:
+	jmp	L130
+L128:
 	movl	-20(%ebp), %edx
 	movl	16(%ebp), %eax
 	movl	%edx, (%eax)
 	movl	-12(%ebp), %eax
-L132:
+L130:
 	leave
 	ret
 	.globl	_packet_get_tlv_value_qword
@@ -1380,15 +1453,15 @@ _packet_get_tlv_value_qword:
 	movl	%eax, (%esp)
 	call	_packet_get_tlv
 	testl	%eax, %eax
-	jne	L134
+	jne	L132
 	movl	-36(%ebp), %eax
 	cmpl	$7, %eax
-	ja	L135
-L134:
+	ja	L133
+L132:
 	movl	$0, -48(%ebp)
 	movl	$0, -44(%ebp)
-	jmp	L137
-L135:
+	jmp	L135
+L133:
 	movl	-28(%ebp), %eax
 	movl	4(%eax), %edx
 	movl	(%eax), %eax
@@ -1419,7 +1492,7 @@ L135:
 	movl	%ebx, %edi
 	orl	%edx, %edi
 	movl	%edi, -44(%ebp)
-L137:
+L135:
 	movl	-48(%ebp), %eax
 	movl	-44(%ebp), %edx
 	leal	-12(%ebp), %esp
@@ -1443,12 +1516,12 @@ _packet_get_tlv_value_bool:
 	movl	%eax, (%esp)
 	call	_packet_get_tlv
 	testl	%eax, %eax
-	jne	L139
+	jne	L137
 	movl	-16(%ebp), %eax
 	movzbl	(%eax), %eax
 	movsbl	%al, %eax
 	movl	%eax, -12(%ebp)
-L139:
+L137:
 	movl	-12(%ebp), %eax
 	leave
 	ret
@@ -1499,6 +1572,47 @@ _packet_add_exception:
 	call	_packet_add_tlv_group
 	leave
 	ret
+	.section .rdata,"dr"
+	.align 4
+LC8:
+	.ascii "[PKT FIND] Looking for type %u\0"
+	.align 4
+LC9:
+	.ascii "[PKT FIND] Reached end of packet buffer\0"
+	.align 4
+LC10:
+	.ascii "[PKT FIND] TLV header length: %u\0"
+	.align 4
+LC11:
+	.ascii "[PKT FIND] TLV header type: %u\0"
+	.align 4
+LC12:
+	.ascii "[PKT FIND] Types don't match, skipping.\0"
+	.align 4
+LC13:
+	.ascii "[PKT FIND] wrong index, skipping.\0"
+	.align 4
+LC14:
+	.ascii "[PKT FIND] if ((current + length > payload + payloadLength) || (current < payload))\0"
+LC15:
+	.ascii "[PKT FIND] Current: %p\0"
+LC16:
+	.ascii "[PKT FIND] length: %x\0"
+	.align 4
+LC17:
+	.ascii "[PKT FIND] Current + length: %p\0"
+LC18:
+	.ascii "[PKT FIND] payload: %p\0"
+LC19:
+	.ascii "[PKT FIND] payloadLength: %x\0"
+	.align 4
+LC20:
+	.ascii "[PKT FIND] payload + payloadLength: %p\0"
+LC21:
+	.ascii "[PKT FIND] diff: %x\0"
+LC22:
+	.ascii "[PKT FIND] Found!\0"
+	.text
 	.globl	_packet_find_tlv_buf
 	.def	_packet_find_tlv_buf;	.scl	2;	.type	32;	.endef
 _packet_find_tlv_buf:
@@ -1510,6 +1624,10 @@ _packet_find_tlv_buf:
 	movl	$0, -16(%ebp)
 	movl	$0, -32(%ebp)
 	movl	$0, -20(%ebp)
+	movl	24(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC8, (%esp)
+	call	_real_dprintf
 	movl	$12, 8(%esp)
 	movl	$0, 4(%esp)
 	movl	28(%ebp), %eax
@@ -1518,8 +1636,8 @@ _packet_find_tlv_buf:
 	movl	12(%ebp), %eax
 	movl	%eax, -24(%ebp)
 	movl	$0, -32(%ebp)
-	jmp	L144
-L159:
+	jmp	L142
+L161:
 	movl	-24(%ebp), %eax
 	movl	%eax, -36(%ebp)
 	movl	$0, -28(%ebp)
@@ -1529,10 +1647,15 @@ L159:
 	movl	16(%ebp), %eax
 	addl	%edx, %eax
 	cmpl	%eax, %ecx
-	ja	L145
+	ja	L143
 	movl	-24(%ebp), %eax
 	cmpl	12(%ebp), %eax
-	jb	L145
+	jnb	L144
+L143:
+	movl	$LC9, (%esp)
+	call	_real_dprintf
+	jmp	L145
+L144:
 	movl	-36(%ebp), %eax
 	movl	(%eax), %eax
 	movl	%eax, (%esp)
@@ -1540,6 +1663,10 @@ L159:
 	call	*%eax
 	subl	$4, %esp
 	movl	%eax, -32(%ebp)
+	movl	-32(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC10, (%esp)
+	call	_real_dprintf
 	movl	-36(%ebp), %eax
 	movl	4(%eax), %eax
 	movl	%eax, (%esp)
@@ -1547,6 +1674,10 @@ L159:
 	call	*%eax
 	subl	$4, %esp
 	movl	%eax, -28(%ebp)
+	movl	-28(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC11, (%esp)
+	call	_real_dprintf
 	movl	-28(%ebp), %eax
 	andl	$536870912, %eax
 	testl	%eax, %eax
@@ -1557,11 +1688,16 @@ L146:
 	cmpl	24(%ebp), %eax
 	je	L147
 	cmpl	$0, 24(%ebp)
-	jne	L163
+	je	L147
+	movl	$LC12, (%esp)
+	call	_real_dprintf
+	jmp	L148
 L147:
 	movl	-12(%ebp), %eax
 	cmpl	20(%ebp), %eax
 	je	L149
+	movl	$LC13, (%esp)
+	call	_real_dprintf
 	addl	$1, -12(%ebp)
 	jmp	L148
 L149:
@@ -1572,10 +1708,54 @@ L149:
 	movl	16(%ebp), %eax
 	addl	%edx, %eax
 	cmpl	%eax, %ecx
-	ja	L145
+	ja	L150
 	movl	-24(%ebp), %eax
 	cmpl	12(%ebp), %eax
-	jb	L145
+	jnb	L151
+L150:
+	movl	$LC14, (%esp)
+	call	_real_dprintf
+	movl	-24(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC15, (%esp)
+	call	_real_dprintf
+	movl	-32(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC16, (%esp)
+	call	_real_dprintf
+	movl	-24(%ebp), %edx
+	movl	-32(%ebp), %eax
+	addl	%edx, %eax
+	movl	%eax, 4(%esp)
+	movl	$LC17, (%esp)
+	call	_real_dprintf
+	movl	12(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC18, (%esp)
+	call	_real_dprintf
+	movl	16(%ebp), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC19, (%esp)
+	call	_real_dprintf
+	movl	12(%ebp), %edx
+	movl	16(%ebp), %eax
+	addl	%edx, %eax
+	movl	%eax, 4(%esp)
+	movl	$LC20, (%esp)
+	call	_real_dprintf
+	movl	-24(%ebp), %edx
+	movl	-32(%ebp), %eax
+	leal	(%edx,%eax), %ecx
+	movl	12(%ebp), %edx
+	movl	16(%ebp), %eax
+	addl	%edx, %eax
+	subl	%eax, %ecx
+	movl	%ecx, %eax
+	movl	%eax, 4(%esp)
+	movl	$LC21, (%esp)
+	call	_real_dprintf
+	jmp	L145
+L151:
 	movl	-36(%ebp), %eax
 	movl	4(%eax), %eax
 	movl	%eax, (%esp)
@@ -1599,17 +1779,19 @@ L149:
 	addl	%eax, %edx
 	movl	28(%ebp), %eax
 	movl	%edx, 8(%eax)
+	movl	$LC22, (%esp)
+	call	_real_dprintf
 	movl	28(%ebp), %eax
 	movl	4(%eax), %eax
 	andl	$536870912, %eax
 	testl	%eax, %eax
-	je	L150
+	je	L152
 	movl	$0, -40(%ebp)
 	movl	$8, (%esp)
 	call	_malloc
 	movl	%eax, -40(%ebp)
 	cmpl	$0, -40(%ebp)
-	je	L164
+	je	L165
 	movl	28(%ebp), %eax
 	movl	8(%eax), %eax
 	movl	(%eax), %eax
@@ -1622,7 +1804,7 @@ L149:
 	movl	-40(%ebp), %eax
 	movl	4(%eax), %eax
 	testl	%eax, %eax
-	je	L165
+	je	L166
 	movl	-40(%ebp), %eax
 	movl	4(%eax), %eax
 	movl	%eax, (%esp)
@@ -1633,7 +1815,7 @@ L149:
 	movl	-40(%ebp), %eax
 	movl	(%eax), %eax
 	testl	%eax, %eax
-	je	L166
+	je	L167
 	movl	28(%ebp), %eax
 	movl	(%eax), %eax
 	leal	-4(%eax), %edx
@@ -1658,7 +1840,7 @@ L149:
 	movl	%eax, (%esp)
 	call	_uncompress
 	testl	%eax, %eax
-	jne	L167
+	jne	L168
 	movl	28(%ebp), %eax
 	movl	4(%eax), %eax
 	xorl	$536870912, %eax
@@ -1676,15 +1858,15 @@ L149:
 	movl	8(%ebp), %eax
 	movl	40(%eax), %eax
 	testl	%eax, %eax
-	jne	L156
+	jne	L158
 	call	_list_create
 	movl	8(%ebp), %edx
 	movl	%eax, 40(%edx)
-L156:
+L158:
 	movl	8(%ebp), %eax
 	movl	40(%eax), %eax
 	testl	%eax, %eax
-	je	L168
+	je	L169
 	movl	8(%ebp), %eax
 	movl	40(%eax), %eax
 	movl	-40(%ebp), %edx
@@ -1692,22 +1874,22 @@ L156:
 	movl	%eax, (%esp)
 	call	_list_push
 	movl	$1, -20(%ebp)
-	jmp	L152
-L164:
-	nop
-	jmp	L152
+	jmp	L154
 L165:
 	nop
-	jmp	L152
+	jmp	L154
 L166:
 	nop
-	jmp	L152
+	jmp	L154
 L167:
 	nop
-	jmp	L152
+	jmp	L154
 L168:
 	nop
-L152:
+	jmp	L154
+L169:
+	nop
+L154:
 	cmpl	$0, -20(%ebp)
 	jne	L148
 	cmpl	$0, -40(%ebp)
@@ -1715,14 +1897,14 @@ L152:
 	movl	-40(%ebp), %eax
 	movl	(%eax), %eax
 	testl	%eax, %eax
-	je	L158
+	je	L160
 	movl	-40(%ebp), %eax
 	movl	(%eax), %eax
 	movl	%eax, (%esp)
 	call	_free
 	movl	-40(%ebp), %eax
 	movl	$0, (%eax)
-L158:
+L160:
 	cmpl	$0, -40(%ebp)
 	je	L148
 	movl	-40(%ebp), %eax
@@ -1730,29 +1912,26 @@ L158:
 	call	_free
 	movl	$0, -40(%ebp)
 	jmp	L148
-L150:
+L152:
 	movl	$1, -20(%ebp)
-	jmp	L148
-L163:
-	nop
 L148:
 	movl	-32(%ebp), %eax
 	addl	%eax, -16(%ebp)
 	movl	-32(%ebp), %eax
 	addl	%eax, -24(%ebp)
-L144:
+L142:
 	cmpl	$0, -20(%ebp)
 	jne	L145
 	cmpl	$0, -24(%ebp)
-	jne	L159
+	jne	L161
 L145:
 	cmpl	$0, -20(%ebp)
-	je	L160
+	je	L162
 	movl	$0, %eax
-	jmp	L162
-L160:
-	movl	$1168, %eax
+	jmp	L164
 L162:
+	movl	$1168, %eax
+L164:
 	movl	-4(%ebp), %ebx
 	leave
 	ret
@@ -1767,10 +1946,10 @@ _packet_add_completion_handler:
 	call	_malloc
 	movl	%eax, -16(%ebp)
 	cmpl	$0, -16(%ebp)
-	jne	L170
+	jne	L171
 	movl	$8, -12(%ebp)
-	jmp	L171
-L170:
+	jmp	L172
+L171:
 	movl	-16(%ebp), %eax
 	leal	4(%eax), %edx
 	movl	$12, 8(%esp)
@@ -1787,19 +1966,19 @@ L170:
 	movl	-16(%ebp), %eax
 	movl	(%eax), %eax
 	testl	%eax, %eax
-	jne	L172
+	jne	L173
 	movl	$8, -12(%ebp)
 	movl	-16(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_free
-	jmp	L171
-L172:
+	jmp	L172
+L173:
 	movl	_packetCompletionRoutineList, %edx
 	movl	-16(%ebp), %eax
 	movl	%edx, 16(%eax)
 	movl	-16(%ebp), %eax
 	movl	%eax, _packetCompletionRoutineList
-L171:
+L172:
 	movl	-12(%ebp), %eax
 	leave
 	ret
@@ -1822,8 +2001,8 @@ _packet_call_completion_handlers:
 	movl	%eax, -24(%ebp)
 	movl	_packetCompletionRoutineList, %eax
 	movl	%eax, -12(%ebp)
-	jmp	L175
-L178:
+	jmp	L176
+L179:
 	movl	-12(%ebp), %eax
 	movl	(%eax), %eax
 	movl	%eax, 4(%esp)
@@ -1831,7 +2010,7 @@ L178:
 	movl	%eax, (%esp)
 	call	_strcmp
 	testl	%eax, %eax
-	jne	L183
+	jne	L184
 	movl	-12(%ebp), %eax
 	movl	8(%eax), %eax
 	movl	-12(%ebp), %edx
@@ -1847,29 +2026,29 @@ L178:
 	movl	%edx, (%esp)
 	call	*%eax
 	addl	$1, -16(%ebp)
-	jmp	L177
-L183:
+	jmp	L178
+L184:
 	nop
-L177:
+L178:
 	movl	-12(%ebp), %eax
 	movl	16(%eax), %eax
 	movl	%eax, -12(%ebp)
-L175:
+L176:
 	cmpl	$0, -12(%ebp)
-	jne	L178
+	jne	L179
 	cmpl	$0, -16(%ebp)
-	je	L179
+	je	L180
 	movl	16(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_packet_remove_completion_handler
-L179:
-	cmpl	$0, -16(%ebp)
-	je	L180
-	movl	$0, %eax
-	jmp	L182
 L180:
+	cmpl	$0, -16(%ebp)
+	je	L181
+	movl	$0, %eax
+	jmp	L183
+L181:
 	movl	$1168, %eax
-L182:
+L183:
 	leave
 	ret
 	.globl	_packet_remove_completion_handler
@@ -1882,8 +2061,8 @@ _packet_remove_completion_handler:
 	movl	%eax, -12(%ebp)
 	movl	$0, -20(%ebp)
 	movl	$0, -16(%ebp)
-	jmp	L185
-L190:
+	jmp	L186
+L191:
 	movl	-12(%ebp), %eax
 	movl	16(%eax), %eax
 	movl	%eax, -20(%ebp)
@@ -1894,17 +2073,17 @@ L190:
 	movl	%eax, (%esp)
 	call	_strcmp
 	testl	%eax, %eax
-	jne	L192
+	jne	L193
 	cmpl	$0, -16(%ebp)
-	je	L188
+	je	L189
 	movl	-16(%ebp), %eax
 	movl	-20(%ebp), %edx
 	movl	%edx, 16(%eax)
-	jmp	L189
-L188:
+	jmp	L190
+L189:
 	movl	-20(%ebp), %eax
 	movl	%eax, _packetCompletionRoutineList
-L189:
+L190:
 	movl	-12(%ebp), %eax
 	movl	(%eax), %eax
 	movl	%eax, (%esp)
@@ -1912,17 +2091,17 @@ L189:
 	movl	-12(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_free
-	jmp	L187
-L192:
+	jmp	L188
+L193:
 	nop
-L187:
+L188:
 	movl	-12(%ebp), %eax
 	movl	%eax, -16(%ebp)
 	movl	-20(%ebp), %eax
 	movl	%eax, -12(%ebp)
-L185:
+L186:
 	cmpl	$0, -12(%ebp)
-	jne	L190
+	jne	L191
 	movl	$0, %eax
 	leave
 	ret
@@ -1937,10 +2116,10 @@ _packet_transmit_empty_response:
 	call	_packet_create_response
 	movl	%eax, -12(%ebp)
 	cmpl	$0, -12(%ebp)
-	jne	L194
+	jne	L195
 	movl	$8, %eax
-	jmp	L195
-L194:
+	jmp	L196
+L195:
 	movl	-12(%ebp), %eax
 	movl	%eax, 8(%esp)
 	movl	8(%ebp), %eax
@@ -1948,7 +2127,7 @@ L194:
 	movl	16(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_packet_transmit_response
-L195:
+L196:
 	leave
 	ret
 	.globl	_packet_transmit_response
@@ -1958,7 +2137,7 @@ _packet_transmit_response:
 	movl	%esp, %ebp
 	subl	$24, %esp
 	cmpl	$0, 16(%ebp)
-	je	L197
+	je	L198
 	movl	8(%ebp), %eax
 	movl	%eax, 8(%esp)
 	movl	$131076, 4(%esp)
@@ -1971,10 +2150,10 @@ _packet_transmit_response:
 	movl	12(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_packet_transmit
-	jmp	L198
-L197:
-	movl	$8, %eax
+	jmp	L199
 L198:
+	movl	$8, %eax
+L199:
 	leave
 	ret
 	.globl	_packet_add_request_id
@@ -1993,11 +2172,11 @@ _packet_add_request_id:
 	movl	%eax, (%esp)
 	call	_packet_get_tlv_string
 	testl	%eax, %eax
-	je	L200
+	je	L201
 	movb	$0, -25(%ebp)
 	movl	$0, -12(%ebp)
-	jmp	L201
-L202:
+	jmp	L202
+L203:
 	call	_rand
 	movl	%eax, %ecx
 	movl	$-1370734243, %edx
@@ -2020,39 +2199,58 @@ L202:
 	addl	%edx, %eax
 	movb	%cl, (%eax)
 	addl	$1, -12(%ebp)
-L201:
+L202:
 	cmpl	$30, -12(%ebp)
-	jbe	L202
+	jbe	L203
 	leal	-56(%ebp), %eax
 	movl	%eax, 8(%esp)
 	movl	$65538, 4(%esp)
 	movl	8(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_packet_add_tlv_string
-L200:
+L201:
 	movl	$0, %eax
 	leave
 	ret
+	.section .rdata,"dr"
+	.align 4
+LC23:
+	.ascii "[TRANSMIT] Ignoring local packet\0"
+	.align 4
+LC24:
+	.ascii "[TRANSMIT] Sending packet to the server\0"
+	.align 4
+LC25:
+	.ascii "[PACKET] Sending packet to remote, length: %u, command id: %u\0"
+	.align 4
+LC26:
+	.ascii "[PACKET] Sent packet to remote, length: %u, command id: %u, result: %u\0"
+	.text
 	.globl	_packet_transmit
 	.def	_packet_transmit;	.scl	2;	.type	32;	.endef
 _packet_transmit:
 	pushl	%ebp
 	movl	%esp, %ebp
-	subl	$56, %esp
+	pushl	%ebx
+	subl	$52, %esp
 	movl	12(%ebp), %eax
 	movl	48(%eax), %eax
 	testl	%eax, %eax
-	je	L205
+	je	L206
 	movl	12(%ebp), %eax
 	movl	48(%eax), %eax
 	movl	44(%eax), %eax
 	testl	%eax, %eax
-	je	L205
+	je	L206
+	movl	$LC23, (%esp)
+	call	_real_dprintf
 	movl	$0, %eax
-	jmp	L209
-L205:
+	jmp	L210
+L206:
 	movl	$0, -28(%ebp)
 	movl	$0, -32(%ebp)
+	movl	$LC24, (%esp)
+	call	_real_dprintf
 	movl	12(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_packet_add_request_id
@@ -2066,7 +2264,7 @@ L205:
 	movl	%eax, (%esp)
 	call	_packet_add_tlv_raw
 	cmpl	$0, 16(%ebp)
-	je	L207
+	je	L208
 	leal	-24(%ebp), %eax
 	movl	%eax, 8(%esp)
 	movl	$65538, 4(%esp)
@@ -2074,13 +2272,13 @@ L205:
 	movl	%eax, (%esp)
 	call	_packet_get_tlv_string
 	testl	%eax, %eax
-	jne	L207
+	jne	L208
 	movl	-16(%ebp), %eax
 	movl	16(%ebp), %edx
 	movl	%edx, 4(%esp)
 	movl	%eax, (%esp)
 	call	_packet_add_completion_handler
-L207:
+L208:
 	leal	-32(%ebp), %eax
 	movl	%eax, 12(%esp)
 	leal	-28(%ebp), %eax
@@ -2090,6 +2288,15 @@ L207:
 	movl	8(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_encrypt_packet
+	movl	$131073, 4(%esp)
+	movl	12(%ebp), %eax
+	movl	%eax, (%esp)
+	call	_packet_get_tlv_value_uint
+	movl	-32(%ebp), %edx
+	movl	%eax, 8(%esp)
+	movl	%edx, 4(%esp)
+	movl	$LC25, (%esp)
+	call	_real_dprintf
 	movl	8(%ebp), %eax
 	movl	4(%eax), %eax
 	movl	36(%eax), %eax
@@ -2106,27 +2313,43 @@ L207:
 	subl	$4, %esp
 	movl	__imp__GetLastError@0, %eax
 	call	*%eax
+	movl	%eax, %ebx
+	movl	$131073, 4(%esp)
+	movl	12(%ebp), %eax
+	movl	%eax, (%esp)
+	call	_packet_get_tlv_value_uint
+	movl	-32(%ebp), %edx
+	movl	%ebx, 12(%esp)
+	movl	%eax, 8(%esp)
+	movl	%edx, 4(%esp)
+	movl	$LC26, (%esp)
+	call	_real_dprintf
+	movl	__imp__GetLastError@0, %eax
+	call	*%eax
 	movl	%eax, -12(%ebp)
 	movl	-28(%ebp), %eax
 	testl	%eax, %eax
-	je	L208
+	je	L209
 	movl	-28(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_free
-L208:
+L209:
 	movl	12(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_packet_destroy
 	movl	-12(%ebp), %eax
-L209:
+L210:
+	movl	-4(%ebp), %ebx
 	leave
 	ret
 	.section .rdata,"dr"
 	.align 8
-LC0:
+LC5:
 	.long	3264175145
 	.long	1072703733
 	.ident	"GCC: (GNU) 9.3-win32 20200320"
+	.def	_strlen;	.scl	2;	.type	32;	.endef
+	.def	_vsnprintf_s;	.scl	2;	.type	32;	.endef
 	.def	_lock_acquire;	.scl	2;	.type	32;	.endef
 	.def	_lock_release;	.scl	2;	.type	32;	.endef
 	.def	_free;	.scl	2;	.type	32;	.endef
@@ -2134,7 +2357,6 @@ LC0:
 	.def	_memset;	.scl	2;	.type	32;	.endef
 	.def	_list_pop;	.scl	2;	.type	32;	.endef
 	.def	_list_destroy;	.scl	2;	.type	32;	.endef
-	.def	_strlen;	.scl	2;	.type	32;	.endef
 	.def	_wcstombs;	.scl	2;	.type	32;	.endef
 	.def	_wcslen;	.scl	2;	.type	32;	.endef
 	.def	_memcpy;	.scl	2;	.type	32;	.endef

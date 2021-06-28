@@ -1,5 +1,67 @@
 	.file	"thread.c"
 	.text
+	.section .rdata,"dr"
+LC0:
+	.ascii "[%04x] \0"
+LC1:
+	.ascii "\15\12\0"
+	.text
+	.def	_real_dprintf;	.scl	3;	.type	32;	.endef
+_real_dprintf:
+	pushl	%ebp
+	movl	%esp, %ebp
+	pushl	%esi
+	pushl	%ebx
+	subl	$1072, %esp
+	movl	__imp__GetCurrentThreadId@0, %eax
+	call	*%eax
+	movl	%eax, 16(%esp)
+	movl	$LC0, 12(%esp)
+	movl	$1023, 8(%esp)
+	movl	$1024, 4(%esp)
+	leal	-1040(%ebp), %eax
+	movl	%eax, (%esp)
+	movl	__imp___snprintf_s, %eax
+	call	*%eax
+	leal	-1040(%ebp), %eax
+	movl	%eax, (%esp)
+	call	_strlen
+	movl	%eax, -12(%ebp)
+	leal	12(%ebp), %eax
+	movl	%eax, -16(%ebp)
+	movl	-16(%ebp), %ecx
+	movl	$1021, %eax
+	subl	-12(%ebp), %eax
+	movl	%eax, %edx
+	movl	$1024, %eax
+	subl	-12(%ebp), %eax
+	leal	-1040(%ebp), %esi
+	movl	-12(%ebp), %ebx
+	addl	%esi, %ebx
+	movl	%ecx, 16(%esp)
+	movl	8(%ebp), %ecx
+	movl	%ecx, 12(%esp)
+	movl	%edx, 8(%esp)
+	movl	%eax, 4(%esp)
+	movl	%ebx, (%esp)
+	call	_vsnprintf_s
+	movl	$LC1, 8(%esp)
+	movl	$1024, 4(%esp)
+	leal	-1040(%ebp), %eax
+	movl	%eax, (%esp)
+	movl	__imp__strcat_s, %eax
+	call	*%eax
+	leal	-1040(%ebp), %eax
+	movl	%eax, (%esp)
+	movl	__imp__OutputDebugStringA@4, %eax
+	call	*%eax
+	subl	$4, %esp
+	nop
+	leal	-8(%ebp), %esp
+	popl	%ebx
+	popl	%esi
+	popl	%ebp
+	ret
 	.globl	_lock_create
 	.def	_lock_create;	.scl	2;	.type	32;	.endef
 _lock_create:
@@ -10,7 +72,7 @@ _lock_create:
 	call	_malloc
 	movl	%eax, -12(%ebp)
 	cmpl	$0, -12(%ebp)
-	je	L2
+	je	L3
 	movl	$4, 8(%esp)
 	movl	$0, 4(%esp)
 	movl	-12(%ebp), %eax
@@ -24,7 +86,7 @@ _lock_create:
 	subl	$12, %esp
 	movl	-12(%ebp), %edx
 	movl	%eax, (%edx)
-L2:
+L3:
 	movl	-12(%ebp), %eax
 	leave
 	ret
@@ -35,7 +97,7 @@ _lock_destroy:
 	movl	%esp, %ebp
 	subl	$24, %esp
 	cmpl	$0, 8(%ebp)
-	je	L6
+	je	L7
 	movl	8(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_lock_release
@@ -48,7 +110,7 @@ _lock_destroy:
 	movl	8(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_free
-L6:
+L7:
 	nop
 	leave
 	ret
@@ -59,7 +121,7 @@ _lock_acquire:
 	movl	%esp, %ebp
 	subl	$24, %esp
 	cmpl	$0, 8(%ebp)
-	je	L9
+	je	L10
 	movl	8(%ebp), %eax
 	movl	(%eax), %eax
 	movl	$-1, 4(%esp)
@@ -67,7 +129,7 @@ _lock_acquire:
 	movl	__imp__WaitForSingleObject@8, %eax
 	call	*%eax
 	subl	$8, %esp
-L9:
+L10:
 	nop
 	leave
 	ret
@@ -78,14 +140,14 @@ _lock_release:
 	movl	%esp, %ebp
 	subl	$24, %esp
 	cmpl	$0, 8(%ebp)
-	je	L12
+	je	L13
 	movl	8(%ebp), %eax
 	movl	(%eax), %eax
 	movl	%eax, (%esp)
 	movl	__imp__ReleaseMutex@4, %eax
 	call	*%eax
 	subl	$4, %esp
-L12:
+L13:
 	nop
 	leave
 	ret
@@ -100,10 +162,10 @@ _event_create:
 	call	_malloc
 	movl	%eax, -12(%ebp)
 	cmpl	$0, -12(%ebp)
-	jne	L14
+	jne	L15
 	movl	$0, %eax
-	jmp	L15
-L14:
+	jmp	L16
+L15:
 	movl	$4, 8(%esp)
 	movl	$0, 4(%esp)
 	movl	-12(%ebp), %eax
@@ -121,15 +183,15 @@ L14:
 	movl	-12(%ebp), %eax
 	movl	(%eax), %eax
 	testl	%eax, %eax
-	jne	L16
+	jne	L17
 	movl	-12(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_free
 	movl	$0, %eax
-	jmp	L15
-L16:
+	jmp	L16
+L17:
 	movl	-12(%ebp), %eax
-L15:
+L16:
 	leave
 	ret
 	.globl	_event_destroy
@@ -139,10 +201,10 @@ _event_destroy:
 	movl	%esp, %ebp
 	subl	$24, %esp
 	cmpl	$0, 8(%ebp)
-	jne	L18
+	jne	L19
 	movl	$0, %eax
-	jmp	L19
-L18:
+	jmp	L20
+L19:
 	movl	8(%ebp), %eax
 	movl	(%eax), %eax
 	movl	%eax, (%esp)
@@ -153,9 +215,15 @@ L18:
 	movl	%eax, (%esp)
 	call	_free
 	movl	$1, %eax
-L19:
+L20:
 	leave
 	ret
+	.section .rdata,"dr"
+LC2:
+	.ascii "Signalling 0x%x\0"
+LC3:
+	.ascii "Signalling 0x%x failed %u\0"
+	.text
 	.globl	_event_signal
 	.def	_event_signal;	.scl	2;	.type	32;	.endef
 _event_signal:
@@ -163,10 +231,15 @@ _event_signal:
 	movl	%esp, %ebp
 	subl	$24, %esp
 	cmpl	$0, 8(%ebp)
-	jne	L21
+	jne	L22
 	movl	$0, %eax
-	jmp	L22
-L21:
+	jmp	L23
+L22:
+	movl	8(%ebp), %eax
+	movl	(%eax), %eax
+	movl	%eax, 4(%esp)
+	movl	$LC2, (%esp)
+	call	_real_dprintf
 	movl	8(%ebp), %eax
 	movl	(%eax), %eax
 	movl	%eax, (%esp)
@@ -174,12 +247,20 @@ L21:
 	call	*%eax
 	subl	$4, %esp
 	testl	%eax, %eax
-	jne	L23
+	jne	L24
+	movl	__imp__GetLastError@0, %eax
+	call	*%eax
+	movl	8(%ebp), %edx
+	movl	(%edx), %edx
+	movl	%eax, 8(%esp)
+	movl	%edx, 4(%esp)
+	movl	$LC3, (%esp)
+	call	_real_dprintf
 	movl	$0, %eax
-	jmp	L22
-L23:
+	jmp	L23
+L24:
 	movl	$1, %eax
-L22:
+L23:
 	leave
 	ret
 	.globl	_event_poll
@@ -189,10 +270,10 @@ _event_poll:
 	movl	%esp, %ebp
 	subl	$24, %esp
 	cmpl	$0, 8(%ebp)
-	jne	L25
+	jne	L26
 	movl	$0, %eax
-	jmp	L26
-L25:
+	jmp	L27
+L26:
 	movl	8(%ebp), %eax
 	movl	(%eax), %eax
 	movl	12(%ebp), %edx
@@ -202,22 +283,22 @@ L25:
 	call	*%eax
 	subl	$8, %esp
 	testl	%eax, %eax
-	jne	L27
+	jne	L28
 	movl	$1, %eax
-	jmp	L26
-L27:
+	jmp	L27
+L28:
 	movl	$0, %eax
-L26:
+L27:
 	leave
 	ret
 	.section .rdata,"dr"
-LC0:
+LC4:
 	.ascii "kernel32.dll\0"
-LC1:
+LC5:
 	.ascii "OpenThread\0"
-LC2:
+LC6:
 	.ascii "ntdll.dll\0"
-LC3:
+LC7:
 	.ascii "NtOpenThread\0"
 	.text
 	.globl	_thread_open
@@ -233,7 +314,7 @@ _thread_open:
 	call	_malloc
 	movl	%eax, -12(%ebp)
 	cmpl	$0, -12(%ebp)
-	je	L29
+	je	L30
 	movl	$28, 8(%esp)
 	movl	$0, 4(%esp)
 	movl	-12(%ebp), %eax
@@ -246,12 +327,12 @@ _thread_open:
 	call	_event_create
 	movl	-12(%ebp), %edx
 	movl	%eax, 8(%edx)
-	movl	$LC0, (%esp)
+	movl	$LC4, (%esp)
 	movl	__imp__LoadLibraryA@4, %eax
 	call	*%eax
 	subl	$4, %esp
 	movl	%eax, -20(%ebp)
-	movl	$LC1, 4(%esp)
+	movl	$LC5, 4(%esp)
 	movl	-20(%ebp), %eax
 	movl	%eax, (%esp)
 	movl	__imp__GetProcAddress@8, %eax
@@ -259,7 +340,7 @@ _thread_open:
 	subl	$8, %esp
 	movl	%eax, -16(%ebp)
 	cmpl	$0, -16(%ebp)
-	je	L30
+	je	L31
 	movl	-12(%ebp), %eax
 	movl	(%eax), %eax
 	movl	%eax, 8(%esp)
@@ -270,15 +351,15 @@ _thread_open:
 	subl	$12, %esp
 	movl	-12(%ebp), %edx
 	movl	%eax, 4(%edx)
-	jmp	L31
-L30:
+	jmp	L32
+L31:
 	movl	$0, -24(%ebp)
-	movl	$LC2, (%esp)
+	movl	$LC6, (%esp)
 	movl	__imp__LoadLibraryA@4, %eax
 	call	*%eax
 	subl	$4, %esp
 	movl	%eax, -28(%ebp)
-	movl	$LC3, 4(%esp)
+	movl	$LC7, 4(%esp)
 	movl	-28(%ebp), %eax
 	movl	%eax, (%esp)
 	movl	__imp__GetProcAddress@8, %eax
@@ -286,17 +367,17 @@ L30:
 	subl	$8, %esp
 	movl	%eax, -24(%ebp)
 	cmpl	$0, -24(%ebp)
-	je	L32
+	je	L33
 	movl	$0, %ecx
 	movl	$24, %eax
 	andl	$-4, %eax
 	movl	%eax, %edx
 	movl	$0, %eax
-L33:
+L34:
 	movl	%ecx, -52(%ebp,%eax)
 	addl	$4, %eax
 	cmpl	%edx, %eax
-	jb	L33
+	jb	L34
 	movl	$0, -60(%ebp)
 	movl	$0, -56(%ebp)
 	movl	-12(%ebp), %eax
@@ -313,24 +394,24 @@ L33:
 	movl	-24(%ebp), %eax
 	call	*%eax
 	subl	$16, %esp
-L32:
+L33:
 	movl	-28(%ebp), %eax
 	movl	%eax, (%esp)
 	movl	__imp__FreeLibrary@4, %eax
 	call	*%eax
 	subl	$4, %esp
-L31:
+L32:
 	movl	-20(%ebp), %eax
 	movl	%eax, (%esp)
 	movl	__imp__FreeLibrary@4, %eax
 	call	*%eax
 	subl	$4, %esp
-L29:
+L30:
 	movl	-12(%ebp), %eax
 	leave
 	ret
 	.section .rdata,"dr"
-LC4:
+LC8:
 	.ascii "SetThreadErrorMode\0"
 	.text
 	.globl	_disable_thread_error_reporting
@@ -339,12 +420,12 @@ _disable_thread_error_reporting:
 	pushl	%ebp
 	movl	%esp, %ebp
 	subl	$40, %esp
-	movl	$LC0, (%esp)
+	movl	$LC4, (%esp)
 	movl	__imp__LoadLibraryA@4, %eax
 	call	*%eax
 	subl	$4, %esp
 	movl	%eax, -12(%ebp)
-	movl	$LC4, 4(%esp)
+	movl	$LC8, 4(%esp)
 	movl	-12(%ebp), %eax
 	movl	%eax, (%esp)
 	movl	__imp__GetProcAddress@8, %eax
@@ -352,13 +433,13 @@ _disable_thread_error_reporting:
 	subl	$8, %esp
 	movl	%eax, -16(%ebp)
 	cmpl	$0, -16(%ebp)
-	je	L38
+	je	L39
 	movl	$0, 4(%esp)
 	movl	$1, (%esp)
 	movl	-16(%ebp), %eax
 	call	*%eax
 	subl	$8, %esp
-L38:
+L39:
 	nop
 	leave
 	ret
@@ -384,18 +465,18 @@ _thread_create:
 	subl	$56, %esp
 	movl	$0, -12(%ebp)
 	cmpl	$0, 8(%ebp)
-	jne	L42
+	jne	L43
 	movl	$0, %eax
-	jmp	L43
-L42:
+	jmp	L44
+L43:
 	movl	$28, (%esp)
 	call	_malloc
 	movl	%eax, -12(%ebp)
 	cmpl	$0, -12(%ebp)
-	jne	L44
+	jne	L45
 	movl	$0, %eax
-	jmp	L43
-L44:
+	jmp	L44
+L45:
 	movl	$28, 8(%esp)
 	movl	$0, 4(%esp)
 	movl	-12(%ebp), %eax
@@ -407,13 +488,13 @@ L44:
 	movl	-12(%ebp), %eax
 	movl	8(%eax), %eax
 	testl	%eax, %eax
-	jne	L45
+	jne	L46
 	movl	-12(%ebp), %eax
 	movl	%eax, (%esp)
 	call	_free
 	movl	$0, %eax
-	jmp	L43
-L45:
+	jmp	L44
+L46:
 	movl	-12(%ebp), %eax
 	movl	12(%ebp), %edx
 	movl	%edx, 16(%eax)
@@ -442,7 +523,7 @@ L45:
 	movl	-12(%ebp), %eax
 	movl	4(%eax), %eax
 	testl	%eax, %eax
-	jne	L46
+	jne	L47
 	movl	-12(%ebp), %eax
 	movl	8(%eax), %eax
 	movl	%eax, (%esp)
@@ -451,10 +532,10 @@ L45:
 	movl	%eax, (%esp)
 	call	_free
 	movl	$0, %eax
-	jmp	L43
-L46:
+	jmp	L44
+L47:
 	movl	-12(%ebp), %eax
-L43:
+L44:
 	leave
 	ret
 	.globl	_thread_run
@@ -464,10 +545,10 @@ _thread_run:
 	movl	%esp, %ebp
 	subl	$24, %esp
 	cmpl	$0, 8(%ebp)
-	jne	L48
+	jne	L49
 	movl	$0, %eax
-	jmp	L49
-L48:
+	jmp	L50
+L49:
 	movl	8(%ebp), %eax
 	movl	4(%eax), %eax
 	movl	%eax, (%esp)
@@ -475,7 +556,7 @@ L48:
 	call	*%eax
 	subl	$4, %esp
 	movl	$1, %eax
-L49:
+L50:
 	leave
 	ret
 	.globl	_thread_sigterm
@@ -485,17 +566,17 @@ _thread_sigterm:
 	movl	%esp, %ebp
 	subl	$40, %esp
 	cmpl	$0, 8(%ebp)
-	jne	L51
+	jne	L52
 	movl	$0, %eax
-	jmp	L52
-L51:
+	jmp	L53
+L52:
 	movl	8(%ebp), %eax
 	movl	8(%eax), %eax
 	movl	%eax, (%esp)
 	call	_event_signal
 	movl	%eax, -12(%ebp)
 	movl	-12(%ebp), %eax
-L52:
+L53:
 	leave
 	ret
 	.globl	_thread_kill
@@ -505,10 +586,10 @@ _thread_kill:
 	movl	%esp, %ebp
 	subl	$24, %esp
 	cmpl	$0, 8(%ebp)
-	jne	L54
+	jne	L55
 	movl	$0, %eax
-	jmp	L55
-L54:
+	jmp	L56
+L55:
 	movl	8(%ebp), %eax
 	movl	4(%eax), %eax
 	movl	$-1, 4(%esp)
@@ -517,12 +598,12 @@ L54:
 	call	*%eax
 	subl	$8, %esp
 	testl	%eax, %eax
-	jne	L56
+	jne	L57
 	movl	$0, %eax
-	jmp	L55
-L56:
+	jmp	L56
+L57:
 	movl	$1, %eax
-L55:
+L56:
 	leave
 	ret
 	.globl	_thread_join
@@ -532,10 +613,10 @@ _thread_join:
 	movl	%esp, %ebp
 	subl	$24, %esp
 	cmpl	$0, 8(%ebp)
-	jne	L58
+	jne	L59
 	movl	$0, %eax
-	jmp	L59
-L58:
+	jmp	L60
+L59:
 	movl	8(%ebp), %eax
 	movl	4(%eax), %eax
 	movl	$-1, 4(%esp)
@@ -544,12 +625,12 @@ L58:
 	call	*%eax
 	subl	$8, %esp
 	testl	%eax, %eax
-	jne	L60
+	jne	L61
 	movl	$1, %eax
-	jmp	L59
-L60:
+	jmp	L60
+L61:
 	movl	$0, %eax
-L59:
+L60:
 	leave
 	ret
 	.globl	_thread_destroy
@@ -559,10 +640,10 @@ _thread_destroy:
 	movl	%esp, %ebp
 	subl	$24, %esp
 	cmpl	$0, 8(%ebp)
-	jne	L62
+	jne	L63
 	movl	$0, %eax
-	jmp	L63
-L62:
+	jmp	L64
+L63:
 	movl	8(%ebp), %eax
 	movl	8(%eax), %eax
 	movl	%eax, (%esp)
@@ -577,10 +658,12 @@ L62:
 	movl	%eax, (%esp)
 	call	_free
 	movl	$1, %eax
-L63:
+L64:
 	leave
 	ret
 	.ident	"GCC: (GNU) 9.3-win32 20200320"
+	.def	_strlen;	.scl	2;	.type	32;	.endef
+	.def	_vsnprintf_s;	.scl	2;	.type	32;	.endef
 	.def	_malloc;	.scl	2;	.type	32;	.endef
 	.def	_memset;	.scl	2;	.type	32;	.endef
 	.def	_free;	.scl	2;	.type	32;	.endef

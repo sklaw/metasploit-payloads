@@ -1,5 +1,175 @@
 	.file	"thread.c"
 	.text
+	.section .rdata,"dr"
+LC0:
+	.ascii "[%04x] \0"
+LC1:
+	.ascii "\15\12\0"
+	.text
+	.def	_real_dprintf;	.scl	3;	.type	32;	.endef
+_real_dprintf:
+	pushl	%ebp
+push %eax
+pop %eax
+	movl	%esp, %ebp
+push %eax
+pop %eax
+	pushl	%esi
+push %eax
+pop %eax
+	pushl	%ebx
+push %eax
+pop %eax
+	subl	$1072, %esp
+push %eax
+pop %eax
+	movl	__imp__GetCurrentThreadId@0, %eax
+push %eax
+pop %eax
+	call	*%eax
+push %eax
+pop %eax
+	movl	%eax, 16(%esp)
+push %eax
+pop %eax
+	movl	$LC0, 12(%esp)
+push %eax
+pop %eax
+	movl	$1023, 8(%esp)
+push %eax
+pop %eax
+	movl	$1024, 4(%esp)
+push %eax
+pop %eax
+	leal	-1040(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, (%esp)
+push %eax
+pop %eax
+	movl	__imp___snprintf_s, %eax
+push %eax
+pop %eax
+	call	*%eax
+push %eax
+pop %eax
+	leal	-1040(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, (%esp)
+push %eax
+pop %eax
+	call	_strlen
+push %eax
+pop %eax
+	movl	%eax, -12(%ebp)
+push %eax
+pop %eax
+	leal	12(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, -16(%ebp)
+push %eax
+pop %eax
+	movl	-16(%ebp), %ecx
+push %eax
+pop %eax
+	movl	$1021, %eax
+push %eax
+pop %eax
+	subl	-12(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, %edx
+push %eax
+pop %eax
+	movl	$1024, %eax
+push %eax
+pop %eax
+	subl	-12(%ebp), %eax
+push %eax
+pop %eax
+	leal	-1040(%ebp), %esi
+push %eax
+pop %eax
+	movl	-12(%ebp), %ebx
+push %eax
+pop %eax
+	addl	%esi, %ebx
+push %eax
+pop %eax
+	movl	%ecx, 16(%esp)
+push %eax
+pop %eax
+	movl	8(%ebp), %ecx
+push %eax
+pop %eax
+	movl	%ecx, 12(%esp)
+push %eax
+pop %eax
+	movl	%edx, 8(%esp)
+push %eax
+pop %eax
+	movl	%eax, 4(%esp)
+push %eax
+pop %eax
+	movl	%ebx, (%esp)
+push %eax
+pop %eax
+	call	_vsnprintf_s
+push %eax
+pop %eax
+	movl	$LC1, 8(%esp)
+push %eax
+pop %eax
+	movl	$1024, 4(%esp)
+push %eax
+pop %eax
+	leal	-1040(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, (%esp)
+push %eax
+pop %eax
+	movl	__imp__strcat_s, %eax
+push %eax
+pop %eax
+	call	*%eax
+push %eax
+pop %eax
+	leal	-1040(%ebp), %eax
+push %eax
+pop %eax
+	movl	%eax, (%esp)
+push %eax
+pop %eax
+	movl	__imp__OutputDebugStringA@4, %eax
+push %eax
+pop %eax
+	call	*%eax
+push %eax
+pop %eax
+	subl	$4, %esp
+push %eax
+pop %eax
+	nop
+push %eax
+pop %eax
+	leal	-8(%ebp), %esp
+push %eax
+pop %eax
+	popl	%ebx
+push %eax
+pop %eax
+	popl	%esi
+push %eax
+pop %eax
+	popl	%ebp
+push %eax
+pop %eax
+	ret
+push %eax
+pop %eax
 	.globl	_lock_create
 	.def	_lock_create;	.scl	2;	.type	32;	.endef
 _lock_create:
@@ -24,7 +194,7 @@ pop %eax
 	cmpl	$0, -12(%ebp)
 push %eax
 pop %eax
-	je	L2
+	je	L3
 push %eax
 pop %eax
 	movl	$4, 8(%esp)
@@ -66,7 +236,7 @@ pop %eax
 	movl	%eax, (%edx)
 push %eax
 pop %eax
-L2:
+L3:
 	movl	-12(%ebp), %eax
 push %eax
 pop %eax
@@ -91,7 +261,7 @@ pop %eax
 	cmpl	$0, 8(%ebp)
 push %eax
 pop %eax
-	je	L6
+	je	L7
 push %eax
 pop %eax
 	movl	8(%ebp), %eax
@@ -130,7 +300,7 @@ pop %eax
 	call	_free
 push %eax
 pop %eax
-L6:
+L7:
 	nop
 push %eax
 pop %eax
@@ -155,7 +325,7 @@ pop %eax
 	cmpl	$0, 8(%ebp)
 push %eax
 pop %eax
-	je	L9
+	je	L10
 push %eax
 pop %eax
 	movl	8(%ebp), %eax
@@ -179,7 +349,7 @@ pop %eax
 	subl	$8, %esp
 push %eax
 pop %eax
-L9:
+L10:
 	nop
 push %eax
 pop %eax
@@ -204,7 +374,7 @@ pop %eax
 	cmpl	$0, 8(%ebp)
 push %eax
 pop %eax
-	je	L12
+	je	L13
 push %eax
 pop %eax
 	movl	8(%ebp), %eax
@@ -225,7 +395,7 @@ pop %eax
 	subl	$4, %esp
 push %eax
 pop %eax
-L12:
+L13:
 	nop
 push %eax
 pop %eax
@@ -262,16 +432,16 @@ pop %eax
 	cmpl	$0, -12(%ebp)
 push %eax
 pop %eax
-	jne	L14
+	jne	L15
 push %eax
 pop %eax
 	movl	$0, %eax
 push %eax
 pop %eax
-	jmp	L15
+	jmp	L16
 push %eax
 pop %eax
-L14:
+L15:
 	movl	$4, 8(%esp)
 push %eax
 pop %eax
@@ -323,7 +493,7 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	jne	L16
+	jne	L17
 push %eax
 pop %eax
 	movl	-12(%ebp), %eax
@@ -338,14 +508,14 @@ pop %eax
 	movl	$0, %eax
 push %eax
 pop %eax
-	jmp	L15
+	jmp	L16
 push %eax
 pop %eax
-L16:
+L17:
 	movl	-12(%ebp), %eax
 push %eax
 pop %eax
-L15:
+L16:
 	leave
 push %eax
 pop %eax
@@ -367,16 +537,16 @@ pop %eax
 	cmpl	$0, 8(%ebp)
 push %eax
 pop %eax
-	jne	L18
+	jne	L19
 push %eax
 pop %eax
 	movl	$0, %eax
 push %eax
 pop %eax
-	jmp	L19
+	jmp	L20
 push %eax
 pop %eax
-L18:
+L19:
 	movl	8(%ebp), %eax
 push %eax
 pop %eax
@@ -407,13 +577,19 @@ pop %eax
 	movl	$1, %eax
 push %eax
 pop %eax
-L19:
+L20:
 	leave
 push %eax
 pop %eax
 	ret
 push %eax
 pop %eax
+	.section .rdata,"dr"
+LC2:
+	.ascii "Signalling 0x%x\0"
+LC3:
+	.ascii "Signalling 0x%x failed %u\0"
+	.text
 	.globl	_event_signal
 	.def	_event_signal;	.scl	2;	.type	32;	.endef
 _event_signal:
@@ -429,16 +605,31 @@ pop %eax
 	cmpl	$0, 8(%ebp)
 push %eax
 pop %eax
-	jne	L21
+	jne	L22
 push %eax
 pop %eax
 	movl	$0, %eax
 push %eax
 pop %eax
-	jmp	L22
+	jmp	L23
 push %eax
 pop %eax
-L21:
+L22:
+	movl	8(%ebp), %eax
+push %eax
+pop %eax
+	movl	(%eax), %eax
+push %eax
+pop %eax
+	movl	%eax, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC2, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
+push %eax
+pop %eax
 	movl	8(%ebp), %eax
 push %eax
 pop %eax
@@ -460,20 +651,44 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	jne	L23
+	jne	L24
+push %eax
+pop %eax
+	movl	__imp__GetLastError@0, %eax
+push %eax
+pop %eax
+	call	*%eax
+push %eax
+pop %eax
+	movl	8(%ebp), %edx
+push %eax
+pop %eax
+	movl	(%edx), %edx
+push %eax
+pop %eax
+	movl	%eax, 8(%esp)
+push %eax
+pop %eax
+	movl	%edx, 4(%esp)
+push %eax
+pop %eax
+	movl	$LC3, (%esp)
+push %eax
+pop %eax
+	call	_real_dprintf
 push %eax
 pop %eax
 	movl	$0, %eax
 push %eax
 pop %eax
-	jmp	L22
+	jmp	L23
 push %eax
 pop %eax
-L23:
+L24:
 	movl	$1, %eax
 push %eax
 pop %eax
-L22:
+L23:
 	leave
 push %eax
 pop %eax
@@ -495,16 +710,16 @@ pop %eax
 	cmpl	$0, 8(%ebp)
 push %eax
 pop %eax
-	jne	L25
+	jne	L26
 push %eax
 pop %eax
 	movl	$0, %eax
 push %eax
 pop %eax
-	jmp	L26
+	jmp	L27
 push %eax
 pop %eax
-L25:
+L26:
 	movl	8(%ebp), %eax
 push %eax
 pop %eax
@@ -532,20 +747,20 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	jne	L27
+	jne	L28
 push %eax
 pop %eax
 	movl	$1, %eax
 push %eax
 pop %eax
-	jmp	L26
+	jmp	L27
 push %eax
 pop %eax
-L27:
+L28:
 	movl	$0, %eax
 push %eax
 pop %eax
-L26:
+L27:
 	leave
 push %eax
 pop %eax
@@ -553,13 +768,13 @@ pop %eax
 push %eax
 pop %eax
 	.section .rdata,"dr"
-LC0:
+LC4:
 	.ascii "kernel32.dll\0"
-LC1:
+LC5:
 	.ascii "OpenThread\0"
-LC2:
+LC6:
 	.ascii "ntdll.dll\0"
-LC3:
+LC7:
 	.ascii "NtOpenThread\0"
 	.text
 	.globl	_thread_open
@@ -595,7 +810,7 @@ pop %eax
 	cmpl	$0, -12(%ebp)
 push %eax
 pop %eax
-	je	L29
+	je	L30
 push %eax
 pop %eax
 	movl	$28, 8(%esp)
@@ -634,7 +849,7 @@ pop %eax
 	movl	%eax, 8(%edx)
 push %eax
 pop %eax
-	movl	$LC0, (%esp)
+	movl	$LC4, (%esp)
 push %eax
 pop %eax
 	movl	__imp__LoadLibraryA@4, %eax
@@ -649,7 +864,7 @@ pop %eax
 	movl	%eax, -20(%ebp)
 push %eax
 pop %eax
-	movl	$LC1, 4(%esp)
+	movl	$LC5, 4(%esp)
 push %eax
 pop %eax
 	movl	-20(%ebp), %eax
@@ -673,7 +888,7 @@ pop %eax
 	cmpl	$0, -16(%ebp)
 push %eax
 pop %eax
-	je	L30
+	je	L31
 push %eax
 pop %eax
 	movl	-12(%ebp), %eax
@@ -706,14 +921,14 @@ pop %eax
 	movl	%eax, 4(%edx)
 push %eax
 pop %eax
-	jmp	L31
+	jmp	L32
 push %eax
 pop %eax
-L30:
+L31:
 	movl	$0, -24(%ebp)
 push %eax
 pop %eax
-	movl	$LC2, (%esp)
+	movl	$LC6, (%esp)
 push %eax
 pop %eax
 	movl	__imp__LoadLibraryA@4, %eax
@@ -728,7 +943,7 @@ pop %eax
 	movl	%eax, -28(%ebp)
 push %eax
 pop %eax
-	movl	$LC3, 4(%esp)
+	movl	$LC7, 4(%esp)
 push %eax
 pop %eax
 	movl	-28(%ebp), %eax
@@ -752,7 +967,7 @@ pop %eax
 	cmpl	$0, -24(%ebp)
 push %eax
 pop %eax
-	je	L32
+	je	L33
 push %eax
 pop %eax
 	movl	$0, %ecx
@@ -770,7 +985,7 @@ pop %eax
 	movl	$0, %eax
 push %eax
 pop %eax
-L33:
+L34:
 	movl	%ecx, -52(%ebp,%eax)
 push %eax
 pop %eax
@@ -780,7 +995,7 @@ pop %eax
 	cmpl	%edx, %eax
 push %eax
 pop %eax
-	jb	L33
+	jb	L34
 push %eax
 pop %eax
 	movl	$0, -60(%ebp)
@@ -831,7 +1046,7 @@ pop %eax
 	subl	$16, %esp
 push %eax
 pop %eax
-L32:
+L33:
 	movl	-28(%ebp), %eax
 push %eax
 pop %eax
@@ -847,7 +1062,7 @@ pop %eax
 	subl	$4, %esp
 push %eax
 pop %eax
-L31:
+L32:
 	movl	-20(%ebp), %eax
 push %eax
 pop %eax
@@ -863,7 +1078,7 @@ pop %eax
 	subl	$4, %esp
 push %eax
 pop %eax
-L29:
+L30:
 	movl	-12(%ebp), %eax
 push %eax
 pop %eax
@@ -874,7 +1089,7 @@ pop %eax
 push %eax
 pop %eax
 	.section .rdata,"dr"
-LC4:
+LC8:
 	.ascii "SetThreadErrorMode\0"
 	.text
 	.globl	_disable_thread_error_reporting
@@ -889,7 +1104,7 @@ pop %eax
 	subl	$40, %esp
 push %eax
 pop %eax
-	movl	$LC0, (%esp)
+	movl	$LC4, (%esp)
 push %eax
 pop %eax
 	movl	__imp__LoadLibraryA@4, %eax
@@ -904,7 +1119,7 @@ pop %eax
 	movl	%eax, -12(%ebp)
 push %eax
 pop %eax
-	movl	$LC4, 4(%esp)
+	movl	$LC8, 4(%esp)
 push %eax
 pop %eax
 	movl	-12(%ebp), %eax
@@ -928,7 +1143,7 @@ pop %eax
 	cmpl	$0, -16(%ebp)
 push %eax
 pop %eax
-	je	L38
+	je	L39
 push %eax
 pop %eax
 	movl	$0, 4(%esp)
@@ -946,7 +1161,7 @@ pop %eax
 	subl	$8, %esp
 push %eax
 pop %eax
-L38:
+L39:
 	nop
 push %eax
 pop %eax
@@ -1012,16 +1227,16 @@ pop %eax
 	cmpl	$0, 8(%ebp)
 push %eax
 pop %eax
-	jne	L42
+	jne	L43
 push %eax
 pop %eax
 	movl	$0, %eax
 push %eax
 pop %eax
-	jmp	L43
+	jmp	L44
 push %eax
 pop %eax
-L42:
+L43:
 	movl	$28, (%esp)
 push %eax
 pop %eax
@@ -1034,16 +1249,16 @@ pop %eax
 	cmpl	$0, -12(%ebp)
 push %eax
 pop %eax
-	jne	L44
+	jne	L45
 push %eax
 pop %eax
 	movl	$0, %eax
 push %eax
 pop %eax
-	jmp	L43
+	jmp	L44
 push %eax
 pop %eax
-L44:
+L45:
 	movl	$28, 8(%esp)
 push %eax
 pop %eax
@@ -1077,7 +1292,7 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	jne	L45
+	jne	L46
 push %eax
 pop %eax
 	movl	-12(%ebp), %eax
@@ -1092,10 +1307,10 @@ pop %eax
 	movl	$0, %eax
 push %eax
 pop %eax
-	jmp	L43
+	jmp	L44
 push %eax
 pop %eax
-L45:
+L46:
 	movl	-12(%ebp), %eax
 push %eax
 pop %eax
@@ -1180,7 +1395,7 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	jne	L46
+	jne	L47
 push %eax
 pop %eax
 	movl	-12(%ebp), %eax
@@ -1207,14 +1422,14 @@ pop %eax
 	movl	$0, %eax
 push %eax
 pop %eax
-	jmp	L43
+	jmp	L44
 push %eax
 pop %eax
-L46:
+L47:
 	movl	-12(%ebp), %eax
 push %eax
 pop %eax
-L43:
+L44:
 	leave
 push %eax
 pop %eax
@@ -1236,16 +1451,16 @@ pop %eax
 	cmpl	$0, 8(%ebp)
 push %eax
 pop %eax
-	jne	L48
+	jne	L49
 push %eax
 pop %eax
 	movl	$0, %eax
 push %eax
 pop %eax
-	jmp	L49
+	jmp	L50
 push %eax
 pop %eax
-L48:
+L49:
 	movl	8(%ebp), %eax
 push %eax
 pop %eax
@@ -1267,7 +1482,7 @@ pop %eax
 	movl	$1, %eax
 push %eax
 pop %eax
-L49:
+L50:
 	leave
 push %eax
 pop %eax
@@ -1289,16 +1504,16 @@ pop %eax
 	cmpl	$0, 8(%ebp)
 push %eax
 pop %eax
-	jne	L51
+	jne	L52
 push %eax
 pop %eax
 	movl	$0, %eax
 push %eax
 pop %eax
-	jmp	L52
+	jmp	L53
 push %eax
 pop %eax
-L51:
+L52:
 	movl	8(%ebp), %eax
 push %eax
 pop %eax
@@ -1317,7 +1532,7 @@ pop %eax
 	movl	-12(%ebp), %eax
 push %eax
 pop %eax
-L52:
+L53:
 	leave
 push %eax
 pop %eax
@@ -1339,16 +1554,16 @@ pop %eax
 	cmpl	$0, 8(%ebp)
 push %eax
 pop %eax
-	jne	L54
+	jne	L55
 push %eax
 pop %eax
 	movl	$0, %eax
 push %eax
 pop %eax
-	jmp	L55
+	jmp	L56
 push %eax
 pop %eax
-L54:
+L55:
 	movl	8(%ebp), %eax
 push %eax
 pop %eax
@@ -1373,20 +1588,20 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	jne	L56
+	jne	L57
 push %eax
 pop %eax
 	movl	$0, %eax
 push %eax
 pop %eax
-	jmp	L55
+	jmp	L56
 push %eax
 pop %eax
-L56:
+L57:
 	movl	$1, %eax
 push %eax
 pop %eax
-L55:
+L56:
 	leave
 push %eax
 pop %eax
@@ -1408,16 +1623,16 @@ pop %eax
 	cmpl	$0, 8(%ebp)
 push %eax
 pop %eax
-	jne	L58
+	jne	L59
 push %eax
 pop %eax
 	movl	$0, %eax
 push %eax
 pop %eax
-	jmp	L59
+	jmp	L60
 push %eax
 pop %eax
-L58:
+L59:
 	movl	8(%ebp), %eax
 push %eax
 pop %eax
@@ -1442,20 +1657,20 @@ pop %eax
 	testl	%eax, %eax
 push %eax
 pop %eax
-	jne	L60
+	jne	L61
 push %eax
 pop %eax
 	movl	$1, %eax
 push %eax
 pop %eax
-	jmp	L59
+	jmp	L60
 push %eax
 pop %eax
-L60:
+L61:
 	movl	$0, %eax
 push %eax
 pop %eax
-L59:
+L60:
 	leave
 push %eax
 pop %eax
@@ -1477,16 +1692,16 @@ pop %eax
 	cmpl	$0, 8(%ebp)
 push %eax
 pop %eax
-	jne	L62
+	jne	L63
 push %eax
 pop %eax
 	movl	$0, %eax
 push %eax
 pop %eax
-	jmp	L63
+	jmp	L64
 push %eax
 pop %eax
-L62:
+L63:
 	movl	8(%ebp), %eax
 push %eax
 pop %eax
@@ -1529,7 +1744,7 @@ pop %eax
 	movl	$1, %eax
 push %eax
 pop %eax
-L63:
+L64:
 	leave
 push %eax
 pop %eax
@@ -1537,6 +1752,8 @@ pop %eax
 push %eax
 pop %eax
 	.ident	"GCC: (GNU) 9.3-win32 20200320"
+	.def	_strlen;	.scl	2;	.type	32;	.endef
+	.def	_vsnprintf_s;	.scl	2;	.type	32;	.endef
 	.def	_malloc;	.scl	2;	.type	32;	.endef
 	.def	_memset;	.scl	2;	.type	32;	.endef
 	.def	_free;	.scl	2;	.type	32;	.endef
