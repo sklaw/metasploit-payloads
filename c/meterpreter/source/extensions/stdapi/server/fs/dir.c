@@ -55,10 +55,15 @@ DWORD request_fs_getwd(Remote * remote, Packet * packet)
 	char *directory = NULL;
 	DWORD result;
 
+  dprintf("[fs_getwd] before fs_getwd");
 	result = fs_getwd(&directory);
+  dprintf("[fs_getwd] after fs_getwd");
+
 	if (directory != NULL) {
 		met_api->packet.add_tlv_string(response, TLV_TYPE_DIRECTORY_PATH, directory);
+    dprintf("[fs_getwd] before free(directory)");
 		free(directory);
+    dprintf("[fs_getwd] after free(directory)");
 	}
   dprintf("[fs_getwd] Done");
 

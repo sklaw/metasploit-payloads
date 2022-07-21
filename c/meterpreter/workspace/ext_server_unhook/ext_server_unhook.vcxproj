@@ -30,6 +30,7 @@
     <ProjectGuid>{561E26D9-7E79-4EF4-8AA2-A770F81568A7}</ProjectGuid>
     <RootNamespace>ext_server_unhook</RootNamespace>
     <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">

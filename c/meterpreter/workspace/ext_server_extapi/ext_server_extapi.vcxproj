@@ -30,6 +30,7 @@
     <ProjectGuid>{42E143CB-6086-4FF1-A4AE-D8545782DD31}</ProjectGuid>
     <RootNamespace>ext_server_extapi</RootNamespace>
     <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -177,7 +178,7 @@ copy /y "$(TargetDir)$(TargetFileName)" "$(ProjectDir)..\..\output\"</Command>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
-      <TreatWarningAsError>true</TreatWarningAsError>
+      <TreatWarningAsError>false</TreatWarningAsError>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -343,7 +344,7 @@ copy /y "$(TargetDir)$(TargetFileName)" "$(ProjectDir)..\..\output\"</Command>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <BufferSecurityCheck>false</BufferSecurityCheck>
-      <TreatWarningAsError>true</TreatWarningAsError>
+      <TreatWarningAsError>false</TreatWarningAsError>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
