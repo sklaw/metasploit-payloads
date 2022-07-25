@@ -327,21 +327,21 @@ DWORD load_extension(HMODULE hLibrary, BOOL bLibLoadedReflectivly, Remote* remot
  */
 DWORD request_core_loadlib(Remote *remote, Packet *packet)
 {
+	dprintf("[LOADLIB] request_core_loadlib");
 	Packet *response = packet_create_response(packet);
 	DWORD res = ERROR_SUCCESS;
 	HMODULE library;
 	PCHAR libraryPath;
 	DWORD flags = 0;
 	BOOL bLibLoadedReflectivly = FALSE;
-  dprintf("[LOADLIB] here 1");
 
 	Command *first = extensionCommands;
 
 	do
 	{
-  dprintf("[LOADLIB] here 2");
+
 		libraryPath = packet_get_tlv_value_string(packet, TLV_TYPE_LIBRARY_PATH);
-  dprintf("[LOADLIB] here 3");
+
 		flags = packet_get_tlv_value_uint(packet, TLV_TYPE_FLAGS);
 
 		// Invalid library path?
@@ -350,15 +350,19 @@ DWORD request_core_loadlib(Remote *remote, Packet *packet)
 			res = ERROR_INVALID_PARAMETER;
 			break;
 		}
-  dprintf("[LOADLIB] here 4");
+
+		dprintf("[LOADLIB] libraryPath = %s.", libraryPath);
 
 		// If the lib does not exist locally, but is being uploaded...
 		if (!(flags & LOAD_LIBRARY_FLAG_LOCAL))
 		{
+
+			dprintf("[LOADLIB] the lib does not exist locally, but is being uploaded.");
+
 			PCHAR targetPath;
 			Tlv dataTlv;
 
-  dprintf("[LOADLIB] here 5");
+
 			// Get the library's file contents
 			if ((packet_get_tlv(packet, TLV_TYPE_DATA,
 				&dataTlv) != ERROR_SUCCESS) ||
@@ -369,18 +373,25 @@ DWORD request_core_loadlib(Remote *remote, Packet *packet)
 				break;
 			}
 
-  dprintf("[LOADLIB] here 6");
+
 			// If the library is not to be stored on disk, 
 			if (!(flags & LOAD_LIBRARY_FLAG_ON_DISK))
 			{
+
+				dprintf("[LOADLIB] the library is not to be stored on disk.");
+
 				LPCSTR reflectiveLoader = packet_get_tlv_value_reflective_loader(packet);
-  dprintf("[LOADLIB] here 7");
+
+
 
 				// try to load the library via its reflective loader...
 				library = LoadLibraryR(dataTlv.buffer, dataTlv.header.length, reflectiveLoader);
-  dprintf("[LOADLIB] here 8");
+
 				if (library == NULL)
 				{
+
+					dprintf("[LOADLIB] LoadLibraryR failed, presumably besause the library doesn't support, we default to using libloader.");
+
 					// if that fails, presumably besause the library doesn't support
 					// reflective injection, we default to using libloader...
 					library = libloader_load_library(targetPath,
@@ -388,14 +399,19 @@ DWORD request_core_loadlib(Remote *remote, Packet *packet)
 				}
 				else
 				{
+
+					dprintf("[LOADLIB] LoadLibraryR succeeded.");
+
 					bLibLoadedReflectivly = TRUE;
 				}
-  dprintf("[LOADLIB] here 9");
+
 
 				res = (library) ? ERROR_SUCCESS : ERROR_NOT_FOUND;
 			}
 			else
 			{
+				dprintf("[LOADLIB] save the library buffer to disk.");
+
 				// Otherwise, save the library buffer to disk
 				res = buffer_to_file(targetPath, dataTlv.buffer,
 					dataTlv.header.length);
@@ -412,26 +428,36 @@ DWORD request_core_loadlib(Remote *remote, Packet *packet)
 		}
 
 		// Load the library
-		if (!library && !(library = LoadLibraryA(libraryPath)))
+		if (!library)
 		{
-			res = GetLastError();
+			dprintf("[LOADLIB] gonna call LoadLibraryA.");
+			library = LoadLibraryA(libraryPath);
+			if (!library) {
+				dprintf("[LOADLIB] LoadLibraryA failed.");
+				res = GetLastError();
+			}
+			else {
+				dprintf("[LOADLIB] LoadLibraryA succeeded.");
+			}
 		}
 
 		// If this library is supposed to be an extension library, try to
 		// call its Init routine
 		if ((flags & LOAD_LIBRARY_FLAG_EXTENSION) && library)
 		{
+			dprintf("[LOADLIB] this library is supposed to be an extension library, try to call its Init routine.");
+
 			res = load_extension(library, bLibLoadedReflectivly, remote, response, first);
 		}
 
 	} while (0);
 
-  dprintf("[LOADLIB] here 10");
+
 	if (response)
 	{
 		packet_transmit_response(res, remote, response);
 	}
-  dprintf("[LOADLIB] here 11");
+
 
 	return res;
 }
