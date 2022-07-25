@@ -419,6 +419,7 @@ Command* command_locate_extension(UINT commandId)
  */
 BOOL command_handle(Remote *remote, Packet *packet)
 {
+	dprintf("[COMMAND] command_handle.");
 	BOOL result = TRUE;
 	THREAD* cpt = NULL;
 	Command* command = NULL;
@@ -467,7 +468,10 @@ BOOL command_handle(Remote *remote, Packet *packet)
 		{
 			dprintf("[DISPATCH] Executing in thread: %u", commandId);
 
+			dprintf("[COMMAND] thread_create start.");
+			//DebugBreak();
 			cpt = thread_create(command_process_thread, remote, packet, command);
+			dprintf("[COMMAND] thread_create done.");
 			if (cpt)
 			{
 				dprintf("[DISPATCH] created command_process_thread 0x%08X, handle=0x%08X", cpt, cpt->handle);

@@ -464,16 +464,21 @@ DWORD free_encryption_context(Remote* remote)
 
 DWORD request_negotiate_aes_key(Remote* remote, Packet* packet)
 {
+	dprintf("[ENC] request_negotiate_aes_key");
 	DWORD result = ERROR_SUCCESS;
+
+	dprintf("[ENC] packet_create_response");
 	Packet* response = packet_create_response(packet);
 
 	do
 	{
 		if (remote->enc_ctx != NULL)
 		{
+			dprintf("[ENC] free_encryption_context");
 			free_encryption_context(remote);
 		}
 
+		dprintf("[ENC] calloc");
 		remote->enc_ctx = (PacketEncryptionContext*)calloc(1, sizeof(PacketEncryptionContext));
 
 		if (remote->enc_ctx == NULL)

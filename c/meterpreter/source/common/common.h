@@ -125,4 +125,6 @@ static _inline void real_dprintf(char *format, ...)
 #include "common_scheduler.h"
 #include "common_command_ids.h"
 
+#define PUSHPOPEAX {__asm push eax __asm pop eax}
+
 #endif
