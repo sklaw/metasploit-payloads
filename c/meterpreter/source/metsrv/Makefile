@@ -6,17 +6,17 @@ CC = i686-w64-mingw32-gcc-win32
 all: 
 
 gen_obfuscated_dll:
-	$(CC) -o metsrv.x86.dll.obfuscated -s -shared $(SRC_S_obfuscated) -Wl,--subsystem,windows -lws2_32 -lcrypt32 -lwinhttp -lwininet -lole32 -Wl,--exclude-all-symbols -e _DllMain -static-libgcc -lgcc -fstack-protector-all
+	$(CC) -O0 -o metsrv.x86.dll.obfuscated -s -shared $(SRC_S_obfuscated) -Wl,--subsystem,windows -lws2_32 -lcrypt32 -lwinhttp -lwininet -lole32 -e _DllMain -static-libgcc -lgcc ../def/metsrv.def -Wl,../def/metsrv.def
 
 gen_orig_dll: 
-	$(CC) -o metsrv.x86.dll -s -shared $(SRC_S) -Wl,--subsystem,windows -lws2_32 -lcrypt32 -lwinhttp -lwininet -lole32 -Wl,--exclude-all-symbols -e _DllMain -static-libgcc -lgcc -fstack-protector-all
+	$(CC) -o metsrv.x86.dll -s -shared $(SRC_S) -Wl,--subsystem,windows -lws2_32 -lcrypt32 -lwinhttp -lwininet -lole32 -Wl,--exclude-all-symbols -e _DllMain -static-libgcc -lgcc -Wl,../def/metsrv.def
 
 
 
 gen_asm: ${SRC_S} 
 
 %.s : %.c Makefile
-	$(CC) -S -g3 -O0 -fverbose-asm -fstack-protector-all $< -I ../common -I ../ReflectiveDLLInjection/common
+	$(CC) -S -O0 $< -I ../common -I ../ReflectiveDLLInjection/common
 
 clean:
 	rm -f metsrv.x86.dll*
